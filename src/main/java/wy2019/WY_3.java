@@ -1,3 +1,5 @@
+package wy2019;
+
 import java.util.Scanner;
 
 public class WY_3 {

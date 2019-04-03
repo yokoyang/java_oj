@@ -1,6 +1,6 @@
-import java.util.Arrays;
+package wy2019;
+
 import java.util.Scanner;
-import java.util.TreeMap;
 
 public class WY_2 {
 

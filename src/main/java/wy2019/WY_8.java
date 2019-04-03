@@ -1,15 +1,16 @@
+package wy2019;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class WY_8 {
     private static ArrayList<Integer> vList = new ArrayList<>();
 
-    private static int DP(int i, int now_w) {
+    private static long DP(int i, long now_w) {
         if (now_w <= 0) {
             return 0;
         }
-        int result;
+        long result;
         if (i == -1) {
             return 1;
         }
@@ -20,6 +21,13 @@ public class WY_8 {
                 return 1;
             }
         }
+        long sum = 0;
+        for (int j = 0; j <= i; j++) {
+            sum += vList.get(j);
+        }
+        if (now_w >= sum) {
+            return (long) Math.pow(2, i+1);
+        }
         result = DP(i - 1, now_w) + DP(i - 1, now_w - vList.get(i));
         return result;
     }
@@ -27,11 +35,19 @@ public class WY_8 {
     public static void main(String[] arsg) {
         Scanner scanner = new Scanner(System.in);
         int n = scanner.nextInt();
-        int w = scanner.nextInt();
+        long w = scanner.nextLong();
+        long total = 0;
+        long res = 0;
         for (int i = 0; i < n; i++) {
-            vList.add(scanner.nextInt());
+            int v_i = scanner.nextInt();
+            vList.add(v_i);
+            total += v_i;
         }
-        int res = DP(vList.size() - 1, w);
+        if (total <= w) {
+            res = (int) Math.pow(2, n);
+        } else {
+            res = DP(vList.size() - 1, w);
+        }
         System.out.println(res);
 
     }

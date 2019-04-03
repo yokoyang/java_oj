@@ -1,3 +1,5 @@
+package wy2019;
+
 import java.util.*;
 
 public class WY_7 {
