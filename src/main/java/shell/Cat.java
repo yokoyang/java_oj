@@ -11,9 +11,9 @@ public class Cat {
     public static void main(String[] args){
         List<String> resultStringList = new ArrayList<>();
         ExecutorService executorService = Executors.newCachedThreadPool();
-        String dirName = "";
-        String pattern = ".log";
-        String regex = "login";
+        String dirName = "E:\\project\\oj\\doc\\网易2019";
+        String pattern = ".md";
+        String regex = "描述";
         File path = new File(dirName);
         if (path.exists() && path.isDirectory()){
             for(File file : path.listFiles()){
