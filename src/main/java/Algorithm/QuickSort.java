@@ -22,16 +22,17 @@ public class QuickSort {
         quickSortC(A, q + 1, end);
     }
 
-    private static int partition(int[] A, int s, int end) {
-        int pivot = A[end];
-        int i = s;
-        for (int j = s; j != end; j++) {
+    private static int partition(int[] A, int left, int right) {
+        int pivot = A[right];
+        int i = left;
+        int j = left;
+        for (; j != right; j++) {
             if (A[j] < pivot) {
                 swap(A, i, j);
                 i++;
             }
         }
-        swap(A, i, end);
+        swap(A, i, right);
         return i;
     }
 

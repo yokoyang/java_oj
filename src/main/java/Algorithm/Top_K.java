@@ -40,7 +40,7 @@ public class Top_K {
         int len = 40;
 //        int[] A = {-1,10,3,2,1,2,};
         int[] A = new int[len];
-        int topK = 2;
+        int topK = 3;
         for (int i = 0; i != len; i++) {
             A[i] = ThreadLocalRandom.current().nextInt(-3021, 7700);
         }
