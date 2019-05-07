@@ -9,8 +9,8 @@ public class QuickSort {
 
     public static void swap(int[] arr, int i, int j) {
         int t = arr[i];
-        arr[i]=arr[j];
-        arr[j]=t;
+        arr[i] = arr[j];
+        arr[j] = t;
     }
 
     private static void quickSortC(int[] A, int s, int end) {

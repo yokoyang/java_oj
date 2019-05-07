@@ -1,8 +1,5 @@
 package shell;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.*;
@@ -13,7 +10,7 @@ public class Cat {
         ExecutorService executorService = Executors.newCachedThreadPool();
         String dirName = "E:\\project\\oj\\doc\\网易2019";
         String pattern = ".md";
-        String regex = "描述";
+        String regex = "表示";
         File path = new File(dirName);
         if (path.exists() && path.isDirectory()){
             for(File file : path.listFiles()){
@@ -26,7 +23,6 @@ public class Cat {
                         e.printStackTrace();
                     }
                 }
-
             }
         }
         executorService.shutdown();
@@ -42,7 +38,9 @@ public class Cat {
         @Override
         public List<String> call() throws IOException {
             List<String> callList = new ArrayList<>();
-            BufferedReader br = new BufferedReader(new FileReader(file));
+//            BufferedReader br = new BufferedReader(new FileReader(file));
+            FileInputStream fileInputStream = new FileInputStream(file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream));
             String str;
             while((str=br.readLine()) != null){
                 if (str.contains(regex)){
