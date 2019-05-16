@@ -164,13 +164,50 @@ public class MyDynamicProgammingPackageValue {
         return currMinDist;
     }
 
+    //    字符串来莱文斯坦距离
+    public int lwstDP(char[] a, int n, char[] b, int m) {
+        int[][] minDist = new int[n][m];
+        for (int j = 0; j < m; ++j) { // 初始化第 0 行:a[0..0] 与 b[0..j] 的编辑距离
+            if (a[0] == b[j]) minDist[0][j] = j;
+            else if (j != 0) minDist[0][j] = minDist[0][j - 1] + 1;
+            else minDist[0][j] = 1;
+        }
+        for (int i = 0; i < n; ++i) { // 初始化第 0 列:a[0..i] 与 b[0..0] 的编辑距离
+            if (a[i] == b[0]) minDist[i][0] = i;
+            else if (i != 0) minDist[i][0] = minDist[i - 1][0] + 1;
+            else minDist[i][0] = 1;
+        }
+        for (int i = 1; i < n; ++i) { // 按行填表
+            for (int j = 1; j < m; ++j) {
+                if (a[i] == b[j]) minDist[i][j] = min(
+                        minDist[i - 1][j] + 1, minDist[i][j - 1] + 1, minDist[i - 1][j - 1]);
+                else minDist[i][j] = min(
+                        minDist[i - 1][j] + 1, minDist[i][j - 1] + 1, minDist[i - 1][j - 1] + 1);
+            }
+        }
+        return minDist[n - 1][m - 1];
+    }
+
+
+    private int min(int x, int y, int z) {
+        int minv = Integer.MAX_VALUE;
+        if (x < minv) minv = x;
+        if (y < minv) minv = y;
+        if (z < minv) minv = z;
+        return minv;
+    }
+
+
     public static void main(String[] args) {
         Solution myDynamicProgammingPackageValue = new Solution();
 //        int[] coins = new int[]{186, 419, 83, 408};
         int[] coins = new int[]{1, 5, 5, 11};
-        System.out.println(myDynamicProgammingPackageValue.canPartition(coins));
+//        System.out.println(myDynamicProgammingPackageValue.canPartition(coins));
 //        int minDist = myDynamicProgammingPackageValue.coinChange(coins, 6249);
-//        System.out.println(minDist);
+        String str1 = "asbsda";
+        String str2 = "as923asasbsda";
+        int minDist = myDynamicProgammingPackageValue.lcs(str1.toCharArray(), str1.toCharArray().length, str2.toCharArray(), str2.toCharArray().length);
+        System.out.println(minDist);
     }
 
     static class Solution {
@@ -253,6 +290,42 @@ public class MyDynamicProgammingPackageValue {
             }
 
             return dp[amount] != Integer.MAX_VALUE ? dp[amount] : -1;
+        }
+
+        public int lcs(char[] a, int n, char[] b, int m) {
+            int[][] maxLcs = new int[n][m];
+            for (int i = 0; i < n; i++) {
+                if (a[i] == b[0]) {
+                    maxLcs[i][0] = 1;
+                } else if (i != 0) {
+                    maxLcs[i][0] = maxLcs[i - 1][0];
+                } else {
+                    maxLcs[i][0] = 0;
+                }
+            }
+            for (int i = 0; i < m; i++) {
+                if (b[i] == a[0]) {
+                    maxLcs[0][i] = 1;
+                } else if (i != 0) {
+                    maxLcs[0][i] = maxLcs[0][i - 1];
+                } else {
+                    maxLcs[0][i] = 0;
+                }
+            }
+            for (int i = 1; i < n; i++) {
+                for (int j = 1; j < m; j++) {
+                    if (a[i] == b[j]) {
+                        maxLcs[i][j] = multiMax(maxLcs[i - 1][j - 1] + 1, maxLcs[i - 1][j], maxLcs[i][j - 1]);
+                    } else {
+                        maxLcs[i][j] = multiMax(maxLcs[i - 1][j - 1], maxLcs[i - 1][j], maxLcs[i][j - 1]);
+                    }
+                }
+            }
+            return maxLcs[n - 1][m - 1];
+        }
+
+        private int multiMax(int a1, int a2, int a3) {
+            return Math.max(Math.max(a1, a2), a3);
         }
     }
 
