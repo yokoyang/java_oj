@@ -11,6 +11,59 @@ public class Solution {
         }
     }
 
+    public int longestValidParentheses(String s) {
+        int maxans = 0;
+        LinkedList<Integer> stack = new LinkedList<>();
+        stack.push(-1);
+        for (int i = 0; i < s.length(); i++) {
+            if ('(' == s.charAt(i)) {
+                stack.push(i);
+            } else {
+                stack.pop();
+                if (stack.isEmpty()) {
+                    stack.push(i);
+                } else {
+                    maxans = Math.max(maxans, i - stack.peek());
+                }
+            }
+
+        }
+        return maxans;
+    }
+
+    public int evalRPN(String[] tokens) {
+        HashSet<String> operations = new HashSet<>();
+        operations.add("*");
+        operations.add("/");
+        operations.add("+");
+        operations.add("-");
+        LinkedList<Integer> stack = new LinkedList<>();
+        for (int i = 0; i < tokens.length; i++) {
+            String now = tokens[i];
+            if (operations.contains(now)) {
+                //operation
+                Integer f2 = stack.pollLast();
+                Integer f1 = stack.pollLast();
+                Integer temp;
+                if (now.equals("+")) {
+                    temp = f1 + f2;
+                } else if (now.equals("-")) {
+                    temp = f1 - f2;
+                } else if (now.equals("*")) {
+                    temp = f1 * f2;
+                } else {
+                    temp = f1 / f2;
+                }
+                stack.offerLast(temp);
+            } else {
+                stack.offerLast(Integer.valueOf(now));
+            }
+        }
+        int result = stack.poll();
+//        System.out.println(result);
+        return result;
+    }
+
     private static int solve(Scanner scanner) {
         int N = scanner.nextInt();
         int Q = scanner.nextInt();
