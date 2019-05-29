@@ -1,5 +1,6 @@
 package Algorithm.shortestPath;
 
+import java.lang.reflect.AccessibleObject;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
@@ -25,7 +26,6 @@ class Solution {
         int sid;
         int tid;
         int w;
-
         public Edge(int sid, int tid, int w) {
             this.sid = sid;
             this.tid = tid;
@@ -36,7 +36,6 @@ class Solution {
     class Vertex implements Comparable<Vertex> {
         int id;
         int dist;
-
         public Vertex(int id, int dist) {
             this.id = id;
             this.dist = dist;
