@@ -1,6 +1,6 @@
 package Algorithm.heap;
 
-import static Algorithm.QuickSort.swap;
+import static Algorithm.sort.QuickSort.swap;
 
 public class MyHeap {
     private int[] a;

@@ -112,7 +112,29 @@ public class BinarySearch {
         }
         return -1;
     }
-
+    public boolean isPerfectSquare(int num) {
+        if(num == 1){
+            return true;
+        }
+        long low = 1;
+        long high = num;
+        long mid = (low+high)/2;
+        while(true){
+            if(mid*mid>num){
+                high = mid-1;
+            }
+            else if(mid*mid<num){
+                if((mid+1)*(mid+1)>num){
+                    return false;
+                }
+                low= mid+1;
+            }
+            else{
+                return true;
+            }
+            mid = (low+high)/2;
+        }
+    }
     private static int bsearchFirstBig(int[] a, int n, int value) {
         int low = 0;
         int high = n - 1;
@@ -131,9 +153,38 @@ public class BinarySearch {
         }
         return -1;
     }
-
-
+    public int mySqrt(int x) {
+        if(x==0){
+            return 0;
+        }
+        if(x==1){
+            return 1;
+        }
+        int low =0;
+        int high = x;
+        int mid = low+(high-low)/2;
+        while(low<=high){
+            int t = mid *mid;
+            if(t==x){
+                return mid;
+            }
+            if(t>x){
+                high = mid -1;
+            }
+            else if(t<x){
+                if((mid + 1) * (mid + 1) > x){
+                    return mid;
+                }
+                low = mid+1;
+            }
+            mid = low+(high-low)/2;
+        }
+        return mid;
+    }
     public static void main(String[] args) {
-        System.out.println(sqrtByInc(8, 0.001));
+        BinarySearch binarySearch = new BinarySearch();
+//        binarySearch.mySqrt(9);
+        System.out.println(binarySearch.isPerfectSquare(100));
+//        System.out.println(sqrtByInc(2147395599, 0.1));
     }
 }
