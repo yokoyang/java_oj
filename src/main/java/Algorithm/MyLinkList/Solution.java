@@ -15,6 +15,7 @@ class ListNode {
 }
 
 class Solution {
+
     public ListNode mergeKLists2(ListNode[] lists) {
         ListNode dummy = new ListNode(0), cur = dummy;
         if (lists == null || lists.length < 1) {
@@ -36,6 +37,7 @@ class Solution {
         }
         return dummy.next;
     }
+
     public ListNode mergeKLists(ListNode[] lists) {
         ListNode head = new ListNode(0);
         ListNode pre = head;
@@ -73,6 +75,23 @@ class Solution {
             break;
         }
         return head.next;
+    }
+
+    private ListNode reverseLinkedList(ListNode node) {
+        if (node == null) {
+            return node;
+        }
+        ListNode pre = node;
+        ListNode now = node.next;
+        ListNode tmp;
+        while (now != null) {
+            tmp = now.next;
+            now.next = pre;
+            pre = now;
+            now = tmp;
+        }
+        node.next = null;
+        return pre;
     }
 
     public static void main(String[] args) {

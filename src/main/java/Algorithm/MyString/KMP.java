@@ -1,4 +1,4 @@
-package Algorithm.heap;
+package Algorithm.MyString;
 
 public class KMP {
     private static int KmpSearch(char[] s, char[] p) {

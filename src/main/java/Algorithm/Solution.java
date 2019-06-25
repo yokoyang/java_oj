@@ -4,11 +4,15 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int caseNum = scanner.nextInt();
-        for (int i = 1; i <= caseNum; i++) {
-            System.out.println(String.format("Case #%d: %d", i, solve(scanner)));
-        }
+        Solution s = new Solution();
+        int[][] t = new int[][]{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};
+        s.minPathSum(t);
+//        TreeNode root = new TreeNode(10);
+//        root.left = new TreeNode(5);
+//        root.right = new TreeNode(15);
+//        root.right.left = new TreeNode(6);
+//        root.right.right = new TreeNode(20);
+//        System.out.println(s.isValidBST(root));
     }
 
     public int longestValidParentheses(String s) {
@@ -29,6 +33,10 @@ public class Solution {
 
         }
         return maxans;
+    }
+
+    public String reverseString(String s) {
+        return new StringBuilder(s).reverse().toString();
     }
 
     public int evalRPN(String[] tokens) {
@@ -107,5 +115,53 @@ public class Solution {
 
         }
         return sum;
+    }
+
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] memo = new int[m][n];
+        memo[0][0] = grid[0][0];
+        for (int i = 1; i < m; i++) {
+            memo[i][0] = memo[i - 1][0] + grid[i][0];
+        }
+        for (int j = 1; j < n; j++) {
+            memo[0][j] = memo[0][j - 1] + grid[0][j];
+        }
+        if (m * n < 4) {
+            return grid[0][0] * grid[m][n];
+        }
+        int min = Math.min(m, n);
+        for (int k = 1; k < min; k++) {
+            for (int col = k; col < n; col++) {
+                memo[k][col] = Math.min(memo[k][col - 1], memo[k - 1][col]) + grid[k][col];
+            }
+            for (int row = k; row < m; row++) {
+                memo[row][k] = Math.min(memo[row][k - 1], memo[row - 1][k]) + grid[row][k];
+            }
+        }
+        return memo[m - 1][n - 1];
+    }
+
+    public static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    public boolean isValidBST(TreeNode root, long minVal, long maxVal) {
+        if (root == null) return true;
+        if (root.val >= maxVal || root.val <= minVal) {
+            return false;
+        }
+        return isValidBST(root.left, minVal, root.val) && isValidBST(root.right, root.val, maxVal);
     }
 }

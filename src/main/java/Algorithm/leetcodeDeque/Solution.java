@@ -39,7 +39,7 @@ public class Solution {
             dq.offerLast(new int[]{i, nums[i]});
 
             // Kick out elements that are not no longer in the window
-            if (!dq.isEmpty() && dq.getFirst()[0] <= i - k){
+            if (!dq.isEmpty() && dq.getFirst()[0] <= i - k) {
                 dq.removeFirst();
             }
 
@@ -53,7 +53,7 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] result = s.maxSlidingWindow2(new int[]{1, 3, 4,2,-3, -1, 5, 3, 6, 7}, 3);
+        int[] result = s.maxSlidingWindow2(new int[]{1, 3, 4, 2, -3, -1, 5, 3, 6, 7}, 3);
         for (int i = 0; i < result.length; i++) {
             System.out.println(
                     result[i]

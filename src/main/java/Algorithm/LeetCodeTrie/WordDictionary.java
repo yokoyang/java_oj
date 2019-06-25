@@ -11,7 +11,6 @@ class WordDictionary {
      */
     public WordDictionary() {
         root = new TrieNode('/');
-
     }
 
     class TrieNode {

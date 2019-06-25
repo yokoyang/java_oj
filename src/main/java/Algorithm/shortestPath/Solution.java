@@ -6,10 +6,10 @@ import java.util.PriorityQueue;
 
 class Solution {
     class Graph {
-        public int v;
-        public LinkedList<Edge> ajd[];
+        int v;
+        LinkedList<Edge> ajd[];
 
-        public Graph(int v) {
+        Graph(int v) {
             this.v = v;
             this.ajd = new LinkedList[v];
             for (int i = 0; i < v; i++) {
@@ -26,7 +26,7 @@ class Solution {
         int sid;
         int tid;
         int w;
-        public Edge(int sid, int tid, int w) {
+        Edge(int sid, int tid, int w) {
             this.sid = sid;
             this.tid = tid;
             this.w = w;
