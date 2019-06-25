@@ -79,8 +79,7 @@ public class BinarySearch {
                 } else {
                     start = mid + 1;
                 }
-            }
-            else {
+            } else {
                 if (target > nums[mid] && target <= nums[end]) {
                     start = mid + 1;
                 } else {
@@ -112,29 +111,29 @@ public class BinarySearch {
         }
         return -1;
     }
+
     public boolean isPerfectSquare(int num) {
-        if(num == 1){
+        if (num == 1) {
             return true;
         }
         long low = 1;
         long high = num;
-        long mid = (low+high)/2;
-        while(true){
-            if(mid*mid>num){
-                high = mid-1;
-            }
-            else if(mid*mid<num){
-                if((mid+1)*(mid+1)>num){
+        long mid = (low + high) / 2;
+        while (true) {
+            if (mid * mid > num) {
+                high = mid - 1;
+            } else if (mid * mid < num) {
+                if ((mid + 1) * (mid + 1) > num) {
                     return false;
                 }
-                low= mid+1;
-            }
-            else{
+                low = mid + 1;
+            } else {
                 return true;
             }
-            mid = (low+high)/2;
+            mid = (low + high) / 2;
         }
     }
+
     private static int bsearchFirstBig(int[] a, int n, int value) {
         int low = 0;
         int high = n - 1;
@@ -153,38 +152,57 @@ public class BinarySearch {
         }
         return -1;
     }
+
     public int mySqrt(int x) {
-        if(x==0){
+        if (x == 0) {
             return 0;
         }
-        if(x==1){
+        if (x == 1) {
             return 1;
         }
-        int low =0;
+        int low = 0;
         int high = x;
-        int mid = low+(high-low)/2;
-        while(low<=high){
-            int t = mid *mid;
-            if(t==x){
+        int mid = low + (high - low) / 2;
+        while (low <= high) {
+            int t = mid * mid;
+            if (t == x) {
                 return mid;
             }
-            if(t>x){
-                high = mid -1;
-            }
-            else if(t<x){
-                if((mid + 1) * (mid + 1) > x){
+            if (t > x) {
+                high = mid - 1;
+            } else if (t < x) {
+                if ((mid + 1) * (mid + 1) > x) {
                     return mid;
                 }
-                low = mid+1;
+                low = mid + 1;
             }
-            mid = low+(high-low)/2;
+            mid = low + (high - low) / 2;
         }
         return mid;
     }
+
+    //    已知 sqrt (2)约等于 1.414，要求不用数学库，求 sqrt (2)精确到小数点后 10 位。
+    public static double mySqrt3() {
+        double precesion = 0.0000001;
+        double l = 1.41;
+        double r = 1.42;
+        double mid = (l + r) / 2;
+        while (r - l > precesion) {
+            mid = (l + r) / 2;
+            if (mid * mid < 2) {
+                l = mid;
+            } else {
+                r = mid;
+            }
+        }
+        return mid;
+    }
+
     public static void main(String[] args) {
         BinarySearch binarySearch = new BinarySearch();
 //        binarySearch.mySqrt(9);
-        System.out.println(binarySearch.isPerfectSquare(100));
-//        System.out.println(sqrtByInc(2147395599, 0.1));
+//        System.out.println(binarySearch.isPerfectSquare(100));
+//        System.out.println(sqrtByInc(2147395599, 0.0000000001));
+        System.out.println(mySqrt3());
     }
 }
