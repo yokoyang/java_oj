@@ -1,15 +1,15 @@
 package Algorithm.search;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class BreadthFirstSearch {
     public static void main(String[] args) {
         BreadthFirstSearch bfs = new BreadthFirstSearch();
         String beginWord = "hit";
         String endWord = "cog";
-        List<String> wordList = Arrays.asList("hot", "dot", "dog", "lot", "log");
-        int t = bfs.ladderLength(beginWord, endWord, wordList);
-        System.out.println(t);
+        List<String> wordList = Arrays.asList("hot", "dot", "dog", "lot", "log", "cog");
+        bfs.findLadders(beginWord, endWord, wordList);
     }
 
     private boolean similarWord(String s1, String s2) {
@@ -84,7 +84,63 @@ public class BreadthFirstSearch {
             return 0;
         }
         return result;
-
     }
 
+    private HashMap<String, ArrayList<String>> record = new HashMap<>();
+    List<List<String>> result = new ArrayList<>();
+
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        Set<String> wordSet = new HashSet<>(wordList);
+        if (!wordSet.contains(endWord)) {
+            return result;
+        }
+        Set<String> reached = new HashSet<>();
+        reached.add(beginWord);
+        while (!reached.isEmpty()) {
+            Set<String> toAdd = new HashSet<>();
+            Set<String> toDel = new HashSet<>();
+            for (String each : reached) {
+                for (int i = 0; i < each.length(); i++) {
+                    char[] chars = each.toCharArray();
+                    for (char ch = 'a'; ch <= 'z'; ch++) {
+                        chars[i] = ch;
+                        String word = new String(chars);
+//                        如果剩下的里面包含节点
+                        if (wordSet.contains(word)) {
+//                          当前不是最后一个
+                            toAdd.add(word);
+                            ArrayList<String> tmp = record.getOrDefault(word, new ArrayList<>());
+                            tmp.add(each);
+                            record.putIfAbsent(word, tmp);
+                            toDel.add(word);
+                        }
+                    }
+                }
+            }
+            wordSet.removeAll(toDel);
+            reached = toAdd;
+        }
+        if (record.getOrDefault(endWord, new ArrayList<>()).isEmpty()) {
+            return result;
+        }
+        LinkedList<String> l = new LinkedList<>();
+        backTrace(endWord, beginWord, l);
+        return result;
+    }
+
+    private void backTrace(String word, String start, LinkedList<String> list) {
+        if (word.equals(start)) {
+            list.add(0, start);
+            result.add(new ArrayList<String>(list));
+            list.remove(0);
+            return;
+        }
+        list.add(0, word);
+        if (record.get(word) != null) {
+            for (String s : record.get(word)) {
+                backTrace(s, start, list);
+            }
+        }
+        list.remove(0);
+    }
 }

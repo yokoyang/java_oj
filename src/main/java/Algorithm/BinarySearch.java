@@ -198,6 +198,36 @@ public class BinarySearch {
         return mid;
     }
 
+    public int findPeakElement(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+        int mid = 0;
+        while (left < right) {
+            mid = (left + right) >> 1;
+            if (nums[mid] < nums[mid + 1]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+
+    public int peakIndexInMountainArray(int[] A) {
+        int left = 0;
+        int right = A.length - 1;
+        int mid;
+        while (left < right) {
+            mid = (left + right) >> 1;
+            if (A[mid] > A[mid + 1]) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
     public static void main(String[] args) {
         BinarySearch binarySearch = new BinarySearch();
 //        binarySearch.mySqrt(9);

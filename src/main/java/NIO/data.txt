@@ -193,7 +193,7 @@ void function(){
 　　典型的阻塞IO模型的例子为：
 
 1
-data = socket.read();
+val = socket.read();
  　　如果数据没有就绪，就会一直阻塞在read方法。
 
 2.非阻塞IO模型
@@ -212,8 +212,8 @@ data = socket.read();
 6
 7
 while(true){
-    data = socket.read();
-    if(data!= error){
+    val = socket.read();
+    if(val!= error){
         处理数据
         break;
     }
