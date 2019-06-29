@@ -83,6 +83,7 @@ public class ChannelTest {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         String string = "java nio\n";
         buffer.put(string.getBytes());
+//        也就是说调用flip之后，读写指针指到缓存头部，并且设置了最多只能读出之前写入的数据长度(而不是整个缓存的容量大小)。
         buffer.flip();     //此处必须要调用buffer的flip方法
         channel.write(buffer);
         channel.close();

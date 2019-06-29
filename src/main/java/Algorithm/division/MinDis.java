@@ -18,13 +18,13 @@ public class MinDis {
         points[6] = new Point(6, 2);
 
         // 预处理，基于x轴坐标排序，便于分治法实施
-        Arrays.sort(points, (p1, p2) -> (p1.x > p2.x) ? 1 : (p1.x == p2.x) ? 0 : -1);
+        Arrays.sort(points, (p1, p2) -> Integer.compare(p1.x, p2.x));
         // 测试
         System.out.println(divide(0, points.length - 1, points));
     }
 
     public static double divide(int left, int right, Point[] points) {
-        double curMinDis = 1e20;
+        double curMinDis = Double.MAX_VALUE;
         if (left >= right) {
             return curMinDis;
         }
@@ -65,8 +65,8 @@ public class MinDis {
  * 定义点
  */
 class Point {
-    public int x;
-    public int y;
+    int x;
+    int y;
 
     Point(int x, int y) {
         this.x = x;
