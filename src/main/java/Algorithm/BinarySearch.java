@@ -9,7 +9,7 @@ public class BinarySearch {
     }
 
     private int bsearchInternally(int[] a, int low, int high, int value) {
-        if (low > high) {
+            if (low > high) {
             return -1;
         }
         int mid = low + ((high - low) >> 1);
