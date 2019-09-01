@@ -51,6 +51,27 @@ public class Solution {
         return ret;
     }
 
+    public int[] maxSlidingWindow3(int[] nums, int k) {
+        if (nums.length == 0) {
+            return new int[]{};
+        }
+        Deque<int[]> dq = new ArrayDeque<>();
+        int[] ret = new int[nums.length - k + 1];
+        for (int i = 0; i < nums.length; i++) {
+            while (!dq.isEmpty() && dq.peekLast()[1] <= nums[i]) {
+                dq.pollLast();
+            }
+            dq.offerLast(new int[]{i, nums[i]});
+            if (!dq.isEmpty() && dq.peekFirst()[0] <= i - k) {
+                dq.pollFirst();
+            }
+            if (i >= k - 1) {
+                ret[i - k + 1] = dq.peekFirst()[1];
+            }
+        }
+        return ret;
+    }
+
     public static void main(String[] args) {
         Solution s = new Solution();
         int[] result = s.maxSlidingWindow2(new int[]{1, 3, 4, 2, -3, -1, 5, 3, 6, 7}, 3);
