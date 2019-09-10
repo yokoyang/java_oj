@@ -98,6 +98,35 @@ public class MyGraph {
         }
     }
 
+    public void bfs2(int s, int t) {
+        if (s == t) {
+            return;
+        }
+        boolean visit[] = new boolean[v];
+        Queue<Integer> queue = new LinkedList<>();
+
+        queue.offer(s);
+        visit[s] = true;
+        int[] prev = new int[v];
+        for (int i = 0; i < v; i++) {
+            prev[i] = -1;
+        }
+        while (!queue.isEmpty()) {
+            int queuePoint = queue.poll();
+            for (int i = 0; i < topLinked[queuePoint].size(); i++) {
+                int currentPoint = topLinked[queuePoint].get(i);
+                if (!visit[currentPoint]) {
+                    visit[currentPoint] = true;
+                    prev[currentPoint] = queuePoint;
+                    if (currentPoint == t) {
+                        print(prev, s, t);
+                    }
+                    queue.offer(currentPoint);
+                }
+            }
+        }
+    }
+
     /**
      * 进行顶点的打印操作
      *
@@ -139,7 +168,6 @@ public class MyGraph {
             print(prev, s, t);
         }
     }
-
 
 
     private boolean recurDfs(int s, int t, boolean[] visited, int[] prev) {

@@ -115,12 +115,52 @@ public class MatrixMax {
         Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
             if (map.containsKey(target - nums[i])) {
-                result[1] = i + 1;
+                result[1] = i;
                 result[0] = map.get(target - nums[i]);
                 return result;
             }
-            map.put(nums[i], i + 1);
+            map.put(nums[i], i);
         }
         return result;
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        Set<List<Integer>> res = new HashSet<>();
+        if (nums.length < 3) return new ArrayList<>(res);
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 2; i++) {
+            int j = i + 1;
+            int k = nums.length - 1;
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+                if (sum == 0) res.add(Arrays.asList(nums[i], nums[j++], nums[k--]));
+                else if (sum > 0) k--;
+                else j++;
+            }
+        }
+        return new ArrayList<>(res);
+
+    }
+
+    public List<List<Integer>> threeSum2(int[] nums) {
+        Set<List<Integer>> res = new HashSet<>();
+        if (nums.length < 3) {
+            return new ArrayList<>(res);
+        }
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i >= 1 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            HashMap<Integer, Integer> d = new HashMap<>();
+            for (int j = i + 1; j < nums.length; j++) {
+                if (!d.containsKey(nums[j])) {
+                    d.put((-nums[j] - nums[i]), 1);
+                } else {
+                    res.add(Arrays.asList(nums[i], nums[j], -nums[i] - nums[j]));
+                }
+            }
+        }
+        return new ArrayList<>(res);
     }
 }

@@ -2,6 +2,7 @@ package Algorithm;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 public class BinarySearch {
     public int binarySearch(int[] a, int n, int val) {
@@ -9,7 +10,7 @@ public class BinarySearch {
     }
 
     private int bsearchInternally(int[] a, int low, int high, int value) {
-            if (low > high) {
+        if (low > high) {
             return -1;
         }
         int mid = low + ((high - low) >> 1);
@@ -20,6 +21,25 @@ public class BinarySearch {
         } else {
             return bsearchInternally(a, low, mid - 1, value);
         }
+    }
+
+    public static String sqrt(int n, double precision) {
+        double start = 0;
+        double end = (double) n;
+        double last = end;
+        double mid = (start + end) / 2.0;
+        while (Math.abs(last - mid) > precision) {
+            if (mid * mid > n) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+            last = mid;
+            mid = (start + end) / 2.0;
+        }
+        System.out.println(mid);
+        DecimalFormat df = new DecimalFormat("0.000");
+        return df.format(mid);
     }
 
     private static double sqrtByInc(int n, double precision) {
@@ -232,7 +252,7 @@ public class BinarySearch {
         BinarySearch binarySearch = new BinarySearch();
 //        binarySearch.mySqrt(9);
 //        System.out.println(binarySearch.isPerfectSquare(100));
-//        System.out.println(sqrtByInc(2147395599, 0.0000000001));
-        System.out.println(mySqrt3());
+        System.out.println(sqrt(2147395599, 0.000001));
+        System.out.println(Math.sqrt(2147395599));
     }
 }

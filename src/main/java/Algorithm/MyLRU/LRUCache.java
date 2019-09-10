@@ -4,67 +4,69 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LRUCache {
-    private class Node {
+    class Node {
         Node pre;
         Node next;
-        int key;
-        int value;
+        Integer key;
+        Integer value;
 
-        private Node(int k, int v) {
-            key = k;
-            value = v;
+        public Node(Integer key, Integer value) {
+            this.key = key;
+            this.value = value;
         }
     }
 
+    int cap;
     Map<Integer, Node> map = new HashMap<>();
     Node head;
     Node tail;
-    int cap;
 
-    public LRUCache(int c) {
-        cap = c;
-        head = new Node(0, 0);
-        tail = new Node(0, 0);
+    public LRUCache(int capacity) {
+        this.cap = capacity;
+        head = new Node(null, null);
+        tail = new Node(null, null);
         head.next = tail;
         tail.pre = head;
     }
 
-    public int LRUGet(int key) {
-        Node node = map.get(key);
-        if (node != null) {
-            node.pre.next = node.next;
-            node.next.pre = node.pre;
-            appendTail(node);
-            return node.value;
+    public Node getKey(int key) {
+        Node n = map.get(key);
+        if (n != null) {
+            n.pre.next = n.next;
+            n.next.pre = n.pre;
+            appendTail(n);
         }
-        return -1;
+        return n;
     }
 
-    public int LRUSet(int key, int value) {
-        Node node = map.get(key);
-        if (node != null) {
-            node.value = value;
-            map.put(key, node);
-            node.pre.next = node.next;
-            node.next.pre = node.pre;
-            appendTail(node);
-            return node.value;
-        } else if (map.size() >= cap) {
+    public void setKV(int key, int value) {
+        Node n = map.get(key);
+        if (n != null) {
+            n.value = value;
+            map.put(key, n);
+            n.pre.next = n.next;
+            n.next.pre = n.pre;
+            appendTail(n);
+            return;
+        }
+        if (map.size() >= cap) {
+            // 满了
             Node tmp = head.next;
             head.next = head.next.next;
             head.next.pre = head;
             map.remove(tmp.key);
         }
-        node = new Node(key,value);
-        appendTail(node);
-        map.put(key,node);
-        return node.value;
+        n = new Node(key, value);
+        appendTail(n);
+        map.put(key, n);
+        return;
     }
 
-    private void appendTail(Node n) {
+    public void appendTail(Node n) {
+        tail.pre.next = n;
         n.next = tail;
         n.pre = tail.pre;
-        tail.pre.next = n;
         tail.pre = n;
     }
+
 }
