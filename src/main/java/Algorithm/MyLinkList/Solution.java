@@ -1,9 +1,6 @@
 package Algorithm.MyLinkList;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 class ListNode {
     int val;
@@ -108,5 +105,43 @@ class Solution {
         lists[2] = new ListNode(2);
         lists[2].next = new ListNode(6);
         new Solution().mergeKLists(lists);
+    }
+
+
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode fast = head;
+        ListNode slow = head;
+        ListNode pre = null;
+        for (int i = 0; i < n; i++) {
+            fast = fast.next;
+        }
+        while (fast != null) {
+            fast = fast.next;
+            pre = slow;
+            slow = slow.next;
+        }
+        if (pre != null) {
+            pre.next = slow.next;
+        } else {
+            return slow.next;
+        }
+        return head;
+    }
+
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> heap = new PriorityQueue<>(k);
+        for (int i = 0; i < nums.length; i++) {
+            if (heap.size() < k) {
+                heap.offer(nums[i]);
+            } else {
+                int top = heap.peek();
+                if (top < nums[i]) {
+                    heap.poll();
+                    heap.offer(nums[i]);
+                }
+            }
+
+        }
+        return heap.peek();
     }
 }
