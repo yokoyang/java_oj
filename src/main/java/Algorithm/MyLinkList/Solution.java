@@ -132,16 +132,18 @@ class Solution {
         if (g.length == 0 || s.length == 0) {
             return 0;
         }
+
+//        Arrays.sort(g, Collections.reverseOrder());
         Arrays.sort(g);
         Arrays.sort(s);
         int count = 0;
         int pos = 0;
 
-        for (int i = 0; i < s.length; i++) {
+        for (int value : s) {
             if (pos >= g.length) {
                 break;
             }
-            if (g[pos] <= s[i]) {
+            if (g[pos] <= value) {
                 count++;
                 pos++;
             }
@@ -160,7 +162,7 @@ class Solution {
     }
 
     //    merge sort
-    public ListNode sortList(ListNode head) {
+    private ListNode sortList(ListNode head) {
         if (head == null || head.next == null) {
             return head;
         }
@@ -175,8 +177,16 @@ class Solution {
         return mergeTwoLists(sortList(head), sortList(mid));
     }
 
+    private void merge(int[] nums1, int m, int[] nums2, int n) {
+        int i = m - 1;
+        int j = n - 1;
+        int tail = m + n - 1;
+        while (j >= 0) {
+            nums1[tail--] = (i >= 0 && nums1[i] > nums2[j]) ? nums1[i--] : nums2[j--];
+        }
+    }
 
-    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         if (l1 == null) {
             return l2;
         }
@@ -190,6 +200,23 @@ class Solution {
             l2.next = mergeTwoLists(l1, l2.next);
             return l2;
         }
+    }
+
+    private ListNode mergeTwoLists2(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val > l2.val) {
+                ListNode tmp = l1;
+                l1 = l2;
+                l2 = tmp;
+            }
+            tail.next = l1;
+            l1 = l1.next;
+            tail = tail.next;
+        }
+        tail.next = (l1 != null) ? l1 : l2;
+        return dummy.next;
     }
 
     public void reorderList(ListNode head) {

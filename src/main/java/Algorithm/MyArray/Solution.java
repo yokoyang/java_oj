@@ -6,11 +6,59 @@ import java.util.*;
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] t = new int[]{0,0,1,1,1,1,2,3,3};
+        s.sortedSquares(new int[]{-2, 0});
+        int[] t = new int[]{0, 0, 1, 1, 1, 1, 2, 3, 3};
         System.out.println(s.removeDuplicates(t));
         for (int i : t) {
             System.out.print(i);
         }
+    }
+
+    //    https://zhanghuimeng.github.io/post/leetcode-977-squares-of-a-sorted-array/
+    public int[] sortedSquares(int[] A) {
+        int size = A.length;
+        if (size == 0) {
+            return A;
+        }
+        if (size == 1) {
+            return new int[]{A[0] * A[0]};
+        }
+        int min = Integer.MAX_VALUE;
+        int minPos = -1;
+        for (int i = 0; i < size; i++) {
+            int t = Math.abs(A[i]);
+            if (t < min) {
+                min = t;
+                minPos = i;
+            }
+        }
+        int[] ans = new int[size];
+        int left = minPos;
+        int right = minPos + 1;
+        int now = 0;
+        int tl;
+        int tr;
+        while ((left >= 0) && (right < size)) {
+            tl = A[left] * A[left];
+            tr = A[right] * A[right];
+            if (tl < tr) {
+                ans[now] = tl;
+                left--;
+            } else {
+                ans[now] = tr;
+                right++;
+            }
+            now++;
+        }
+        while (right < size) {
+            ans[now++] = A[right] * A[right];
+            right++;
+        }
+        while (left >= 0) {
+            ans[now++] = A[left] * A[left];
+            left--;
+        }
+        return ans;
     }
 
     public int findShortestSubArray(int[] nums) {
