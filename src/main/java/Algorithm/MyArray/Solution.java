@@ -1,5 +1,6 @@
 package Algorithm.MyArray;
 
+import javax.print.DocFlavor;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -7,6 +8,10 @@ import java.util.stream.Collectors;
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
+        int[][] t1 = new int[][]{{2, 3}, {4, 5}, {6, 7}, {8, 9}, {1, 10}};
+
+        int[][] r = s.merge(t1);
+        System.out.println(r);
         s.sortedSquares(new int[]{-2, 0});
         int[] t = new int[]{0, 0, 1, 1, 1, 1, 2, 3, 3};
         System.out.println(s.removeDuplicates(t));
@@ -35,7 +40,6 @@ class Solution {
             if (stu.getHeight() > 160) { // 如果身高大于 160
                 List<Student> a = stuMap.getOrDefault(stu.getSex(), new ArrayList<>());
                 a.add(stu);
-
             }
         }
         Map<String, List<Student>> stuMap2 = studentsList.stream().filter((Student s) -> s.getHeight() > 160)
@@ -44,11 +48,64 @@ class Solution {
         List<String> names = Arrays.asList(" 张三 ", " 李四 ", " 王老五 ", " 李三 ", " 刘老四 ", " 王小二 ", " 张四 ", " 张五六七 ");
 
         String maxLenStartWithZ = names.stream()
+                .parallel()
                 .filter(name -> name.startsWith(" 张 "))
                 .mapToInt(String::length)
                 .max()
                 .toString();
 
+    }
+
+    //Input: [[1,3],[2,6],[8,10],[15,18]]
+    //Output: [[1,6],[8,10],[15,18]]
+    //Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+    public int[][] merge2(int[][] intervals) {
+        List<List<Integer>> res = new ArrayList<>();
+        int size = intervals.length;
+        if (size == 0) {
+            return new int[0][0];
+        }
+        Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
+        if (size == 1) {
+            return intervals;
+        }
+        res.add(Arrays.asList(intervals[0][0], intervals[0][1]));
+        for (int i = 1; i < size; i++) {
+            if (intervals[i][0] <= res.get(res.size() - 1).get(1)) {
+                List<Integer> last = res.get(res.size() - 1);
+                res.set(res.size() - 1, Arrays.asList(last.get(0), Math.max(res.get(res.size() - 1).get(1), intervals[i][1])));
+                continue;
+            }
+            res.add(Arrays.asList(intervals[i][0], intervals[i][1]));
+        }
+        int[][] arrayRes = new int[res.size()][2];
+        for (int i = 0; i < res.size(); i++) {
+            arrayRes[i][0] = res.get(i).get(0);
+            arrayRes[i][1] = res.get(i).get(1);
+        }
+        return arrayRes;
+    }
+
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length <= 1)
+            return intervals;
+
+        // Sort by ascending starting point
+        Arrays.sort(intervals, (i1, i2) -> Integer.compare(i1[0], i2[0]));
+
+        List<int[]> result = new ArrayList<>();
+        int[] newInterval = intervals[0];
+        result.add(newInterval);
+        for (int[] interval : intervals) {
+            if (interval[0] <= newInterval[1]) // Overlapping intervals, move the end if needed
+                newInterval[1] = Math.max(newInterval[1], interval[1]);
+            else {                             // Disjoint intervals, add the new interval to the list
+                newInterval = interval;
+                result.add(newInterval);
+            }
+        }
+
+        return result.toArray(new int[result.size()][]);
     }
 
     //    https://zhanghuimeng.github.io/post/leetcode-977-squares-of-a-sorted-array/

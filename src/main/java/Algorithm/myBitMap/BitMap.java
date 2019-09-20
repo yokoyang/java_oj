@@ -1,12 +1,13 @@
 package Algorithm.myBitMap;
-import java.util.BitSet;
-public class BitMap { // Java 中 char 类型占 16bit，也即是 2 个字节
+
+public class BitMap {
+    // Java 中 char 类型占 16bit，也即是 2 个字节
     private char[] bytes;
     private int nbits;
 
     public BitMap(int nbits) {
         this.nbits = nbits;
-        this.bytes = new char[nbits/16+1];
+        this.bytes = new char[nbits / 16 + 1];
     }
 
     public void set(int k) {
