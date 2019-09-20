@@ -2,6 +2,7 @@ package Algorithm.MyArray;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
 
 class Solution {
     public static void main(String[] args) {
@@ -12,6 +13,42 @@ class Solution {
         for (int i : t) {
             System.out.print(i);
         }
+    }
+
+    private class Student {
+        private String sex;
+        private int Height;
+
+        public int getHeight() {
+            return Height;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+    }
+
+    public static void remove(ArrayList<String> list2, List<Student> studentsList) {
+        list2.removeIf(str -> str.equals("b"));
+        Map<String, List<Student>> stuMap = new HashMap<String, List<Student>>();
+        for (Student stu : studentsList) {
+            if (stu.getHeight() > 160) { // 如果身高大于 160
+                List<Student> a = stuMap.getOrDefault(stu.getSex(), new ArrayList<>());
+                a.add(stu);
+
+            }
+        }
+        Map<String, List<Student>> stuMap2 = studentsList.stream().filter((Student s) -> s.getHeight() > 160)
+                .collect(Collectors.groupingBy(Student::getSex));
+
+        List<String> names = Arrays.asList(" 张三 ", " 李四 ", " 王老五 ", " 李三 ", " 刘老四 ", " 王小二 ", " 张四 ", " 张五六七 ");
+
+        String maxLenStartWithZ = names.stream()
+                .filter(name -> name.startsWith(" 张 "))
+                .mapToInt(String::length)
+                .max()
+                .toString();
+
     }
 
     //    https://zhanghuimeng.github.io/post/leetcode-977-squares-of-a-sorted-array/

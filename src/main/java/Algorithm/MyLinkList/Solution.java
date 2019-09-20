@@ -161,6 +161,100 @@ class Solution {
         return headNew;
     }
 
+    private long convertListNode2Num(ListNode n) {
+        long num = 0;
+        while (n != null) {
+            num *= 10;
+            num += n.val;
+            n = n.next;
+        }
+        return num;
+    }
+
+    private ListNode num2ListNode(long num) {
+
+        LinkedList<Long> integerList = new LinkedList<>();
+        if (num == 0) {
+            return new ListNode(0);
+        }
+        while (num != 0) {
+            integerList.offerFirst(num % 10);
+            num /= 10;
+        }
+        ListNode pre = new ListNode(-1);
+        ListNode dummy = pre;
+
+        while (integerList.size() > 0) {
+            long v = integerList.pollFirst();
+            ListNode now = new ListNode((int) v);
+            pre.next = now;
+            pre = now;
+        }
+        return dummy.next;
+    }
+
+    //    数字太大会超出
+    public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
+        long num1 = convertListNode2Num(l1);
+        num1 += convertListNode2Num(l2);
+        return num2ListNode(num1);
+    }
+
+    //
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 == null)
+            return null;
+        //push numbers to stack so we can start from the lower digit
+        Stack<ListNode> s1 = new Stack<>();
+        while (l1 != null) {
+            s1.push(l1);
+            l1 = l1.next;
+        }
+        Stack<ListNode> s2 = new Stack<>();
+        while (l2 != null) {
+            s2.push(l2);
+            l2 = l2.next;
+        }
+
+        int carry = 0;
+        ListNode resNode = null;
+        //start iterating on stacks until both are empty, keep the carry on part
+        while (!s1.isEmpty() || !s2.isEmpty()) {
+            int n1 = s1.isEmpty() ? 0 : s1.pop().val;
+            int n2 = s2.isEmpty() ? 0 : s2.pop().val;
+            int sum = n1 + n2 + carry;
+            //create current sum digit, add previous node as next
+            ListNode n = new ListNode(sum % 10);
+            n.next = resNode;
+            //make current node our result
+            resNode = n;
+            carry = sum / 10;
+        }
+        //take care of remainder
+        if (carry > 0) {
+            ListNode n = new ListNode(carry);
+            n.next = resNode;
+            resNode = n;
+        }
+        return resNode;
+    }
+
+    public ListNode swapPairs(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy;
+        ListNode now = head;
+        while (now != null && now.next != null) {
+            ListNode n = now.next;
+            now.next = n.next;
+            pre.next = n;
+            n.next = now;
+            pre = now;
+            now = now.next;
+        }
+        return dummy.next;
+    }
+
     //    merge sort
     private ListNode sortList(ListNode head) {
         if (head == null || head.next == null) {

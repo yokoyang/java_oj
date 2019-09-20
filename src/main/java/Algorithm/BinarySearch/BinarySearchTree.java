@@ -1,4 +1,4 @@
-package Algorithm;
+package Algorithm.BinarySearch;
 
 public class BinarySearchTree {
     private TreeNode tree;

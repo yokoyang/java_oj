@@ -18,7 +18,7 @@ public class MinDis {
         points[6] = new Point(6, 2);
 
         // 预处理，基于x轴坐标排序，便于分治法实施
-        Arrays.sort(points, (p1, p2) -> Integer.compare(p1.x, p2.x));
+        Arrays.sort(points, (p1, p2) -> (p1.x - p2.x));
         // 测试
         System.out.println(divide(0, points.length - 1, points));
     }
