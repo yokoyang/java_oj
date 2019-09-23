@@ -1,8 +1,7 @@
 package Algorithm.BinaryTree;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Solution {
     class TreeNode {
@@ -128,6 +127,7 @@ public class Solution {
         root.right = buildTreeTrace(preorder, preStart + rootPos - inStart + 1, rootPos + 1, inEnd);
         return root;
     }
+
 
 
     public static void main(String[] args) {
