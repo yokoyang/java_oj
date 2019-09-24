@@ -8,6 +8,7 @@ import java.util.List;
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
+        s.combinationSum3(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
         s.permuteUnique(new int[]{1, 1, 2});
         char[][] boards = new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
         String word = "ABCCED";
@@ -118,6 +119,41 @@ public class Solution {
             }
         }
     }
+    //40. Combination Sum II
+    //Input: candidates = [10,1,2,7,6,1,5], target = 8,
+    //A solution set is:
+    //[
+    //  [1, 7],
+    //  [1, 2, 5],
+    //  [2, 6],
+    //  [1, 1, 6]
+    //]
+
+    public List<List<Integer>> combinationSum3(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> res = new ArrayList<>();
+        if (target <= 0) {
+            return res;
+        }
+        traceSum3(res, new ArrayList<>(), 0, candidates, target);
+        return res;
+    }
+
+    private void traceSum3(List<List<Integer>> res, List<Integer> tmp, int start, int[] candidates, int remain) {
+        if (remain < 0) {
+            return;
+        } else if (remain == 0) {
+            res.add(new ArrayList<>(tmp));
+        }
+        for (int i = start; i < candidates.length; i++) {
+            if (i > start && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            tmp.add(candidates[i]);
+            traceSum3(res, tmp, i + 1, candidates, remain - candidates[i]);
+            tmp.remove(tmp.size() - 1);
+        }
+    }
 
     private boolean dfsFindBoard(char[][] board, char[] word, int i, int j, int nowSize, int m, int n) {
         if (nowSize == word.length) {
@@ -178,5 +214,65 @@ public class Solution {
                 used[i] = false;
             }
         }
+    }
+
+    class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
+    //114. Flatten Binary Tree to Linked List
+    //    1
+    //   / \
+    //  2   5
+    // / \   \
+    //3   4   6
+    //The flattened tree should look like:
+    //
+    //1
+    // \
+    //  2
+    //   \
+    //    3
+    //     \
+    //      4
+    //       \
+    //        5
+    //         \
+    //          6
+    public void flatten(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        traceFlatten(root);
+    }
+
+    private void traceFlatten(TreeNode now) {
+        if (now == null) {
+            return;
+        }
+        if (now.left == null) {
+            traceFlatten(now.right);
+        }
+        TreeNode leftRight = now.left;
+        if(leftRight==null){
+            return;
+        }
+
+        while (leftRight.right != null) {
+            leftRight = leftRight.right;
+        }
+
+
+        TreeNode tmp = now.right;
+        now.right = now.left;
+        now.left = null;
+        leftRight.right = tmp;
+        traceFlatten(now.right);
     }
 }
