@@ -1,5 +1,7 @@
 package Algorithm.greedy;
 
+import java.util.*;
+
 public class Solution {
     //Input: [2,3,1,1,4]
     //Output: true
@@ -25,5 +27,38 @@ public class Solution {
             }
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        boolean res = solution.carPooling(new int[][]{{3, 2, 8}, {4, 4, 6}, {10, 8, 9}}, 11);
+        System.out.println(res);
+    }
+
+    public boolean carPooling(int[][] trips, int capacity) {
+        Arrays.sort(trips, (t1, t2) -> (t1[1] - t2[1]));
+        int left_cap = capacity;
+        int now_pos = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((t1, t2) -> (t1[1] - t2[1]));
+        for (int i = 0; i < trips.length; i++) {
+
+            now_pos = trips[i][1];
+            while (pq.size() > 0) {
+                int[] near = pq.peek();
+                if (near[1] <= now_pos) {
+                    left_cap += near[0];
+                    pq.poll();
+                } else {
+                    break;
+                }
+            }
+
+            left_cap -= trips[i][0];
+            if (left_cap < 0) {
+                return false;
+            }
+            pq.offer(new int[]{trips[i][0], trips[i][2]});
+        }
+        return true;
     }
 }

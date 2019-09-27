@@ -1,4 +1,4 @@
-package Algorithm.LeetCodeTrie;
+package Algorithm.TrieTree;
 
 class L208Trie {
     private TrieNode root;

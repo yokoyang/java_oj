@@ -1,6 +1,4 @@
-package Algorithm.LeetCodeTrie;
-
-import java.util.List;
+package Algorithm.TrieTree;
 
 class WordDictionary {
     private static final char STARTCHAR = 'a';

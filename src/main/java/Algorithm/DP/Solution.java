@@ -159,8 +159,72 @@ public class Solution {
         return dp[s.length()];
     }
 
+    public boolean wordBreak2(String s, List<String> wordDict) {
+        return traceWordBreak(s, new HashSet<>(wordDict), 0, new Boolean[s.length()]);
+    }
+
+//    private int APEXPackage(int C, int[] wList, int[][] abc) {
+//        int[] dp = new int[C];
+//
+//    }
+
+    public int backPackII(int m, int[] A, int[] V) {
+        return backPack(m, A, V);
+    }
+
+    private int backPack2(int maxVolume, int[] volumes, int[] values) {
+        int objectAmount = volumes.length;
+        if (objectAmount == 0) return 0;
+
+        int[] maxValuePerVolume = new int[maxVolume + 1];
+
+        for (int cAmount = 0; cAmount < objectAmount; cAmount++) {
+            for (int cVolume = 1; cVolume <= maxVolume; cVolume++) {
+                if (cVolume >= volumes[cAmount]) {
+                    maxValuePerVolume[cVolume] = Math.max(maxValuePerVolume[cVolume], maxValuePerVolume[cVolume - volumes[cAmount]] + values[cAmount]);
+                }
+            }
+        }
+
+        return maxValuePerVolume[maxVolume];
+    }
+
+    private int backPack(int maxVolume, int[] volumes, int[] values) {
+        int[][] dp = new int[volumes.length + 1][maxVolume + 1];
+        for (int i = 1; i <= volumes.length; i++) {
+            for (int j = 1; j <= maxVolume; j++) {
+                if (j < volumes[i - 1]) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - volumes[i - 1]] + values[i - 1]);
+                }
+            }
+        }
+        return dp[volumes.length][maxVolume];
+    }
+
+    private boolean traceWordBreak(String s, HashSet<String> wordDict, int start, Boolean[] memo) {
+        if (start == s.length()) {
+            return true;
+        }
+        if (memo[start] != null) {
+            return memo[start];
+        }
+        for (int i = start + 1; i <= s.length(); i++) {
+            if (wordDict.contains(s.substring(start, i)) && traceWordBreak(s, wordDict, i, memo)) {
+                memo[start] = true;
+                return true;
+            }
+        }
+        memo[start] = false;
+        return false;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
+        solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
+        Boolean[] booleans = new Boolean[3];
+
         solution.permute(new int[]{1, 2, 3});
         int[] a = new int[]{1, 2, 3, 0, 2};
 
