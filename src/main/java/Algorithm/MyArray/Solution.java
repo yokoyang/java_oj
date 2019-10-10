@@ -1,13 +1,17 @@
 package Algorithm.MyArray;
 
-import javax.print.DocFlavor;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
+        int[] t0 = s.plusOne(new int[]{9});
+        HashSet<Integer> hashSet = new HashSet<>();
+        boolean r1 = hashSet.add(1);
+        boolean r2 = hashSet.add(1);
+        System.out.println(r1);
+        System.out.println(r2);
         int[][] t1 = new int[][]{{2, 3}, {4, 5}, {6, 7}, {8, 9}, {1, 10}};
 
         int[][] r = s.merge(t1);
@@ -30,6 +34,24 @@ class Solution {
 
         public String getSex() {
             return sex;
+        }
+    }
+
+    public void rotate(int[][] matrix) {
+        int size = matrix.length;
+        for (int i = 0; i < size; i++) {
+            for (int j = i+1; j < size; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = tmp;
+            }
+        }
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size / 2; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[i][size - j - 1];
+                matrix[i][size - j - 1] = tmp;
+            }
         }
     }
 
@@ -210,12 +232,100 @@ class Solution {
         for (int j = 0; j < nums.length; j++)
             if (i < 2 || nums[j] > nums[i - 2])
                 nums[i++] = nums[j];
-            else {
-                System.out.println(j);
-            }
         return i;
     }
 
+    public void rotate(int[] nums, int k) {
+        int size = nums.length;
+        int[] res = new int[size];
+        for (int i = 0; i < nums.length; i++) {
+            res[(i + k) % nums.length] = nums[i];
+        }
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = res[i];
+        }
+    }
 
+    public boolean containsUnique(int[] nums) {
+        int res = 0;
+        for (int n : nums) {
+            res ^= n;
+        }
+        if (res == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public boolean containsDuplicate(int[] nums) {
+        Set<Integer> set = new HashSet<>(nums.length);
+        for (int x : nums) {
+            if (set.contains(x)) return true;
+            set.add(x);
+        }
+        return false;
+    }
+
+    public int[] intersect(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        ArrayList<Integer> res = new ArrayList<>();
+        int i = 0, j = 0;
+        while (i < nums1.length && j < nums2.length) {
+            if (nums1[i] == nums2[j]) {
+                res.add(nums1[i]);
+                i++;
+                j++;
+            } else if (nums1[i] < nums2[j]) {
+                i++;
+            } else {
+                j++;
+            }
+        }
+        int[] res2 = new int[res.size()];
+        for (int ii = 0; ii < res.size(); ii++) {
+            res2[ii] = res.get(ii);
+        }
+        return res2;
+    }
+
+    public int[] plusOne(int[] digits) {
+        int carry = 1;
+        int size = digits.length;
+        if (size == 1 && digits[0] == 0) {
+            return new int[]{1};
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int i = size - 1; i >= 0; i--) {
+            if (digits[i] + carry == 10) {
+                res.add(0);
+                carry = 1;
+            } else {
+                res.add(digits[i] + carry);
+                carry = 0;
+            }
+        }
+        if (carry == 1) {
+            res.add(1);
+        }
+        int[] res2 = new int[res.size()];
+        for (int i = 0; i < res.size(); i++) {
+            res2[i] = res.get(res.size() - 1 - i);
+        }
+        return res2;
+    }
+
+    public void moveZeroes(int[] nums) {
+        int size = nums.length;
+        int pos = 0;
+        for (int i = 0; i < size; i++) {
+            if (nums[i] != 0) {
+                nums[pos++] = nums[i];
+            }
+        }
+        for (; pos < size; pos++) {
+            nums[pos] = 0;
+        }
+    }
 }
