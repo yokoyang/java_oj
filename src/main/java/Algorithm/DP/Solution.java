@@ -220,8 +220,25 @@ public class Solution {
         return false;
     }
 
+    private int maxSum(int[] A) {
+        int n = A.length;
+        int[] start = new int[n];
+        int[] all = new int[n];
+        all[n - 1] = A[n - 1];
+        start[n - 1] = A[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            start[i] = Math.max(A[i] + start[i + 1], A[i]);
+            all[i] = Math.max(start[i], all[i + 1]);
+        }
+        System.out.println(all[0]);
+        return all[0];
+    }
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
+        solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
         solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
         Boolean[] booleans = new Boolean[3];
 
