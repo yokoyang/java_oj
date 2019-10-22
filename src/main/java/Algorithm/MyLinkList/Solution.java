@@ -12,6 +12,47 @@ class ListNode {
 }
 
 class Solution {
+    public ListNode array2ListNode(int[] nums) {
+        if (nums.length == 0) {
+            return null;
+        }
+        ListNode head = new ListNode(nums[0]), pre = head;
+
+        if (nums.length == 1) {
+            return new ListNode(nums[0]);
+        }
+        for (int i = 1; i < nums.length; i++) {
+            ListNode now = new ListNode(nums[i]);
+            pre.next = now;
+            pre = now;
+        }
+        return head;
+    }
+
+    //    Given a singly linked list, determine if it is a palindrome.
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+        ListNode slow = head, fast = head, pre = null;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            pre = slow;
+            slow = slow.next;
+        }
+        if (pre != null) {
+            pre.next = null;
+        }
+        ListNode newNode = reverseLinkedList(slow);
+        while (head != null && newNode != null) {
+            if (head.val != newNode.val) {
+                return false;
+            }
+            head = head.next;
+            newNode = newNode.next;
+        }
+        return true;
+    }
 
     public ListNode mergeKLists2(ListNode[] lists) {
         ListNode dummy = new ListNode(0), cur = dummy;
@@ -92,6 +133,9 @@ class Solution {
     }
 
     public static void main(String[] args) {
+        Solution s = new Solution();
+        ListNode h = s.array2ListNode(new int[]{1, 2, 2, 1});
+        s.isPalindrome(h);
         ListNode[] lists = new ListNode[3];
 
         lists[0] = new ListNode(1);
@@ -271,14 +315,7 @@ class Solution {
         return mergeTwoLists(sortList(head), sortList(mid));
     }
 
-    private void merge(int[] nums1, int m, int[] nums2, int n) {
-        int i = m - 1;
-        int j = n - 1;
-        int tail = m + n - 1;
-        while (j >= 0) {
-            nums1[tail--] = (i >= 0 && nums1[i] > nums2[j]) ? nums1[i--] : nums2[j--];
-        }
-    }
+
 
     private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         if (l1 == null) {

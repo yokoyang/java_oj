@@ -1,6 +1,16 @@
 package Algorithm.BinarySearch;
 
 public class Solution {
+    class TreeNode {
+        public int val;
+        public TreeNode left;
+        public TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.searchRange(new int[]{1}, 1);
@@ -26,6 +36,25 @@ public class Solution {
 
         double t = solution.findMedianSortedArrays2(a1, a2);
         System.out.println(t);
+    }
+
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if (nums.length == 0) {
+            return null;
+        }
+        TreeNode head = sortedArrayToBST_C(nums, 0, nums.length - 1);
+        return head;
+    }
+
+    TreeNode sortedArrayToBST_C(int[] nums, int s, int e) {
+        if (s > e) {
+            return null;
+        }
+        int mid = s + (e - s) / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+        node.left = sortedArrayToBST_C(nums, s, mid - 1);
+        node.right = sortedArrayToBST_C(nums, mid + 1, e);
+        return node;
     }
 
     public int[] searchRange(int[] nums, int target) {
