@@ -3,6 +3,7 @@ package Algorithm.greedy;
 import java.util.*;
 
 public class Solution {
+    //55. Jump Game
     //Input: [2,3,1,1,4]
     //Output: true
     //Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
@@ -61,4 +62,54 @@ public class Solution {
         }
         return true;
     }
+
+    //    45. Jump Game II
+    //Given an array of non-negative integers, you are initially positioned at the first index of the array.
+    //
+    //Each element in the array represents your maximum jump length at that position.
+    //
+    //Your goal is to reach the last index in the minimum number of jumps.
+    //    Note:
+    //You can assume that you can always reach the last index.
+    public int jump2(int[] nums) {
+        if (nums.length <= 1) {
+            return 0;
+        }
+        int nowPos = 0;
+        int maxReach = 0;
+        int nowCanReach = 0;
+        int maxIndex = 0;
+        int step = 0;
+        while (nowPos <= nums.length - 1) {
+            nowCanReach = nowPos + nums[nowPos];
+            if (nowCanReach >= nums.length - 1) {
+                step++;
+                break;
+            }
+            maxReach = 0;
+            for (int j = nowPos + 1; j <= nowCanReach; j++) {
+                int nextMaxReach = j + nums[j];
+                if (nextMaxReach > maxReach) {
+                    maxIndex = j;
+                    maxReach = nextMaxReach;
+                }
+            }
+            step++;
+            nowPos = maxIndex;
+        }
+        return step;
+    }
+
+    public int jump(int[] A) {
+        int steps = 0, curEnd = 0, curFarthest = 0;
+        for (int i = 0; i < A.length - 1; i++) {
+            curFarthest = Math.max(curFarthest, i + A[i]);
+            if (i == curEnd) {
+                steps++;
+                curEnd = curFarthest;
+            }
+        }
+        return steps;
+    }
+
 }
