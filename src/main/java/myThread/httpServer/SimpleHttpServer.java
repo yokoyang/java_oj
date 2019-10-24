@@ -21,7 +21,7 @@ public class SimpleHttpServer {
     static String basePath;
     static ServerSocket serverSocket;
     // 服务监听端口
-    static int port = 8080;
+    static int port = 80;
 
     public static void setPort(int port) {
         if (port > 0) {
