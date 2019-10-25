@@ -1,18 +1,13 @@
 package Algorithm.myStack;
 
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Stack;
 
 public class MonotonicStack {
-    public static void main(String[] args) {
-        int a=1;
-        int b=2;
-        a^=b;
-        b^=a;
-        a^=b;
-        System.out.println(a);
-        System.out.println(b);
-    }
+
     //    单调栈
     //    单调栈主要回答这样的几种问题
     //
@@ -118,4 +113,79 @@ public class MonotonicStack {
         }
         return ans;
     }
+
+    //    84. Largest Rectangle in Histogram
+    //Given n non-negative integers representing the histogram's bar height where the width of each bar is 1,
+    // find the area of largest rectangle in the histogram.
+
+    public static void main(String[] args) {
+        MonotonicStack monotonicStack = new MonotonicStack();
+        int height[] = {2, 1, 5, 6, 2, 3};
+//        int height[] = {2, 1, 5, 6, 2, 3, 4, 6, 6, 2, 1};
+//        int height[] = {5, 4, 3, 2};
+        int ans = monotonicStack.largestRectangleArea(height);
+        System.out.println("最大的面积位：" + ans);
+    }
+
+    // O(n) using one stack
+    public int largestRectangleArea(int[] heights) {
+        int area = 0;
+        int n = heights.length;
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(-1);
+        int curIndex = 0;
+        while (curIndex < n) {
+            while (stack.peek() != -1 && heights[stack.peek()] >= heights[curIndex]) {
+                int top = stack.pop();
+                area = Math.max(area, heights[top] * (curIndex - stack.peek() - 1));
+            }
+            stack.push(curIndex++);
+        }
+        while (stack.peek() != -1) {
+            area = Math.max(area, heights[stack.pop()] * (n - stack.peek() - 1));
+        }
+        return area;
+    }
+
+    //    使用动态规划完成
+    //    对于每个节点，找到延伸的边界
+    //    left[i]表示第i个柱子可以最多向左延伸至第left[i]个柱子，形成一个矩形，right[i]则表示向右延伸
+    public int largestRectangleArea2(int[] heights) {
+        int size = heights.length;
+        int[] left = new int[size];
+        int[] right = new int[size];
+        int area = 0;
+        initLeftRight(left, right, heights);
+        for (int i = 0; i < size; i++) {
+            area = Math.max(heights[i] * (right[i] - left[i] + 1), area);
+        }
+        return area;
+    }
+
+    private void initLeftRight(int[] left, int[] right, int[] heights) {
+        int size = heights.length;
+        for (int i = 0; i < size; i++) {
+            if (i == 0) {
+                left[0] = 0;
+                continue;
+            }
+            int k = i;
+            while (k > 0 && heights[i] <= heights[k - 1]) {
+                k = left[k - 1];
+            }
+            left[i] = k;
+        }
+        for (int i = size - 1; i >= 0; i--) {
+            if (i == size - 1) {
+                right[i] = i;
+                continue;
+            }
+            int k = i;
+            while (k < size-1 && heights[i] <= heights[k + 1]) {
+                k = right[k + 1];
+            }
+            right[i] = k;
+        }
+    }
 }
+

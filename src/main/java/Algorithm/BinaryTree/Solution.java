@@ -96,7 +96,8 @@ public class Solution {
     //    preorder = [3,9,20,15,7]
     //inorder = [9,3,15,20,7]
     //Return the following binary tree:
-    //
+//    输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+//    例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
     //    3
     //   / \
     //  9  20
@@ -128,7 +129,45 @@ public class Solution {
         return root;
     }
 
+    //二叉树的下一个节点
+    //给定一个二叉树和其中一个节点，找到中序遍历的下一个节点
+    //有左右父指针
+    //分析：如果这个节点有右子树，next=右子树的最左节点
+    //如果没有右子树，如果节点是父亲的左节点，next=父亲的右节点，如果节点是父亲的右节点，next=递归(父亲)
+    public BinaryTreeNode getNextInorderNode(BinaryTreeNode node) {
+        if (node == null) {
+            return null;
+        }
+        BinaryTreeNode pNext = null;
+        if (node.right != null) {
+            BinaryTreeNode pRight = node.right;
+            while (pRight.left != null) {
+                pRight = pRight.right;
+            }
+            pNext = pRight;
+        } else if (node.parent != null) {
+            BinaryTreeNode pCurrent = node;
+            BinaryTreeNode pParent = node.parent;
+            while (pParent != null && pCurrent == pParent.right) {
+                pCurrent = pParent;
+                pParent = pParent.parent;
+            }
+            pNext = pParent;
+        }
+        return pNext;
+    }
 
+
+    class BinaryTreeNode {
+        int val;
+        BinaryTreeNode left;
+        BinaryTreeNode right;
+        BinaryTreeNode parent;
+
+        BinaryTreeNode(int v) {
+            this.val = v;
+        }
+    }
 
     public static void main(String[] args) {
         Solution s = new Solution();

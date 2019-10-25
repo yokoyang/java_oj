@@ -205,6 +205,48 @@ class Solution {
         return headNew;
     }
 
+    private ListNode reverseListNode(ListNode n) {
+        if (n == null || n.next == null) {
+            return n;
+        }
+        ListNode nextNode = n.next;
+        ListNode newHead = reverseListNode(nextNode);
+        nextNode.next = n;
+        n.next = null;
+        return newHead;
+    }
+
+    //对原始链表修改了，翻转后打印，不推荐
+    // 方法2：用栈来实现，保持原始数据不变
+    public ArrayList<Integer> printListFromTailToHead1(ListNode listNode) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (listNode == null) {
+            return res;
+        }
+        ListNode newHead = reverseListNode(listNode);
+        while (newHead != null) {
+            res.add(newHead.val);
+            newHead = newHead.next;
+        }
+        return res;
+    }
+
+    public ArrayList<Integer> printListFromTailToHead2(ListNode listNode) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (listNode == null) {
+            return res;
+        }
+        Deque<Integer> stack = new ArrayDeque<>();
+        while (listNode != null) {
+            stack.push(listNode.val);
+            listNode = listNode.next;
+        }
+        while (stack.isEmpty()) {
+            res.add(stack.pop());
+        }
+        return res;
+    }
+
     private long convertListNode2Num(ListNode n) {
         long num = 0;
         while (n != null) {
@@ -314,7 +356,6 @@ class Solution {
         slow.next = null;
         return mergeTwoLists(sortList(head), sortList(mid));
     }
-
 
 
     private ListNode mergeTwoLists(ListNode l1, ListNode l2) {

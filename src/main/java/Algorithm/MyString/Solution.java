@@ -210,6 +210,33 @@ public class Solution {
         return (int) result;
     }
 
+    public String replaceSpace(StringBuffer str) {
+        if (str == null) {
+            return null;
+        }
+        int count = 0;
+
+        for (int i = 0; i < str.length(); i++) {
+            if (' ' == str.charAt(i)) {
+                count++;
+            }
+        }
+        int oldIndex = str.length() - 1;
+        int newLength = str.length() + count * 2;
+        int newIndex = newLength - 1;
+        str.setLength(newLength);
+        for (; oldIndex >= 0 && newIndex > oldIndex; oldIndex--) {
+            if (str.charAt(oldIndex) == ' ') {
+                str.setCharAt(newIndex--, '0');
+                str.setCharAt(newIndex--, '2');
+                str.setCharAt(newIndex--, '%');
+            } else {
+                str.setCharAt(newIndex--, str.charAt(oldIndex));
+            }
+        }
+        return str.toString();
+    }
+
     public String longestCommonPrefix(String[] strs) {
         if (strs.length == 0) {
             return "";
