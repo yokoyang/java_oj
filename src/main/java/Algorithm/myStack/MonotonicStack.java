@@ -4,6 +4,15 @@ import java.util.LinkedList;
 import java.util.Stack;
 
 public class MonotonicStack {
+    public static void main(String[] args) {
+        int a=1;
+        int b=2;
+        a^=b;
+        b^=a;
+        a^=b;
+        System.out.println(a);
+        System.out.println(b);
+    }
     //    单调栈
     //    单调栈主要回答这样的几种问题
     //
