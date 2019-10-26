@@ -6,7 +6,8 @@ import java.util.stream.Collectors;
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.findIncreaseMatrix(7,new int[][]{{1,2,8,9},{4,7,10,13}});
+        s.sortAges(new int[]{2, 31, 2, 1, 3});
+        s.findIncreaseMatrix(7, new int[][]{{1, 2, 8, 9}, {4, 7, 10, 13}});
         System.out.println(s.findOneDuplicate(new int[]{2, 3, 1, 0, 2, 5, 3}));
         System.out.println(s.findOneDuplicateNotModify(new int[]{2, 3, 1, 0, 2, 5, 3}));
         int[] t0 = s.plusOne(new int[]{9});
@@ -420,4 +421,58 @@ class Solution {
             nums[pos] = 0;
         }
     }
+
+    //O(n) 复杂度对公司员工年龄排序
+    public void sortAges(int[] ages) {
+        int size = ages.length;
+        if (size <= 1) {
+            return;
+        }
+        int oldestAge = 99;
+        int[] timesOfAge = new int[oldestAge + 1];
+        for (int i = 0; i < size; i++) {
+            timesOfAge[ages[i]]++;
+        }
+        int index = 0;
+        for (int i = 0; i <= oldestAge; i++) {
+            for (int j = 0; j < timesOfAge[i]; j++) {
+                ages[index] = i;
+                index++;
+            }
+        }
+    }
+
+    //返回旋转数组中的最小元素
+    public int minNumberInRotateArray(int[] array) {
+        int size = array.length;
+        if (size <= 1) {
+            return size;
+        }
+        int index1 = 0;
+        int index2 = size - 1;
+        int mid;
+//        if (array[index1] < array[index2]) {
+//            return array[index1];
+//        }
+        while (array[index1] >= array[index2]) {
+            if (index1 + 1 == index2) {
+                return array[index2];
+            }
+            mid = index1 + (index2 - index1) / 2;
+            if (array[mid] >= array[index1]) {
+                index1 = mid;
+            } else if (array[mid] <= array[index2]) {
+                index2 = mid;
+            }
+            if (array[index1] == array[index2] && array[index1] == array[mid]) {
+                int minVal = array[index1];
+                for (int i = index1; i <= index2; i++) {
+                    minVal = Math.min(array[i], minVal);
+                }
+                return minVal;
+            }
+        }
+        return array[index1];
+    }
+
 }

@@ -260,7 +260,7 @@ public class Solution {
             traceFlatten(now.right);
         }
         TreeNode leftRight = now.left;
-        if(leftRight==null){
+        if (leftRight == null) {
             return;
         }
 
@@ -274,5 +274,92 @@ public class Solution {
         now.left = null;
         leftRight.right = tmp;
         traceFlatten(now.right);
+    }
+
+    private int pathLength = 0;
+
+    public boolean hasPath(char[] matrix, int rows, int cols, char[] str) {
+        if (matrix == null || matrix.length == 0 || str == null || str.length == 0 || matrix.length != rows * cols || rows <= 0 || cols <= 0 || rows * cols < str.length) {
+            return false;
+        }
+        boolean[] visited = new boolean[rows * cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (hasPathCore(matrix, rows, cols, str, i, j, visited)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean hasPathCore(char[] matrix, int rows, int cols, char[] str, int row, int col, boolean[] visited) {
+        boolean flag = false;
+
+        if (row >= 0 && row < rows && col >= 0 && col < cols && !visited[row * cols + col] && matrix[row * cols + col] == str[pathLength]) {
+            pathLength++;
+            visited[row * cols + col] = true;
+            if (pathLength == str.length) {
+                return true;
+            }
+            flag = hasPathCore(matrix, rows, cols, str, row, col + 1, visited) ||
+                    hasPathCore(matrix, rows, cols, str, row + 1, col, visited) ||
+                    hasPathCore(matrix, rows, cols, str, row, col - 1, visited) ||
+                    hasPathCore(matrix, rows, cols, str, row - 1, col, visited);
+
+            if (!flag) {
+                pathLength--;
+                visited[row * cols + col] = false;
+            }
+        }
+
+        return flag;
+    }
+
+
+    public int movingCount(int threshold, int rows, int cols) {
+        if (threshold < 0 || rows <= 0 || cols <= 0) {
+            return 0;
+        }
+        boolean[][] visit = new boolean[rows][cols];
+        return movingCount_C(0, 0, rows, cols, threshold, visit);
+    }
+
+    private boolean checkSum(int threshold, int row, int col) {
+        int sum = 0;
+        while (row != 0) {
+            sum += row % 10;
+            row = row / 10;
+        }
+        while (col != 0) {
+            sum += col % 10;
+            col = col / 10;
+        }
+        if (sum > threshold){
+            return false;
+        }
+        return true;
+    }
+
+    private int movingCount_C(int startCol, int startRow, int maxRow, int maxCols, int threshold, boolean[][] visit) {
+        int moveStep = 0;
+        if (startCol >= maxCols || startCol < 0 || startRow >= maxRow || startRow < 0) {
+            return moveStep;
+        }
+        if (!checkSum(threshold, startRow, startCol)) {
+            return moveStep;
+        }
+        if (visit[startRow][startCol]) {
+            return moveStep;
+        }
+        visit[startRow][startCol] = true;
+        moveStep += movingCount_C(startCol + 1, startRow, maxRow, maxCols, threshold, visit);
+        moveStep += movingCount_C(startCol, startRow + 1, maxRow, maxCols, threshold, visit);
+        moveStep += movingCount_C(startCol, startRow - 1, maxRow, maxCols, threshold, visit);
+        moveStep += movingCount_C(startCol - 1, startRow, maxRow, maxCols, threshold, visit);
+        moveStep += 1;
+        return moveStep;
     }
 }
