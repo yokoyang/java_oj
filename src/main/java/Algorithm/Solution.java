@@ -1,9 +1,23 @@
 package Algorithm;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Solution {
-    public static void main(String[] args) {
+    static class TimerTaskDemo extends TimerTask{
+        @Override
+        public void run() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            System.out.println("这是java.util.TimeTask在执行任务,本次执行时间是："+sdf.format(new Date()));
+        }
+    }
+    public static void main(String[] args) throws InterruptedException {
+        //创建Timer对象，并调用schedule方法（有四个重载方法）
+        Timer t = new Timer();
+        //传递参数。第一个参数是TimerTask对象（指定要执行的任务）,第二个参数是延迟时间，第三个参数是时间间隔（毫秒）
+        t.schedule(new TimerTaskDemo(),0,5000);
+        Thread.sleep(6000);
+        System.out.println("a");
         Scanner scanner = new Scanner(System.in);
         int caseNum = scanner.nextInt();
         for (int i = 1; i <= caseNum; i++) {
@@ -55,4 +69,5 @@ public class Solution {
         }
         return sum;
     }
+
 }
