@@ -1,28 +1,75 @@
 package Algorithm;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Solution {
-    static class TimerTaskDemo extends TimerTask{
-        @Override
-        public void run() {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            System.out.println("这是java.util.TimeTask在执行任务,本次执行时间是："+sdf.format(new Date()));
-        }
+    public static void main(String[] args) {
+        Solution s = new Solution();
+        int[][] t = new int[][]{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};
+        s.minPathSum(t);
+//        TreeNode root = new TreeNode(10);
+//        root.left = new TreeNode(5);
+//        root.right = new TreeNode(15);
+//        root.right.left = new TreeNode(6);
+//        root.right.right = new TreeNode(20);
+//        System.out.println(s.isValidBST(root));
     }
-    public static void main(String[] args) throws InterruptedException {
-        //创建Timer对象，并调用schedule方法（有四个重载方法）
-        Timer t = new Timer();
-        //传递参数。第一个参数是TimerTask对象（指定要执行的任务）,第二个参数是延迟时间，第三个参数是时间间隔（毫秒）
-        t.schedule(new TimerTaskDemo(),0,5000);
-        Thread.sleep(6000);
-        System.out.println("a");
-        Scanner scanner = new Scanner(System.in);
-        int caseNum = scanner.nextInt();
-        for (int i = 1; i <= caseNum; i++) {
-            System.out.println(String.format("Case #%d: %d", i, solve(scanner)));
+
+    public int longestValidParentheses(String s) {
+        int maxans = 0;
+        LinkedList<Integer> stack = new LinkedList<>();
+        stack.push(-1);
+        for (int i = 0; i < s.length(); i++) {
+            if ('(' == s.charAt(i)) {
+                stack.push(i);
+            } else {
+                stack.pop();
+                if (stack.isEmpty()) {
+                    stack.push(i);
+                } else {
+                    maxans = Math.max(maxans, i - stack.peek());
+                }
+            }
+
         }
+        return maxans;
+    }
+
+    public String reverseString(String s) {
+        return new StringBuilder(s).reverse().toString();
+    }
+
+    public int evalRPN(String[] tokens) {
+        HashSet<String> operations = new HashSet<>();
+        operations.add("*");
+        operations.add("/");
+        operations.add("+");
+        operations.add("-");
+        LinkedList<Integer> stack = new LinkedList<>();
+        for (int i = 0; i < tokens.length; i++) {
+            String now = tokens[i];
+            if (operations.contains(now)) {
+                //operation
+                Integer f2 = stack.pollLast();
+                Integer f1 = stack.pollLast();
+                Integer temp;
+                if (now.equals("+")) {
+                    temp = f1 + f2;
+                } else if (now.equals("-")) {
+                    temp = f1 - f2;
+                } else if (now.equals("*")) {
+                    temp = f1 * f2;
+                } else {
+                    temp = f1 / f2;
+                }
+                stack.offerLast(temp);
+            } else {
+                stack.offerLast(Integer.valueOf(now));
+            }
+        }
+        int result = stack.poll();
+//        System.out.println(result);
+        return result;
     }
 
     private static int solve(Scanner scanner) {
@@ -70,4 +117,51 @@ public class Solution {
         return sum;
     }
 
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] memo = new int[m][n];
+        memo[0][0] = grid[0][0];
+        for (int i = 1; i < m; i++) {
+            memo[i][0] = memo[i - 1][0] + grid[i][0];
+        }
+        for (int j = 1; j < n; j++) {
+            memo[0][j] = memo[0][j - 1] + grid[0][j];
+        }
+        if (m * n < 4) {
+            return grid[0][0] * grid[m][n];
+        }
+        int min = Math.min(m, n);
+        for (int k = 1; k < min; k++) {
+            for (int col = k; col < n; col++) {
+                memo[k][col] = Math.min(memo[k][col - 1], memo[k - 1][col]) + grid[k][col];
+            }
+            for (int row = k; row < m; row++) {
+                memo[row][k] = Math.min(memo[row][k - 1], memo[row - 1][k]) + grid[row][k];
+            }
+        }
+        return memo[m - 1][n - 1];
+    }
+
+    public static class TreeNode {
+        public int val;
+        public TreeNode left;
+        public TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    public boolean isValidBST(TreeNode root, long minVal, long maxVal) {
+        if (root == null) return true;
+        if (root.val >= maxVal || root.val <= minVal) {
+            return false;
+        }
+        return isValidBST(root.left, minVal, root.val) && isValidBST(root.right, root.val, maxVal);
+    }
 }

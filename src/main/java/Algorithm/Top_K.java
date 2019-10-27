@@ -1,19 +1,19 @@
 package Algorithm;
 
 import java.util.concurrent.ThreadLocalRandom;
-
-import static Algorithm.QuickSort.quickSort;
+import java.util.PriorityQueue;
+import static Algorithm.sort.QuickSort.quickSort;
 
 public class Top_K {
 
-    private static int partition(int[] A, int size, int K) {
+    private static int topK(int[] A, int size, int K) {
         return find_C(A, 0, size - 1, K);
     }
 
     public static void swap(int[] arr, int i, int j) {
         int t = arr[i];
-        arr[i]=arr[j];
-        arr[j]=t;
+        arr[i] = arr[j];
+        arr[j] = t;
     }
 
     private static int find_C(int[] A, int left, int r, int K) {
@@ -41,10 +41,10 @@ public class Top_K {
 //        int[] A = {-1,10,3,2,1,2,};
         int[] A = new int[len];
         int topK = 3;
-        for (int i = 0; i != len; i++) {
+        for (int i = 0; i < len; i++) {
             A[i] = ThreadLocalRandom.current().nextInt(-3021, 7700);
         }
-        int t = (partition(A, len, topK - 1));
+        int t = (topK(A, len, topK - 1));
         quickSort(A, len);
         for (int i = 0; i != len; i++) {
             System.out.println(A[i]);
