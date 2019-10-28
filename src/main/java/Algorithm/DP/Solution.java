@@ -28,6 +28,30 @@ public class Solution {
         return res;
     }
 
+    //    给你一根长度为n的绳子，请把绳子剪成m段（m、n都是整数，n>1并且m>1），每段绳子的长度记为k[0],k[1],...,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+    public int cutRope(int n) {
+        int[] dp = new int[n + 1];
+        if (n < 2) {
+            return 0;
+        }
+        if (n == 2) {
+            return 1;
+        }
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 2;
+        int max = 0;
+        for (int i = 4; i <= n; i++) {
+            max = 0;
+            //因为是对称的，所有可以是j = i/2开始
+            for (int j = i - 1; j >= 1; j--) {
+                max = Math.max(dp[j] * (i - j), max);
+            }
+            dp[i] = max;
+        }
+        return dp[n];
+    }
+
     private void dfsPermute(List<List<Integer>> res, List<Integer> one, int[] nums, boolean[] record) {
         if (one.size() >= nums.length) {
             res.add(new ArrayList<>(one));
@@ -60,6 +84,8 @@ public class Solution {
         }
         return dp[m - 1][n - 1];
     }
+
+
 
     public List<List<String>> groupAnagrams(String[] strs) {
         //返回值是List List里面是List 装的String  定义一个HashMap 值为List
@@ -233,7 +259,6 @@ public class Solution {
         System.out.println(all[0]);
         return all[0];
     }
-
 
 
     public static void main(String[] args) {
