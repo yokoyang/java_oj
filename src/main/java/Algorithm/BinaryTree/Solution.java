@@ -15,61 +15,27 @@ public class Solution {
     }
 
 
-    TreeNode result;
-    int last;
-
-    private int traceFind2(TreeNode now, TreeNode p, TreeNode q) {
-        int findNum = 0;
-        if (now == null) {
-            return findNum;
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
         }
-        if (now == p) {
-            findNum++;
-            last = p.val;
-        } else if (now == q) {
-            findNum++;
-            last = q.val;
-        }
-        int left = 0;
-        int right = 0;
-        if (result == null) {
-            if (now.left != null) {
-                left = traceFind2(now.left, p, q);
-            }
-            if (now.right != null) {
-                right = traceFind2(now.right, p, q);
-            }
-            if (left == 1 && right == 1) {
-                result = now;
-            } else if (findNum == 1) {
-                if (left + right == 1) {
-                    result = now;
-                }
-            }
-            if (left == 2 || right == 2) {
-                if (result != null) {
-                    if (last == p.val) {
-                        result = q;
-                    } else if (last == q.val) {
-                        result = p;
-                    }
-                }
-
-            }
-            findNum += left;
-            findNum += right;
-        }
-
-        return findNum;
+        return traceBackFindAncestor(root, p, q);
     }
 
-    public TreeNode lowestCommonAncestor(TreeNode now, TreeNode p, TreeNode q) {
-        if (now == null || now == p || now == q) return now;
-        TreeNode left = lowestCommonAncestor(now.left, p, q);
-        TreeNode right = lowestCommonAncestor(now.right, p, q);
-        if (left == null) return right;
-        else if (right == null) return left;
-        else return now;
+    private TreeNode traceBackFindAncestor(TreeNode now, TreeNode p, TreeNode q) {
+        if (now == null || now == p || now == q) {
+            return now;
+        }
+        TreeNode left = traceBackFindAncestor(now.left, p, q);
+        TreeNode right = traceBackFindAncestor(now.right, p, q);
+        if (left != null && right != null) {
+            return now;
+        }
+        if (left == null) {
+            return right;
+        } else {
+            return left;
+        }
     }
     //    101. Symmetric Tree
     //    Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).

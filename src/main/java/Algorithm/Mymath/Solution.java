@@ -37,12 +37,12 @@ public class Solution {
 
     //打印从1到最大为n位十进制数
     public static void printToMaxOfNDigits1(int n) {
-        if(n <= 0) {
+        if (n <= 0) {
             return;
         }
         char[] nums = new char[n + 1];
         Arrays.fill(nums, '0');
-        while(!increment(nums)) {
+        while (!increment(nums)) {
             printNum(nums);
         }
     }
@@ -50,35 +50,55 @@ public class Solution {
     /**
      * 大数自增操作！
      * 并判断是否已经超出了n位了。
+     *
      * @param nums
      * @return
      */
     public static boolean increment(char[] nums) {
         int carry = 0;
-        for(int i = nums.length - 1; i >= 0; i--) {
+        for (int i = nums.length - 1; i >= 0; i--) {
             int temp = nums[i] - '0' + carry;
             //因为是加1，所以肯定是在最后一位上加1了
-            if(i == nums.length - 1) {
+            if (i == nums.length - 1) {
                 temp++;
             }
             carry = temp / 10;
             temp %= 10;
-            nums[i] = (char)(temp + '0');
+            nums[i] = (char) (temp + '0');
         }
         return nums[0] == '1';
     }
 
     public static void printNum(char[] nums) {
         int index = 0;
-        for(; index < nums.length; index++) {
-            if(nums[index] != '0'){
+        for (; index < nums.length; index++) {
+            if (nums[index] != '0') {
                 break;
             }
         }
-        for(; index < nums.length; index++) {
+        for (; index < nums.length; index++) {
             System.out.print(nums[index]);
         }
         System.out.println();
+    }
+
+    public static void printToMaxOfNDigits2(int n) {
+        if (n <= 0) {
+            return;
+        }
+        char[] nums = new char[n];
+        recursiveProductNum(0, n, nums);
+    }
+
+    public static void recursiveProductNum(int index, int length, char[] nums) {
+        if (index == length) {
+            printNum(nums);
+            return;
+        }
+        for (char i = '0'; i <= '9'; i++) {
+            nums[index] = i;
+            recursiveProductNum(index + 1, length, nums);
+        }
     }
 
 //    public void printToMaxOfNDigits(int n) {
@@ -114,6 +134,6 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.printToMaxOfNDigits1(3);
+        solution.printToMaxOfNDigits2(3);
     }
 }
