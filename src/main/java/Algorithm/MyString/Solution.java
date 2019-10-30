@@ -5,7 +5,8 @@ import java.util.*;
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.countAndSay(4));
+        System.out.println(s.reMatch("".toCharArray(), ".*".toCharArray()));
+//        System.out.println(s.countAndSay(4));
 //        System.out.println(s.longestCommonPrefix(new String[]{"aa", "a"}));
 //        System.out.println(s.isPalindrome("ASd"));
 //        System.out.println(s.firstUniqChar("loveleetcode"));
@@ -168,7 +169,7 @@ public class Solution {
         int result = 0;
 
         // calculate value
-        while (str.length() > i && str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+        while (i < str.length() && str.charAt(i) >= '0' && str.charAt(i) <= '9') {
             if (Integer.MAX_VALUE / 10 < result || (Integer.MAX_VALUE / 10 == result && Integer.MAX_VALUE % 10 < (str.charAt(i) - '0')))
                 return flag == '-' ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
@@ -235,6 +236,37 @@ public class Solution {
             }
         }
         return str.toString();
+    }
+
+    //正则表达式匹配
+    //请实现一个函数用来匹配包括'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，而'*'表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。
+    // 例如，字符串"aaa"与模式"a.a"和"ab*ac*a"匹配，但是与"aa.a"和"ab*a"均不匹配
+    public boolean reMatch(char[] str, char[] pattern) {
+        if (str.length == 0 && pattern.length == 0) {
+            return true;
+        }
+        return reMatchCore(str, 0, str.length, pattern, 0, pattern.length);
+    }
+
+    //i和j表示当前使用了多少个元素
+    private boolean reMatchCore(char[] str, int i, int len1, char[] pattern, int j, int len2) {
+        boolean firstMatch = false;
+        if (j == len2) {
+            if (i == len1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (i < len1 && (str[i] == pattern[j] || pattern[j] == '.')) {
+            firstMatch = true;
+        }
+
+        if (j < len2 - 1 && pattern[j + 1] == '*') {
+            return reMatchCore(str, i, len1, pattern, j + 2, len2) || (firstMatch && reMatchCore(str, i + 1, len1, pattern, j, len2));
+        } else {
+            return firstMatch && reMatchCore(str, i + 1, len1, pattern, j + 1, len2);
+        }
     }
 
     public String longestCommonPrefix(String[] strs) {

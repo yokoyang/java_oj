@@ -468,5 +468,4 @@ class Solution {
         }
         return Head.next;
     }
-
 }
