@@ -269,6 +269,37 @@ public class Solution {
         }
     }
 
+    //使用动态规划，完成正则匹配
+    //i和j表示当前使用了多少个元素
+    public boolean reMatch2(char[] str, char[] pattern) {
+        if (str.length == 0 && pattern.length == 0) {
+            return true;
+        }
+        boolean[][] dp = new boolean[str.length + 1][pattern.length + 1];
+        dp[0][0] = true;
+        for (int j = 1; j <= pattern.length; j++) {
+            if (pattern[j - 1] == '*') {
+                dp[0][j] = dp[0][j - 2];
+            } else {
+                dp[0][j] = false;
+            }
+        }
+        for (int i = 0; i < str.length; i++) {
+            for (int j = 0; j < pattern.length; j++) {
+                if (pattern[j] == '*') {
+                    dp[i + 1][j + 1] = dp[i + 1][j - 1] || (first_match(str, pattern, i, j - 1) && dp[i][j + 1]);
+                } else {
+                    dp[i + 1][j + 1] = first_match(str, pattern, i, j) && dp[i][j];
+                }
+            }
+        }
+        return dp[str.length][pattern.length];
+    }
+
+    private boolean first_match(char[] s, char[] p, int i, int j) {
+        return s[i] == p[j] || p[j] == '.';
+    }
+
     public String longestCommonPrefix(String[] strs) {
         if (strs.length == 0) {
             return "";
