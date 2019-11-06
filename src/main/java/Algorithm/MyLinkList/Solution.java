@@ -86,7 +86,7 @@ class Solution {
         }
 
         int index = 0;
-        while (record.size() >= 1) {
+        while (record.size() > 1) {
             int nowMin = Integer.MAX_VALUE;
             for (int i = 0; i < lists.length; i++) {
                 ListNode node = lists[i];
@@ -427,26 +427,9 @@ class Solution {
         }
     }
 
-    public int findKthLargest(int[] nums, int k) {
-        PriorityQueue<Integer> heap = new PriorityQueue<>(k);
-        for (int i = 0; i < nums.length; i++) {
-            if (heap.size() < k) {
-                heap.offer(nums[i]);
-            } else {
-                int top = heap.peek();
-                if (top < nums[i]) {
-                    heap.poll();
-                    heap.offer(nums[i]);
-                }
-            }
-
-        }
-        return heap.peek();
-    }
-
     //删除链表中的重复节点
     public ListNode deleteDuplication(ListNode pHead) {
-        if (pHead == null || pHead.next == null) {
+        if (pHead == null) {
             return pHead;
         }
         ListNode Head = new ListNode(0);
@@ -467,5 +450,41 @@ class Solution {
             }
         }
         return Head.next;
+    }
+
+    //链表中环的入口
+    //思路：先使用快慢指针，判断它是否有环，同时，确定出环的大小（再次回到相遇位置，相遇位置一定在环上）
+    //然后双指针，一个先走环大小长度，然后再一起走，相遇的点就是环的入口
+    public ListNode EntryNodeOfLoop(ListNode pHead) {
+        if (pHead == null || pHead.next == null) {
+            return pHead;
+        }
+        boolean hasLoop = false;
+        ListNode fast = pHead, slow = pHead;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                hasLoop = true;
+                break;
+            }
+        }
+        if (!hasLoop) {
+            return null;
+        }
+        int n = 1;
+        while (slow.next != fast) {
+            slow = slow.next;
+            n++;
+        }
+        ListNode p1 = pHead, p2 = pHead;
+        while (n-- > 0) {
+            p1 = p1.next;
+        }
+        while (p1 != p2) {
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        return p1;
     }
 }

@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
+        s.printMatrix(new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
+        s.reOrderArrayOddFirst(new int[]{1, 2, 3, 4, 5, 6, 7});
         s.sortAges(new int[]{2, 31, 2, 1, 3});
         s.findIncreaseMatrix(7, new int[][]{{1, 2, 8, 9}, {4, 7, 10, 13}});
         System.out.println(s.findOneDuplicate(new int[]{2, 3, 1, 0, 2, 5, 3}));
@@ -451,9 +453,6 @@ class Solution {
         int index1 = 0;
         int index2 = size - 1;
         int mid;
-//        if (array[index1] < array[index2]) {
-//            return array[index1];
-//        }
         while (array[index1] >= array[index2]) {
             if (index1 + 1 == index2) {
                 return array[index2];
@@ -475,4 +474,72 @@ class Solution {
         return array[index1];
     }
 
+    private boolean isOdd(int num) {
+        return (num & 1) == 1;
+    }
+
+    //重新排列数组，使得奇数在前面
+    //相对位置可以改变
+    public void reOrderArrayOddFirst(int[] array) {
+        if (array.length < 2) {
+            return;
+        }
+        int s = 0, p = array.length - 1;
+        while (s != p) {
+            if (!isOdd(array[s])) {
+                while (!isOdd(array[p])) {
+                    p--;
+                }
+                swap(array, s, p);
+            }
+            s++;
+        }
+    }
+
+    public void reOrderArrayKeepRelativeOrder(int[] array) {
+        //相对位置不变，稳定性
+        //插入排序的思想
+        int m = array.length;
+        int k = 0;
+        //记录已经摆好位置的奇数的个数
+        for (int i = 0; i < m; i++) {
+            if (isOdd(array[i])) {
+                int j = i;
+                while (j > k) {//j >= k+1
+                    swap(array, j, j - 1);
+                    j--;
+                }
+                k++;
+            }
+        }
+    }
+
+    //    输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字
+    ArrayList<Integer> list = new ArrayList<>();
+
+    public ArrayList<Integer> printMatrix(int[][] matrix) {
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+        int start = 0;
+        while (rows > start * 2 && columns > start * 2) {
+            printMatrixInCircle(matrix, rows, columns, start);
+            start++;
+        }
+        return list;
+    }
+
+    public void printMatrixInCircle(int[][] matrix, int rows, int columns, int start) {
+        // 从左到右打印一行
+        for (int i = start; i < columns - start; i++)
+            list.add(matrix[start][i]);
+        // 从上到下打印一列
+        for (int j = start + 1; j < rows - start; j++)
+            list.add(matrix[j][columns - start - 1]);
+        // 从右到左打印一行
+        for (int m = columns - start - 2; m >= start && rows - start - 1 > start; m--)
+            list.add(matrix[rows - start - 1][m]);
+        // 从下到上打印一列
+        for (int n = rows - start - 2; n >= start + 1 && columns - start - 1 > start; n--)
+            list.add(matrix[n][start]);
+    }
 }

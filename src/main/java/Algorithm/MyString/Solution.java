@@ -5,7 +5,8 @@ import java.util.*;
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.reMatch("".toCharArray(), ".*".toCharArray()));
+        System.out.println(s.isNumeric("+100".toCharArray()));
+//        System.out.println(s.reMatch("".toCharArray(), ".*".toCharArray()));
 //        System.out.println(s.countAndSay(4));
 //        System.out.println(s.longestCommonPrefix(new String[]{"aa", "a"}));
 //        System.out.println(s.isPalindrome("ASd"));
@@ -211,6 +212,57 @@ public class Solution {
         return (int) result;
     }
 
+    //    用来判断字符串是否表示数值（包括整数和小数）。
+    //    例如，字符串"+100","5e2","-123","3.1416"和"-1E-16"都表示数值。
+    //    但是"12e","1a3.14","1.2.3","+-5"和"12e+4.3"都不是。
+    /*
+    以下对正则进行解释:
+    [\\+\\-]?            -> 正或负符号出现与否
+    \\d*                 -> 整数部分是否出现，如-.34 或 +3.34均符合
+    (\\.\\d+)?           -> 如果出现小数点，那么小数点后面必须有数字；
+                            否则一起不出现
+    ([eE][\\+\\-]?\\d+)? -> 如果存在指数部分，那么e或E肯定出现，+或-可以不出现，
+                            紧接着必须跟着整数；或者整个部分都不出现
+    */
+    public boolean isNumeric(char[] str) {
+        String string = String.valueOf(str);
+        return string.matches("[+\\-]?\\d*(\\.\\d+)?([eE][+\\-]?\\d+)?");
+    }
+
+    public boolean isNumeric2(char[] str) {
+        if (str.length < 1) {
+            return false;
+        }
+        boolean sign = false, decimal = false, hasE = false;
+        for (int i = 0; i < str.length; i++) {
+            if (str[i] == '+' || str[i] == '-') {
+                if (!sign && i > 0 && str[i - 1] != 'e' && str[i - 1] != 'E') {
+                    return false;
+                }
+                if (sign && i > 0 && str[i - 1] != 'e' && str[i - 1] != 'E') {
+                    return false;
+                }
+                sign = true;
+            } else if (str[i] == 'E' || str[i] == 'e') {
+                if (hasE) {
+                    return false;
+                }
+                if (i == str.length - 1) {
+                    return false;
+                }
+                hasE = true;
+            } else if (str[i] == '.') {
+                if (hasE || decimal) {
+                    return false;
+                }
+                decimal = true;
+            } else if (str[i] < '0' || str[i] > '9') {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public String replaceSpace(StringBuffer str) {
         if (str == null) {
             return null;
@@ -340,4 +392,5 @@ public class Solution {
         }
         return sb.toString();
     }
+
 }

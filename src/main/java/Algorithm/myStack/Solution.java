@@ -1,6 +1,7 @@
 package Algorithm.myStack;
 
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class Solution {
 
@@ -24,6 +25,25 @@ public class Solution {
         }
         return false;
 
+    }
+
+    //给定压入栈顺序，判断是否产生某一输出栈
+    public boolean IsPopOrder(int[] pushA, int[] popA) {
+        if (pushA == null || popA == null || popA.length == 0 || pushA.length != popA.length)
+            return false;
+        Stack<Integer> st = new Stack<>();
+        int i = 0;
+        int j = 0;
+        st.push(pushA[i++]);
+        while (j < popA.length) {
+            while (popA[j] != st.peek()) {
+                if (i == pushA.length) return false;
+                st.push(pushA[i++]);
+            }
+            j++;
+            st.pop();
+        }
+        return true;
     }
 
     public static void main(String[] args) {
