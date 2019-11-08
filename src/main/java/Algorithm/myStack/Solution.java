@@ -37,7 +37,9 @@ public class Solution {
         st.push(pushA[i++]);
         while (j < popA.length) {
             while (popA[j] != st.peek()) {
-                if (i == pushA.length) return false;
+                if (i >= pushA.length) {
+                    return false;
+                }
                 st.push(pushA[i++]);
             }
             j++;

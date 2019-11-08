@@ -177,6 +177,105 @@ public class Solution {
         Mirror(root.right);
     }
 
+    //从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+    public ArrayList<Integer> PrintFromTopToBottom(TreeNode root) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode now = queue.poll();
+            res.add(now.val);
+            if (now.left != null) {
+                queue.offer(now.left);
+            }
+            if (now.right != null) {
+                queue.offer(now.right);
+            }
+        }
+        return res;
+    }
+
+    //按照之字形打印二叉树，即第一行按照从左到右的顺序打印
+    // ，第二层按照从右至左的顺序打印，第三行按照从左到右的顺序打印，其他行以此类推。
+    public ArrayList<ArrayList<Integer>> zigzagPrint(TreeNode pRoot) {
+
+        int layer = 1;
+        //s1存奇数层节点
+        Stack<TreeNode> s1 = new Stack<>();
+        s1.push(pRoot);
+        //s2存偶数层节点
+        Stack<TreeNode> s2 = new Stack<>();
+
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+
+        while (!s1.empty() || !s2.empty()) {
+            if (layer % 2 != 0) {
+                ArrayList<Integer> temp = new ArrayList<>();
+                while (!s1.empty()) {
+                    TreeNode node = s1.pop();
+                    if (node != null) {
+                        temp.add(node.val);
+                        System.out.print(node.val + " ");
+                        s2.push(node.left);
+                        s2.push(node.right);
+                    }
+                }
+                if (!temp.isEmpty()) {
+                    res.add(temp);
+                    layer++;
+                    System.out.println();
+                }
+            } else {
+                ArrayList<Integer> temp = new ArrayList<>();
+                while (!s2.empty()) {
+                    TreeNode node = s2.pop();
+                    if (node != null) {
+                        temp.add(node.val);
+                        System.out.print(node.val + " ");
+                        s1.push(node.right);
+                        s1.push(node.left);
+                    }
+                }
+                if (!temp.isEmpty()) {
+                    res.add(temp);
+                    layer++;
+                    System.out.println();
+                }
+            }
+        }
+        return res;
+    }
+
+    //输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
+    // 如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
+    public boolean VerifySquenceOfBST(int[] sequence) {
+        if (sequence.length == 0){
+            return false;
+        }
+        return IsTreeBST(sequence, 0, sequence.length - 1);
+    }
+
+    public boolean IsTreeBST(int[] sequence, int start, int end) {
+        if (start>=end){
+            return true;
+        }
+        int i = start;
+        for (; i < end; i++) {
+            if (sequence[i] > sequence[end]) {
+                break;
+            }
+        }
+        for (int j = i; j < end; j++) {
+            if (sequence[j] < sequence[end]) {
+                return false;
+            }
+        }
+        return IsTreeBST(sequence, start, i - 1) && IsTreeBST(sequence, i, end - 1);
+    }
 
     public static void main(String[] args) {
         Solution s = new Solution();
