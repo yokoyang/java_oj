@@ -63,7 +63,6 @@ public class Solution {
     //inorder = [9,3,15,20,7]
     //Return the following binary tree:
 //    输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
-//    例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
     //    3
     //   / \
     //  9  20
@@ -217,10 +216,12 @@ public class Solution {
                 ArrayList<Integer> temp = new ArrayList<>();
                 while (!s1.empty()) {
                     TreeNode node = s1.pop();
-                    if (node != null) {
-                        temp.add(node.val);
-                        System.out.print(node.val + " ");
+                    temp.add(node.val);
+                    System.out.print(node.val + " ");
+                    if (node.left != null) {
                         s2.push(node.left);
+                    }
+                    if (node.right != null) {
                         s2.push(node.right);
                     }
                 }
@@ -233,10 +234,12 @@ public class Solution {
                 ArrayList<Integer> temp = new ArrayList<>();
                 while (!s2.empty()) {
                     TreeNode node = s2.pop();
-                    if (node != null) {
-                        temp.add(node.val);
-                        System.out.print(node.val + " ");
+                    temp.add(node.val);
+                    System.out.print(node.val + " ");
+                    if (node.right != null) {
                         s1.push(node.right);
+                    }
+                    if (node.left != null) {
                         s1.push(node.left);
                     }
                 }
@@ -253,14 +256,14 @@ public class Solution {
     //输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
     // 如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
     public boolean VerifySquenceOfBST(int[] sequence) {
-        if (sequence.length == 0){
+        if (sequence.length == 0) {
             return false;
         }
         return IsTreeBST(sequence, 0, sequence.length - 1);
     }
 
     public boolean IsTreeBST(int[] sequence, int start, int end) {
-        if (start>=end){
+        if (start >= end) {
             return true;
         }
         int i = start;
@@ -277,9 +280,126 @@ public class Solution {
         return IsTreeBST(sequence, start, i - 1) && IsTreeBST(sequence, i, end - 1);
     }
 
+    //    输入一颗二叉树的跟节点和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。
+//    路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。(注意: 在返回值的list中，数组长度大的数组靠前)
+    ArrayList<ArrayList<Integer>> findPathRes = new ArrayList<>();
+
+    public ArrayList<ArrayList<Integer>> FindPath(TreeNode root, int target) {
+        if (root == null) {
+            return findPathRes;
+        }
+        ArrayList<Integer> tmp = new ArrayList<>();
+        tmp.add(root.val);
+        findPath_C(root, target, 0, tmp);
+        return findPathRes;
+    }
+
+    private boolean checkIsLeaf(TreeNode node) {
+        if (node.left == null && node.right == null) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean findPath_C(TreeNode now, int target, int nowSum, ArrayList<Integer> record) {
+        nowSum += now.val;
+        if (checkIsLeaf(now)) {
+            if (nowSum == target) {
+                findPathRes.add(new ArrayList<>(record));
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (now.left != null) {
+            record.add(now.left.val);
+            findPath_C(now.left, target, nowSum, record);
+            record.remove(record.size() - 1);
+        }
+        if (now.right != null) {
+            record.add(now.right.val);
+            findPath_C(now.right, target, nowSum, record);
+            record.remove(record.size() - 1);
+        }
+        return false;
+    }
+
+    private ArrayList<ArrayList<Integer>> listAll = new ArrayList<>();
+    private ArrayList<Integer> list = new ArrayList<Integer>();
+
+    //更加精炼的写法，其实是把左右两侧都找完之后，再remove的
+    private ArrayList<ArrayList<Integer>> FindPath2(TreeNode root, int target) {
+        if (root == null) return listAll;
+        list.add(root.val);
+        target -= root.val;
+        if (target == 0 && root.left == null && root.right == null)
+            listAll.add(new ArrayList<>(list));
+        FindPath2(root.left, target);
+        FindPath2(root.right, target);
+        list.remove(list.size() - 1);
+        return listAll;
+    }
+
     public static void main(String[] args) {
         Solution s = new Solution();
         s.buildTree(new int[]{3, 9, 20, 15, 7}, new int[]{9, 3, 15, 20, 7});
         Integer[] array = new Integer[]{-1, 0, 3, -2, 4, 12, 13, 8};
+    }
+
+    public class RandomListNode {
+        int label;
+        RandomListNode next = null;
+        RandomListNode random = null;
+
+        RandomListNode(int label) {
+            this.label = label;
+        }
+    }
+
+    //    输入一个复杂链表（每个节点中有节点值，以及两个指针，
+//    一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head。
+
+    public RandomListNode cloneRandomListNode(RandomListNode pHead) {
+        HashMap<RandomListNode, RandomListNode> map = new HashMap<>();
+        RandomListNode cur = pHead;
+        while (cur != null) {
+            map.put(cur, new RandomListNode(cur.label));
+            cur = cur.next;
+        }
+        cur = pHead;
+        while (cur != null) {
+            map.get(cur).next = map.get(cur.next);
+            cur = cur.next;
+        }
+        RandomListNode resHead = map.get(pHead);
+        cur = pHead;
+        while (cur != null) {
+            map.get(cur).random = map.get(cur.random);
+            cur = cur.next;
+        }
+        return resHead;
+    }
+
+    public RandomListNode cloneRandomListNode2(RandomListNode pHead) {
+        if (pHead == null) {
+            return null;
+        }
+        HashMap<RandomListNode, RandomListNode> record = new HashMap<>();
+        RandomListNode cur = pHead;
+        while (cur != null) {
+            record.put(cur, new RandomListNode(cur.label));
+            cur = cur.next;
+        }
+        cur = pHead;
+        while (cur != null) {
+            record.get(cur).next = record.get(cur.next);
+            cur = cur.next;
+        }
+        cur = pHead;
+        while (cur != null) {
+            record.get(cur).random = record.get(cur.random);
+            cur = cur.next;
+        }
+        return record.get(pHead);
     }
 }
