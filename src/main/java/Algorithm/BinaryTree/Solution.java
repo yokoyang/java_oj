@@ -62,7 +62,8 @@ public class Solution {
     //    preorder = [3,9,20,15,7]
     //inorder = [9,3,15,20,7]
     //Return the following binary tree:
-//    输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+//    输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。
+//    假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
     //    3
     //   / \
     //  9  20
@@ -401,5 +402,80 @@ public class Solution {
             cur = cur.next;
         }
         return record.get(pHead);
+    }
+
+    public RandomListNode cloneRandomListNode3(RandomListNode pHead) {
+        if (pHead == null) {
+            return null;
+        }
+        cloneNodes(pHead);
+        cloneRandomLink(pHead);
+        return getCloneRandomList(pHead);
+    }
+
+    private void cloneNodes(RandomListNode pHead) {
+        RandomListNode cur = pHead;
+        while (cur != null) {
+            RandomListNode clonedNode = new RandomListNode(cur.label);
+            clonedNode.next = cur.next;
+            cur.next = clonedNode;
+            cur = cur.next.next;
+        }
+    }
+
+    private void cloneRandomLink(RandomListNode pHead) {
+        RandomListNode cur = pHead;
+        while (cur != null) {
+            cur.next.random = cur.random == null ? null : cur.random.next;
+            cur = cur.next.next;
+        }
+    }
+
+    private RandomListNode getCloneRandomList(RandomListNode pHead) {
+        RandomListNode curNode = pHead;
+        RandomListNode cloneHead = pHead.next;
+        while (curNode != null) {
+            RandomListNode cloneNode = curNode.next;
+            curNode.next = curNode.next.next;
+            if (cloneNode.next != null) {
+                cloneNode.next = cloneNode.next.next;
+            }
+            curNode = curNode.next;
+        }
+        return cloneHead;
+    }
+
+    //二叉树的序列化和反序列化
+    String Serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        if (root == null) {
+            sb.append("#,");
+            return sb.toString();
+        }
+        sb.append(root.val).append(",");
+        sb.append(Serialize(root.left));
+        sb.append(Serialize(root.right));
+        return sb.toString();
+    }
+
+    TreeNode Deserialize(String str) {
+        if (str == null) {
+            return null;
+        }
+        String[] strSeg = str.split(",");
+        return DeserializeStr(strSeg);
+    }
+
+    int strSegIndex = -1;
+
+    TreeNode DeserializeStr(String[] strSeg) {
+        strSegIndex++;
+        TreeNode treeNode = null;
+        if (!strSeg[strSegIndex].equals("#")) {
+            treeNode = new TreeNode(Integer.parseInt(strSeg[strSegIndex]));
+            treeNode.left = DeserializeStr(strSeg);
+            treeNode.right = DeserializeStr(strSeg);
+        }
+        return treeNode;
     }
 }

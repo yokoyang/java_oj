@@ -8,8 +8,7 @@ import java.util.List;
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.combinationSum3(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
-        s.permuteUnique(new int[]{1, 1, 2});
+        s.UniqueCombinationSum(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
         char[][] boards = new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
         String word = "ABCCED";
         s.exist(boards, word);
@@ -18,6 +17,7 @@ public class Solution {
     }
 
     //78. Subsets
+    //组合问题,没有重复元素
     List<List<Integer>> subsetsRes = new ArrayList<>();
 
     public List<List<Integer>> subsets(int[] nums) {
@@ -37,6 +37,24 @@ public class Solution {
             nowSelect.add(nums[i]);
             subsetDFS(nums, i + 1, nowSelect);
             nowSelect.remove(nowSelect.size() - 1);
+        }
+    }
+
+    //    90. Subsets II
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        Arrays.sort(nums);
+        backtrack(list, new ArrayList<>(), nums, 0);
+        return list;
+    }
+
+    private void backtrack(List<List<Integer>> list, List<Integer> tempList, int[] nums, int start) {
+        list.add(new ArrayList<>(tempList));
+        for (int i = start; i < nums.length; i++) {
+            if (i > start && nums[i] == nums[i - 1]) continue; // skip duplicates
+            tempList.add(nums[i]);
+            backtrack(list, tempList, nums, i + 1);
+            tempList.remove(tempList.size() - 1);
         }
     }
 
@@ -68,7 +86,7 @@ public class Solution {
         return false;
 
     }
-
+//    39. Combination Sum 可以使用多次
     HashSet<List<Integer>> combinationSumRes = new HashSet<>();
 
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
@@ -119,6 +137,8 @@ public class Solution {
             }
         }
     }
+
+
     //40. Combination Sum II
     //Input: candidates = [10,1,2,7,6,1,5], target = 8,
     //A solution set is:
@@ -129,7 +149,7 @@ public class Solution {
     //  [1, 1, 6]
     //]
 
-    public List<List<Integer>> combinationSum3(int[] candidates, int target) {
+    public List<List<Integer>> UniqueCombinationSum(int[] candidates, int target) {
         Arrays.sort(candidates);
         List<List<Integer>> res = new ArrayList<>();
         if (target <= 0) {
@@ -150,6 +170,7 @@ public class Solution {
                 continue;
             }
             tmp.add(candidates[i]);
+            //这里是i+1，因为不能使用相同的元素了
             traceSum3(res, tmp, i + 1, candidates, remain - candidates[i]);
             tmp.remove(tmp.size() - 1);
         }
@@ -176,45 +197,6 @@ public class Solution {
         return res;
     }
 
-    public List<List<Integer>> permuteUnique(int[] nums) {
-        List<List<Integer>> res = new ArrayList<>();
-        Arrays.sort(nums);
-        tracePermuteUnique(res, new ArrayList<>(), nums, new boolean[nums.length]);
-        return res;
-    }
-//47. Permutations II
-//    Given a collection of numbers that might contain duplicates, return all possible unique permutations.
-//    Input: [1,1,2]
-//Output:
-//[
-//  [1,1,2],
-//  [1,2,1],
-//  [2,1,1]
-//]
-//    例如，假设输入的数组为[1，1，2]。则当第一个1被添加进结果集时，可以继续使用第二个1作为元素添加进结果集从而生成112。
-//    同理，当试图将第二个1作为第一个元素添加进结果集时，只要第一个1还没有被使用过，则不可以使用第二个1。因此，112不会被重复的添加进结果集。
-//其实，这个算法保证了所有重复的数字在结果集中的顺序和在原输入数组中的顺序是相同的。
-// 假设将[1,1,2]表示为[1,1#,2],那么结果集中会确保1永远在数值1#的前面，从而避免了11#2和1#12的重复情况出现。
-
-    private void tracePermuteUnique(List<List<Integer>> res, List<Integer> tmp, int[] nums, boolean[] used) {
-        if (tmp.size() == nums.length) {
-            res.add(new ArrayList<>(tmp));
-        } else {
-            for (int i = 0; i < nums.length; i++) {
-                if (used[i]) {
-                    continue;
-                }
-                if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
-                    continue;
-                }
-                used[i] = true;
-                tmp.add(nums[i]);
-                tracePermuteUnique(res, tmp, nums, used);
-                tmp.remove(tmp.size() - 1);
-                used[i] = false;
-            }
-        }
-    }
 
     class TreeNode {
         int val;
@@ -337,7 +319,7 @@ public class Solution {
             sum += col % 10;
             col = col / 10;
         }
-        if (sum > threshold){
+        if (sum > threshold) {
             return false;
         }
         return true;

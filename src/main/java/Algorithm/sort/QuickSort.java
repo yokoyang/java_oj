@@ -22,7 +22,7 @@ public class QuickSort {
         quickSortC(A, q + 1, end);
     }
 
-    private static int partition(int[] A, int left, int right) {
+    public static int partition(int[] A, int left, int right) {
         int pivot = A[right];
         int i = left;
         int j = left;
@@ -46,6 +46,5 @@ public class QuickSort {
         for (int i = 0; i != len; i++) {
             System.out.println(A[i]);
         }
-
     }
 }

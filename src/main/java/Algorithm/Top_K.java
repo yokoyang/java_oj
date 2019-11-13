@@ -5,7 +5,7 @@ import java.util.PriorityQueue;
 import static Algorithm.sort.QuickSort.quickSort;
 
 public class Top_K {
-
+    //第K大的数字
     private static int topK(int[] A, int size, int K) {
         return find_C(A, 0, size - 1, K);
     }
@@ -16,23 +16,23 @@ public class Top_K {
         arr[j] = t;
     }
 
-    private static int find_C(int[] A, int left, int r, int K) {
-        int pivot = A[r];
+    private static int find_C(int[] A, int left, int right, int K) {
+        int pivot = A[right];
         int i = left;
         int j = left;
-        for (; j != r; j++) {
+        for (; j != right; j++) {
             if (A[j] > pivot) {
                 swap(A, j, i);
                 i++;
             }
         }
-        swap(A, i, r);
+        swap(A, i, right);
         if (i == K) {
             return A[i];
         } else if (i > K) {
             return find_C(A, left, i - 1, K);
         } else {
-            return find_C(A, i + 1, r, K);
+            return find_C(A, i + 1, right, K);
         }
     }
 

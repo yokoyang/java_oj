@@ -23,9 +23,84 @@ public class Solution {
             return res;
         }
         boolean[] record = new boolean[size];
-        List<Integer> one = new ArrayList<>();
-        dfsPermute(res, one, nums, record);
+        List<Integer> each = new ArrayList<>();
+        dfsPermute(res, each, nums, record);
         return res;
+    }
+    //47. Permutations II
+//    Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+//    Input: [1,1,2]
+//Output:
+//[
+//  [1,1,2],
+//  [1,2,1],
+//  [2,1,1]
+//]
+//    例如，假设输入的数组为[1，1，2]。则当第一个1被添加进结果集时，可以继续使用第二个1作为元素添加进结果集从而生成112。
+//    同理，当试图将第二个1作为第一个元素添加进结果集时，只要第一个1还没有被使用过，则不可以使用第二个1。因此，112不会被重复的添加进结果集。
+//其实，这个算法保证了所有重复的数字在结果集中的顺序和在原输入数组中的顺序是相同的。
+// 假设将[1,1,2]表示为[1,1#,2],那么结果集中会确保1永远在数值1#的前面，从而避免了11#2和1#12的重复情况出现。
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        tracePermuteUnique(res, new ArrayList<>(), nums, new boolean[nums.length]);
+        return res;
+    }
+
+    private void tracePermuteUnique(List<List<Integer>> res, List<Integer> tmp, int[] nums, boolean[] used) {
+        if (tmp.size() == nums.length) {
+            res.add(new ArrayList<>(tmp));
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (used[i]) {
+                    continue;
+                }
+                if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
+                    continue;
+                }
+                used[i] = true;
+                tmp.add(nums[i]);
+                tracePermuteUnique(res, tmp, nums, used);
+                tmp.remove(tmp.size() - 1);
+                used[i] = false;
+            }
+        }
+    }
+
+    //    输入一个字符串,按字典序打印出该字符串中字符的所有排列。
+    //    可能有字符重复
+    public ArrayList<String> Permutation(String str) {
+        ArrayList<String> res = new ArrayList<>();
+        if (str == null || str.equals("")) {
+            return res;
+        }
+        char[] chars = str.toCharArray();
+        Arrays.sort(chars);
+        StringBuilder each = new StringBuilder();
+        dfsCharPermutation(res, each, chars, new boolean[chars.length]);
+        return res;
+    }
+
+    private void dfsCharPermutation(ArrayList<String> res, StringBuilder each, char[] chars, boolean[] record) {
+        if (each.length() >= chars.length) {
+            res.add(each.toString());
+            return;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (record[i]) {
+                continue;
+            }
+            if (i > 0 && !record[i - 1] && chars[i] == chars[i - 1]) {
+                continue;
+            }
+            each.append(chars[i]);
+            record[i] = true;
+            dfsCharPermutation(res, each, chars, record);
+            each.deleteCharAt(each.length() - 1);
+            record[i] = false;
+        }
+
     }
 
     //    给你一根长度为n的绳子，请把绳子剪成m段（m、n都是整数，n>1并且m>1），每段绳子的长度记为k[0],k[1],...,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
@@ -52,9 +127,9 @@ public class Solution {
         return dp[n];
     }
 
-    private void dfsPermute(List<List<Integer>> res, List<Integer> one, int[] nums, boolean[] record) {
-        if (one.size() >= nums.length) {
-            res.add(new ArrayList<>(one));
+    private void dfsPermute(List<List<Integer>> res, List<Integer> each, int[] nums, boolean[] record) {
+        if (each.size() >= nums.length) {
+            res.add(new ArrayList<>(each));
             return;
         }
         for (int i = 0; i < nums.length; i++) {
@@ -62,9 +137,9 @@ public class Solution {
                 continue;
             }
             record[i] = true;
-            one.add(nums[i]);
-            dfsPermute(res, one, nums, record);
-            one.remove(one.size() - 1);
+            each.add(nums[i]);
+            dfsPermute(res, each, nums, record);
+            each.remove(each.size() - 1);
             record[i] = false;
         }
     }
@@ -84,7 +159,6 @@ public class Solution {
         }
         return dp[m - 1][n - 1];
     }
-
 
 
     public List<List<String>> groupAnagrams(String[] strs) {
@@ -215,6 +289,42 @@ public class Solution {
         return maxValuePerVolume[maxVolume];
     }
 
+    public int JumpFloor(int target) {
+        int[] memo = new int[]{1, 2};
+        if (target < 3) {
+            return target;
+        }
+        int result = 0;
+        for (int i = 2; i < target; i++) {
+            result = memo[0] + memo[1];
+            memo[0] = memo[1];
+            memo[1] = result;
+        }
+        return result;
+    }
+
+    //    一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。
+//    求该青蛙跳上一个n级的台阶总共有多少种跳法。
+    public int JumpFloorII(int target) {
+        if (target <= 2) {
+            return target;
+        }
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+        int sum;
+
+        for (int i = 3; i <= target; i++) {
+            sum = 0;
+            for (int j = 0; j < i; j++) {
+                sum += dp[j];
+            }
+            dp[i] = sum;
+        }
+        return dp[target];
+    }
+
     private int backPack(int maxVolume, int[] volumes, int[] values) {
         int[][] dp = new int[volumes.length + 1][maxVolume + 1];
         for (int i = 1; i <= volumes.length; i++) {
@@ -263,6 +373,8 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
+        solution.JumpFloorII(4);
+        solution.Permutation("");
         solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
         solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
         Boolean[] booleans = new Boolean[3];

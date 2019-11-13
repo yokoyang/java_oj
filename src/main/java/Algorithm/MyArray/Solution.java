@@ -3,9 +3,12 @@ package Algorithm.MyArray;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static Algorithm.sort.QuickSort.partition;
+
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
+        s.MoreThanHalfNum_Solution_1(new int[]{4, 2, 1, 4, 2, 4});
         s.printMatrix(new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
         s.reOrderArrayOddFirst(new int[]{1, 2, 3, 4, 5, 6, 7});
         s.sortAges(new int[]{2, 31, 2, 1, 3});
@@ -541,5 +544,66 @@ class Solution {
         // 从下到上打印一列
         for (int n = rows - start - 2; n >= start + 1 && columns - start - 1 > start; n--)
             list.add(matrix[n][start]);
+    }
+
+    //offer 39
+    // 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+    //version 1: 可以修改原始数组的情况下
+    public int MoreThanHalfNum_Solution_1(int[] array) {
+        int length = array.length;
+        int mid = length >> 1;
+        int start = 0;
+        int end = length - 1;
+        int index = partition(array, 0, end);
+        while (index != mid) {
+            if (index > mid) {
+                end = index - 1;
+                index = partition(array, start, end);
+            } else {
+                start = index + 1;
+                index = partition(array, start, end);
+            }
+        }
+        int result = array[mid];
+        int times = 0;
+        for (int i = 0; i < length; ++i) {
+            if (array[i] == result)
+                times++;
+        }
+        if (times * 2 <= length) {
+            return 0;
+        } else {
+            return result;
+        }
+    }
+
+    //不能修改原始数组的情况下，找到数组中出现次数超过一半的元素
+    //记录每个元素出现的次数
+    public int MoreThanHalfNum_Solution_2(int[] array) {
+        if (array.length == 0) {
+            return 0;
+        }
+        int res = array[0];
+        int times = 1;
+        for (int i = 1; i < array.length; i++) {
+            if (times == 0) {
+                times = 1;
+                res = array[i];
+            } else if (array[i] == res) {
+                times++;
+            } else {
+                times--;
+            }
+        }
+        times = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (res == array[i]) {
+                times++;
+            }
+        }
+        if (times * 2 <= array.length) {
+            return 0;
+        }
+        return res;
     }
 }

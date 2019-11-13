@@ -157,4 +157,31 @@ public class Solution {
         return (c1 + c2) * 0.5;
 
     }
+
+    //    输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。
+    //    要求不能创建任何新的结点，只能调整树中结点指针的指向。
+    public TreeNode Convert(TreeNode pRootOfTree) {
+        if (pRootOfTree == null) {
+            return null;
+        }
+        if (pRootOfTree.left == null && pRootOfTree.right == null) {
+            return pRootOfTree;
+        }
+
+        TreeNode leftPart = Convert(pRootOfTree.left);
+        TreeNode now = leftPart;
+        while (now != null && now.right != null) {
+            now = now.right;
+        }
+        if (now != null) {
+            now.right = pRootOfTree;
+            pRootOfTree.left = now;
+        }
+        TreeNode rightPart = Convert(pRootOfTree.right);
+        pRootOfTree.right = rightPart;
+        if(rightPart!=null){
+            rightPart.left = pRootOfTree;
+        }
+        return leftPart == null ? pRootOfTree : leftPart;
+    }
 }
