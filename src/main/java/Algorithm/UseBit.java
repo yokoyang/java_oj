@@ -27,6 +27,7 @@ public class UseBit {
 
     public static void main(String[] args) {
         UseBit useBit = new UseBit();
+        System.out.println(Integer.toBinaryString(-1));
         useBit.isPowerOfTwo(-2147483648);
         useBit.isPowerOfTwo(-2147483647);
     }

@@ -3,7 +3,7 @@ package Algorithm.leetcodeDeque;
 import java.util.*;
 
 public class Solution {
-
+    //滑动窗口最大值（使用堆） 比较慢
     public int[] maxSlidingWindow(int[] nums, int k) {
         if (nums.length == 0) {
             return new int[0];
@@ -23,7 +23,7 @@ public class Solution {
         }
         return result;
     }
-
+    //提示我们要用双向队列 deque 来解题，并提示我们窗口中只留下有用的值，没用的全移除掉。
     public int[] maxSlidingWindow2(int[] nums, int k) {
         if (nums.length == 0) return new int[]{};
         // deque is a window of at most size k that ends at index i

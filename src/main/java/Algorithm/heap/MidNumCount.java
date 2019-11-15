@@ -73,8 +73,13 @@ public class MidNumCount {
    *
    * @return
    */
-  public int getMidValue() {
-    return firstBigHeap.peek();
+  public double getMidValue() {
+    if((count&1)==0){
+      return (double) (afterLittleHeap.peek() + firstBigHeap.peek()) /2;
+    }
+    else{
+      return (double)(firstBigHeap.peek());
+    }
   }
 
   /**

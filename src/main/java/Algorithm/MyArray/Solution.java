@@ -606,4 +606,17 @@ class Solution {
         }
         return res;
     }
+
+    //    334. Increasing Triplet Subsequence
+    //判断数组中是否有长度为3的递增子序列
+    public boolean increasingTriplet(int[] nums) {
+        int min = Integer.MAX_VALUE, secondMin = Integer.MAX_VALUE;
+        for (int num : nums) {
+            if (num <= min) min = num;
+            else if (num < secondMin) secondMin = num;
+            else if (num > secondMin) return true;
+        }
+        return false;
+    }
+
 }

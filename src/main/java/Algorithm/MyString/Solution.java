@@ -291,7 +291,8 @@ public class Solution {
     }
 
     //正则表达式匹配
-    //请实现一个函数用来匹配包括'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，而'*'表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。
+    //请实现一个函数用来匹配包括'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，而'*'表示它前面的字符可以出现任意次（包含0次）。
+    // 在本题中，匹配是指字符串的所有字符匹配整个模式。
     // 例如，字符串"aaa"与模式"a.a"和"ab*ac*a"匹配，但是与"aa.a"和"ab*a"均不匹配
     public boolean reMatch(char[] str, char[] pattern) {
         if (str.length == 0 && pattern.length == 0) {
@@ -322,7 +323,7 @@ public class Solution {
     }
 
     //使用动态规划，完成正则匹配
-    //i和j表示当前使用了多少个元素
+    //i和j分别表示当前使用了str和pattern多少个元素
     public boolean reMatch2(char[] str, char[] pattern) {
         if (str.length == 0 && pattern.length == 0) {
             return true;
@@ -393,4 +394,23 @@ public class Solution {
         return sb.toString();
     }
 
+    //    第一个只出现一次的字符
+    //    在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,并返回它的位置, 如果没有则返回 -1（需要区分大小写）.
+    //利用每个字母的ASCII码作hash来作为数组的index。首先用一个58长度的数组来存储每个字母出现的次数，
+    // 为什么是58呢，主要是由于A-Z对应的ASCII码为65-90，a-z对应的ASCII码值为97-122，
+    // 而每个字母的index=int(word)-65，比如g=103-65=38，而数组中具体记录的内容是该字母出现的次数，最终遍历一遍字符串，
+    // 找出第一个数组内容为1的字母就可以了，时间复杂度为O(n)
+    public int FirstNotRepeatingChar(String str) {
+        int[] record = new int[58];
+        char[] chars = str.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            record[(chars[i] - 'A')] += 1;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (record[chars[i] - 'A'] == 1) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

@@ -55,5 +55,9 @@ public class ReversePair {
         ReversePair rp = new ReversePair();
         int[] arrays = new int[]{1, 10, 6, 5, 2, 3, 4, 1};
         rp.counterSort(arrays, 0, arrays.length - 1);
+        for (int i : arrays) {
+            System.out.print(i);
+            System.out.print(" ");
+        }
     }
 }

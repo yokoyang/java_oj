@@ -20,4 +20,7 @@ public class Solution {
         return res;
     }
 
+    public static void main(String[] args) {
+        System.out.println(Integer.toBinaryString(~0<<3));
+    }
 }

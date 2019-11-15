@@ -3,17 +3,7 @@ package Algorithm.DP;
 import java.util.*;
 
 public class Solution {
-//    334. Increasing Triplet Subsequence
 
-    public boolean increasingTriplet(int[] nums) {
-        int min = Integer.MAX_VALUE, secondMin = Integer.MAX_VALUE;
-        for (int num : nums) {
-            if (num <= min) min = num;
-            else if (num < secondMin) secondMin = num;
-            else if (num > secondMin) return true;
-        }
-        return false;
-    }
 
     //    没有重复数字的序列，返回所有可能的全排序
     public List<List<Integer>> permute(int[] nums) {
@@ -103,7 +93,9 @@ public class Solution {
 
     }
 
-    //    给你一根长度为n的绳子，请把绳子剪成m段（m、n都是整数，n>1并且m>1），每段绳子的长度记为k[0],k[1],...,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+    //    给你一根长度为n的绳子，请把绳子剪成m段（m、n都是整数，n>1并且m>1），
+    //    每段绳子的长度记为k[0],k[1],...,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？
+    //    例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
     public int cutRope(int n) {
         int[] dp = new int[n + 1];
         if (n < 2) {
@@ -115,7 +107,7 @@ public class Solution {
         dp[1] = 1;
         dp[2] = 2;
         dp[3] = 2;
-        int max = 0;
+        int max;
         for (int i = 4; i <= n; i++) {
             max = 0;
             //因为是对称的，所有可以是j = i/2开始
@@ -144,6 +136,7 @@ public class Solution {
         }
     }
 
+    // 矩阵中到m,n位置有多少种走法
     public int uniquePaths(int m, int n) {
         int[][] dp = new int[m][n];
         for (int i = 0; i < m; i++) {
@@ -385,4 +378,30 @@ public class Solution {
         int t = solution.maxProfit(a);
         System.out.println(t);
     }
+    // offer 42
+    //连续子数组最大和
+
+    //Input: [-2,1,-3,4,-1,2,1,-5,4],
+    //Output: 6
+    //Explanation: [4,-1,2,1] has the largest sum = 6.
+    //DP的方式
+    public int maxSubArray(int[] nums) {
+        int size = nums.length;
+        if (size == 0) {
+            return 0;
+        }
+//        dp 以i结尾的最大序列的max值
+        int[] dp = new int[size];
+        dp[0] = nums[0];
+        for (int i = 1; i < size; i++) {
+            dp[i] = Math.max(dp[i - 1] + nums[i], nums[i]);
+        }
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < size; i++) {
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+
+
 }
