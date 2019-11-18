@@ -242,10 +242,10 @@ public class Solution {
         return list.get(list.size() - 1);
     }
 
-    private int finMin(int num2, int num3, int num5) {
-        int min = Math.min(num2, Math.min(num3, num5));
-        return min == num2 ? 0 : min == num3 ? 1 : 2;
-    }
+    //数字序列中某一位的数字
+    //数字序列 0123456789101112，求第n位的数字
+    //https://blog.csdn.net/m0_37862405/article/details/80341260
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();

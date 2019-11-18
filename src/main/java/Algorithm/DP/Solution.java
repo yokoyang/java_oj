@@ -403,5 +403,128 @@ public class Solution {
         return max;
     }
 
+    //    91. Decode Ways
+    //A message containing letters from A-Z is being encoded to numbers using the following mapping:
+    //输入的是数字
+    //    https://zxi.mytechroad.com/blog/dynamic-programming/leetcode-91-decode-ways/
+    public int numDecodings(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int n = s.length();
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = s.charAt(0) != '0' ? 1 : 0;
+        for (int i = 2; i <= n; i++) {
+            int first = Integer.parseInt(s.substring(i - 1, i));
+            int second = Integer.parseInt(s.substring(i - 2, i));
+            if (first >= 1 && first <= 9) {
+                dp[i] += dp[i - 1];
+            }
+            if (second >= 10 && second <= 26) {
+                dp[i] += dp[i - 2];
+            }
+        }
+        return dp[n];
+    }
+
+    //使用滚动数组
+    public int numDecodings2(String s) {
+        if (s == null || s.length() == 0 || s.charAt(0) == '0') {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+        int w1 = 1, w2 = 1;
+        for (int i = 1; i < s.length(); i++) {
+            int w = 0;
+            if (!isValid(s.charAt(i)) && !isValid(s.charAt(i - 1), s.charAt(i))) {
+                return 0;
+            }
+            if (isValid(s.charAt(i))) {
+                w += w1;
+            }
+            if (isValid(s.charAt(i - 1), s.charAt(i))) {
+                w += w2;
+            }
+            //滚动
+            w2 = w1;
+            w1 = w;
+        }
+        return w1;
+    }
+
+    private boolean isValid(char c) {
+        return c != '0';
+    }
+
+    private boolean isValid(char c1, char c2) {
+        int num = 10 * (c1 - '0') + (c2 - '0');
+        if (num >= 10 && num <= 26) {
+            return true;
+        }
+        return false;
+    }
+
+    //使用计划递归，5s
+    HashMap<String, Integer> memo = new HashMap<>();
+
+    public int numDecodings3(String s) {
+        if (s == null || s.length() == 0 || s.charAt(0) == '0') {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+        memo.put("", 1);
+        return ways(s);
+    }
+
+    private int ways(String s) {
+        Integer val = memo.get(s);
+
+        if (val != null) {
+            return val;
+        }
+        if (s.charAt(0) == '0') {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+        int w = ways(s.substring(1));
+        int prefix = Integer.parseInt(s.substring(0, 2));
+        //因为这时候第0位已经不可能是0
+        if (prefix <= 26) {
+            w += ways(s.substring(2));
+        }
+        memo.put(s, w);
+        return w;
+    }
+
+    //礼物的最大价值（从矩阵的左上角走到右上角）
+    public int maxValueOfGifts(int[][] values) {
+        if (values == null || values.length <= 0 || values[0].length <= 0) {
+            return 0;
+        }
+        int rows = values.length;
+        int cols = values[0].length;
+        int[][] dp = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int up = 0;
+                int left = 0;
+                if (i > 0) {
+                    up = dp[i - 1][j];
+                }
+                if (j > 0) {
+                    left = dp[i][j - 1];
+                }
+                dp[i][j] = Math.max(left, up) + values[i][j];
+            }
+        }
+        return dp[rows - 1][cols - 1];
+    }
 
 }
