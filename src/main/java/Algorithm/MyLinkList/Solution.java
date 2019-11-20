@@ -487,4 +487,64 @@ class Solution {
         }
         return p1;
     }
+
+    //两个链表的第一个公共节点
+    //思路1：数出长的比短的多几个，先多走x步，然后一起走，第一个相同的就是
+    //思路2：使用栈，构建2个栈，先都分别放进去，然后一起弹出，记录最后一个相同的节点就是
+    public ListNode FindFirstCommonNode(ListNode pHead1, ListNode pHead2) {
+        int l1 = GetListLength(pHead1);
+        int l2 = GetListLength(pHead2);
+        ListNode pLong = pHead1;
+        ListNode pShot = pHead2;
+        if (l2 > l1) {
+            pLong = pHead2;
+            pShot = pHead1;
+        }
+        int diff = Math.abs(l1 - l2);
+        for (int i = 0; i < diff; i++) {
+            pLong = pLong.next;
+        }
+        while (pLong != null && pShot != null && pLong != pShot) {
+            pLong = pLong.next;
+            pShot = pShot.next;
+        }
+        return pLong;
+    }
+
+    private int GetListLength(ListNode pHead) {
+        int len = 0;
+        ListNode pNode = pHead;
+        while (pNode != null) {
+            pNode = pNode.next;
+            len++;
+        }
+        return len;
+    }
+
+    //使用栈的方法
+    public ListNode FindFirstCommonNode2(ListNode pHead1, ListNode pHead2) {
+        LinkedList<ListNode> stack1 = new LinkedList<>();
+        LinkedList<ListNode> stack2 = new LinkedList<>();
+        ListNode n1 = pHead1;
+        ListNode n2 = pHead2;
+        while (n1 != null) {
+            stack1.offerLast(n1);
+            n1 = n1.next;
+        }
+
+        while (n2 != null) {
+            stack2.offerLast(n2);
+            n2 = n2.next;
+        }
+        ListNode t1 = null;
+        ListNode t2 = null;
+        while (!stack1.isEmpty() && !stack2.isEmpty()) {
+            t1 = stack1.pollLast();
+            t2 = stack2.pollLast();
+            if (t1 != t2) {
+                break;
+            }
+        }
+        return t1;
+    }
 }

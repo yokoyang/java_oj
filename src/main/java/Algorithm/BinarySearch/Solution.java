@@ -13,7 +13,7 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.searchRange(new int[]{1}, 1);
+//        solution.searchRange(new int[]{1, 1}, 1);
         solution.searchRange(new int[]{5, 7, 7, 8, 8, 10}, 8);
         String str1 = "abc";
         String str2 = new String("abc");
@@ -57,36 +57,59 @@ public class Solution {
         return node;
     }
 
+    //34. Find First and Last Position of Element in Sorted Array
     public int[] searchRange(int[] nums, int target) {
-        int size = nums.length;
-        int[] res = new int[]{-1, -1};
-        if (size == 0) {
-            return res;
-        }
-        int l = 0, r = size - 1, mid;
-        while (l <= r) {
-            mid = l + (r - l) / 2;
-            if (nums[mid] < target) {
-                l = mid + 1;
-            } else if (nums[mid] > target) {
-                r = mid - 1;
-            } else {
-                int t = mid;
-                while (t < size && nums[t] == target) {
-                    t++;
-                }
-                res[1] = t - 1;
-                t = mid;
-                while (t >= 0 && nums[t] == target) {
-                    t--;
-                }
-                res[0] = t + 1;
-                return res;
+        int[] result = new int[2];
+        result[0] = findFirst(nums, target);
+        result[1] = findLast(nums, target);
+        return result;
+    }
 
+    private int findFirst(int[] nums, int target) {
+        int idx = -1;
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid] > target) {
+                end = mid - 1;
+            } else if (nums[mid] < target) {
+                start = mid + 1;
+            }
+
+            if (nums[mid] == target) {
+                if ((mid > 0 && nums[mid - 1] != target) || mid == 0) {
+                    return mid;
+                } else {
+                    end = mid - 1;
+                }
             }
         }
-        return res;
+        return idx;
     }
+
+    private int findLast(int[] nums, int target) {
+        int idx = -1;
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid] > target) {
+                end = mid - 1;
+            } else if (nums[mid] < target) {
+                start = mid + 1;
+            }
+            if (nums[mid] == target) {
+                if ((mid<nums.length-1 && nums[mid +1] != target) || mid == nums.length-1) {
+                    return mid;
+                } else {
+                    start = mid + 1;
+                }
+            }
+        }
+        return idx;
+    }
+
     //    LeetCode 4
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -179,7 +202,7 @@ public class Solution {
         }
         TreeNode rightPart = Convert(pRootOfTree.right);
         pRootOfTree.right = rightPart;
-        if(rightPart!=null){
+        if (rightPart != null) {
             rightPart.left = pRootOfTree;
         }
         return leftPart == null ? pRootOfTree : leftPart;

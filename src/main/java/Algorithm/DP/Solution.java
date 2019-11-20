@@ -366,6 +366,7 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
+        solution.longestSubstringWithoutDuplication("arabcacfr");
         solution.JumpFloorII(4);
         solution.Permutation("");
         solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
@@ -527,4 +528,27 @@ public class Solution {
         return dp[rows - 1][cols - 1];
     }
 
+    //剑指offer 48
+    //最长不含重复字符的子字符串
+    public int longestSubstringWithoutDuplication(String str) {
+        int curLength = 0;
+        int maxLength = 0;
+        int[] position = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            int preIndex = position[str.charAt(i) - 'a'];
+            if (preIndex < 0 || i - preIndex > curLength) {
+                curLength++;
+            } else {
+                if (curLength > maxLength) {
+                    maxLength = curLength;
+                }
+                curLength = i - preIndex;
+        }
+            position[str.charAt(i) - 'a'] = i;
+        }
+        if (curLength >= maxLength) {
+            maxLength = curLength;
+        }
+        return maxLength;
+    }
 }

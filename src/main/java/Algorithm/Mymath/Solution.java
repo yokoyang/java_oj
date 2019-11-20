@@ -223,6 +223,7 @@ public class Solution {
     其实每次我们只用比较3个数：用于乘2的最小的数、用于乘3的最小的数，用于乘5的最小的
     数。也就是比较(2*x , 3*y, 5*z) ，x>=y>=z的，
 */
+    //获得第n个丑数
     public int GetUglyNumber_Solution(int n) {
         if (n <= 0) return 0;
         ArrayList<Integer> list = new ArrayList<>();

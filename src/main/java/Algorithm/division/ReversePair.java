@@ -1,11 +1,7 @@
 package Algorithm.division;
 
-import java.util.Arrays;
 
 public class ReversePair {
-    public int num;
-
-    //通常解法
     public int counterSort(int[] works, int start, int end) {
         if (start >= end) {
             return 0;

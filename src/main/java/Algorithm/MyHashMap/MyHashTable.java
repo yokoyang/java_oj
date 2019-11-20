@@ -63,7 +63,7 @@ public class MyHashTable {
         } else {
             HashEntry cEntry = arrayList.get(theLocIndex);
             while (cEntry != null) {
-                if (cEntry.key == key) {
+                if (cEntry.key.equals(key)) {
                     return cEntry;
                 } else {
                     cEntry = cEntry.next;

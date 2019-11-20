@@ -1,5 +1,8 @@
 package Algorithm.MyString;
 
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 
 public class Solution {
@@ -412,5 +415,76 @@ public class Solution {
             }
         }
         return -1;
+    }
+
+    //请实现一个函数用来找出字符流中第一个只出现一次的字符。例如，当从字符流中只读出前两个字符"go"时，第一个只出现一次的字符是"g"。当从该字符流中读出前六个字符“google"时，第一个只出现一次的字符是"l"。
+    //输出描述:
+    //如果当前字符流没有存在出现一次的字符，返回#字符。
+    private int[] occurence = new int[256];
+    private int index;
+
+    public Solution() {
+        for (int i = 0; i < 256; i++) {
+            occurence[i] = -1;
+        }
+        index = 0;
+    }
+
+    void Insert(char ch) {
+        if (occurence[ch] == -1)
+            occurence[ch] = index;
+        else if (occurence[ch] >= 0)
+            occurence[ch] = -2;
+        index++;
+    }
+
+    //return the first appearence once char in current stringstream
+    char FirstAppearingOnce() {
+        char ch = '\0';
+        int minIndex = Integer.MAX_VALUE;
+        for (int i = 0; i < 256; i++) {
+            if (occurence[i] >= 0 && occurence[i] < minIndex) {
+                ch = (char) i;
+                minIndex = occurence[i];
+            }
+        }
+        if (ch == '\0')
+            return '#';
+        return ch;
+    }
+
+    //翻转单词顺序列
+    //“student. a am I” -> I am a student.”
+    public static String reverseStringSequence(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        String[] seq = str.split("\\s+");
+        int start = 0, end = seq.length - 1;
+        while (start < end) {
+            String tmp = seq[start];
+            seq[start] = seq[end];
+            seq[end] = tmp;
+            start++;
+            end--;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < seq.length; i++) {
+            sb.append(seq[i]).append(" ");
+        }
+        return sb.toString().trim();
+    }
+
+    public static String reverseStringSequence2(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        str = new StringBuilder(str).reverse().toString();
+        String[] seq = str.split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < seq.length; i++) {
+            sb.append(new StringBuilder(seq[i]).reverse().toString()).append(" ");
+        }
+        return sb.toString().trim();
     }
 }
