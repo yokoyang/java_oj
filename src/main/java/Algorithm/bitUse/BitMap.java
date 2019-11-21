@@ -1,4 +1,4 @@
-package Algorithm.myBitMap;
+package Algorithm.bitUse;
 
 public class BitMap {
     //保存数据的

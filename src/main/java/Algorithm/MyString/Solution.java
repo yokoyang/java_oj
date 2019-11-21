@@ -8,7 +8,12 @@ import java.util.*;
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.isNumeric("+100".toCharArray()));
+//        System.out.println(Integer.toBinaryString(-3));
+//        System.out.println(Integer.toBinaryString(0xffffffff));
+//        System.out.println(Integer.toBinaryString(0x7fffffff));
+//        System.out.println(Integer.toBinaryString(-3&0x7fffffff));
+//        System.out.println((-3&0x7fffffff));
+//        System.out.println(s.isNumeric("+100".toCharArray()));
 //        System.out.println(s.reMatch("".toCharArray(), ".*".toCharArray()));
 //        System.out.println(s.countAndSay(4));
 //        System.out.println(s.longestCommonPrefix(new String[]{"aa", "a"}));
