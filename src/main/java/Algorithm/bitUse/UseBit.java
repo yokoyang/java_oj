@@ -26,7 +26,7 @@ public class UseBit {
 
     public static void main(String[] args) {
         UseBit useBit = new UseBit();
-        useBit.singleNumber_3(new int[]{1,2,1,3,2,5});
+        useBit.singleNumber_3(new int[]{1, 2, 1, 3, 2, 5});
         useBit.NumberOf1(12);
         useBit.NumberOf1(-12);
         System.out.println(Integer.toBinaryString(-12));
@@ -54,6 +54,30 @@ public class UseBit {
         }
         System.out.println(count);
         return count;
+    }
+
+    //    137. Single Number II
+    //    Given a non-empty array of integers, every element appears three times except for one, which appears exactly once. Find that single one.
+    //    Input: [2,2,3,2]
+    //Output: 3
+    //    Input: [0,1,0,1,0,1,99]
+    //Output: 99
+    //只有一个数出现1次，其他的都出现3次
+    public int singleNumber_2(int[] nums) {
+        int ans = 0;
+        for (int i = 0; i < 32; i++) {
+            int sum = 0;
+            for (int j = 0; j < nums.length; j++) {
+                if (((nums[j] >> i) & 1) == 1) {
+                    sum++;
+                    sum %= 3;
+                }
+            }
+            if (sum != 0) {
+                ans |= sum << i;
+            }
+        }
+        return ans;
     }
 
     //    260. Single Number III
