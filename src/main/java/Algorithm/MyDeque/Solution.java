@@ -1,4 +1,4 @@
-package Algorithm.leetcodeDeque;
+package Algorithm.MyDeque;
 
 import java.util.*;
 

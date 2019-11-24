@@ -1,5 +1,6 @@
 package Algorithm.MyArray;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import static Algorithm.sort.QuickSort.partition;
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
+        s.isNStraightHand(new int[]{1, 2, 3, 6, 2, 3, 4, 7, 8}, 3);
         s.MoreThanHalfNum_Solution_1(new int[]{4, 2, 1, 4, 2, 4});
         s.printMatrix(new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
         s.reOrderArrayOddFirst(new int[]{1, 2, 3, 4, 5, 6, 7});
@@ -619,4 +621,66 @@ class Solution {
         return false;
     }
 
+    //数组是不是顺子
+    //offer 61
+    public boolean isContinuous(int[] numbers) {
+        if (numbers == null) {
+            return false;
+        }
+        int length = numbers.length;
+        if (length < 1) {
+            return false;
+        }
+        int numberOfZero = 0;
+        int numberOfGap = 0;
+        Arrays.sort(numbers);
+        //统计数组中0的个数
+        for (int i = 0; i < length && numbers[i] == 0; i++) {
+            numberOfZero++;
+        }
+        int small = numberOfZero;
+        int big = small + 1;
+        while (big < length) {
+            if (numbers[big] == numbers[small]) {
+                return false;
+            }
+            int gap = numbers[big] - numbers[small] - 1;
+            numberOfGap += gap;
+            small = big;
+            big++;
+        }
+        return numberOfGap <= numberOfZero;
+    }
+
+    //846 一手顺子
+    //爱丽丝有一手（hand）由整数数组给定的牌。
+    //现在她想把牌重新排列成组，使得每个组的大小都是 W，且由 W 张连续的牌组成。
+    //如果她可以完成分组就返回 true，否则返回 false。
+    public boolean isNStraightHand(int[] hand, int W) {
+        Arrays.sort(hand);
+        int length = hand.length;
+        if (length % W != 0) {
+            return false;
+        }
+        HashMap<Integer, Integer> record = new HashMap<>();
+        for (int num : hand) {
+            record.put(num, record.getOrDefault(num, 0) + 1);
+        }
+
+        for (int i = 0; i < length; i++) {
+            if (i + 1 < length && hand[i + 1] == hand[i]) {
+                continue;
+            }
+            while (record.getOrDefault(hand[i], 0) != 0) {
+                for (int n = hand[i]; n < hand[i] + W; n++) {
+                    int t = record.getOrDefault(n, 0);
+                    if (t == 0) {
+                        return false;
+                    }
+                    record.put(n, t - 1);
+                }
+            }
+        }
+        return true;
+    }
 }

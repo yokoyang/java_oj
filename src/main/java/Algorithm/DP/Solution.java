@@ -366,6 +366,10 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
+        String[] result = solution.printProbability(3);
+        System.out.println(result.length);
+        for (String val : result)
+            System.out.print(val + ",");
         solution.longestSubstringWithoutDuplication("arabcacfr");
         solution.JumpFloorII(4);
         solution.Permutation("");
@@ -543,12 +547,71 @@ public class Solution {
                     maxLength = curLength;
                 }
                 curLength = i - preIndex;
-        }
+            }
             position[str.charAt(i) - 'a'] = i;
         }
         if (curLength >= maxLength) {
             maxLength = curLength;
         }
         return maxLength;
+    }
+
+    public String[] printProbability(int n) {
+        if (n <= 0)
+            return null;
+        //结果可能性总数
+        int total = (int) Math.pow(6, n);
+        String[] result = new String[6 * n - n + 1];
+
+        //dp[c][k] c个骰子朝上一面点数之和为k的次数
+        int[][] dp = new int[n + 1][6 * n + 1];
+        //初始化dp[1][1...6]
+        for (int x = 1; x <= 6; x++)
+            dp[1][x] = 1;
+        //执行计算
+        for (int i = 2; i <= n; i++)
+            for (int j = 2; j <= 6 * n; j++) {
+                int sum = 0;
+                for (int m = 1; m < j && m <= 6; m++)
+                    sum += dp[i - 1][j - m];
+                dp[i][j] = sum;
+            }
+        //统计结果,用分数表示
+        for (int k = n; k <= 6 * n; k++) {
+            result[k - n] = dp[n][k] + "/" + total;
+        }
+        return result;
+    }
+//    1155. 掷骰子的N种方法
+//这里有 d 个一样的骰子，每个骰子上都有 f 个面，分别标号为 1, 2, ..., f。
+//我们约定：掷骰子的得到总点数为各骰子面朝上的数字的总和。
+//如果需要掷出的总点数为 target，请你计算出有多少种不同的组合情况（所有的组合情况总共有 f^d 种），模 10^9 + 7 后返回。
+
+    public int numRollsToTarget(int d, int f, int target) {
+        int toMod = (int) Math.pow(10, 9) + 7;
+        if (target > d * f) {
+            return 0;
+        }
+        if (target < d) {
+            return 0;
+        }
+        int[][] dp = new int[d + 1][target + 1];
+        for (int i = 1; i <= Math.min(f, target); i++) {
+            dp[1][i] = 1;
+        }
+
+        for (int i = 2; i <= d; i++) {
+            for (int j = i; j <= target; j++) {
+                int sum = 0;
+                for (int k = 1; k <= f; k++) {
+                    if (j - k >= 0) {
+                        sum += dp[i - 1][j - k];
+                        sum %= toMod;
+                    }
+                }
+                dp[i][j] = sum;
+            }
+        }
+        return dp[d][target];
     }
 }
