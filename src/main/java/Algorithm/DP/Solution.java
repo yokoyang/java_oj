@@ -366,22 +366,24 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String[] result = solution.printProbability(3);
-        System.out.println(result.length);
-        for (String val : result)
-            System.out.print(val + ",");
-        solution.longestSubstringWithoutDuplication("arabcacfr");
-        solution.JumpFloorII(4);
-        solution.Permutation("");
-        solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
-        solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
-        Boolean[] booleans = new Boolean[3];
-
-        solution.permute(new int[]{1, 2, 3});
-        int[] a = new int[]{1, 2, 3, 0, 2};
-
-        int t = solution.maxProfit(a);
-        System.out.println(t);
+        int nw = solution.numWays(2, 4);
+        System.out.println(nw);
+//        String[] result = solution.printProbability(3);
+//        System.out.println(result.length);
+//        for (String val : result)
+//            System.out.print(val + ",");
+//        solution.longestSubstringWithoutDuplication("arabcacfr");
+//        solution.JumpFloorII(4);
+//        solution.Permutation("");
+//        solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
+//        solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
+//        Boolean[] booleans = new Boolean[3];
+//
+//        solution.permute(new int[]{1, 2, 3});
+//        int[] a = new int[]{1, 2, 3, 0, 2};
+//
+//        int t = solution.maxProfit(a);
+//        System.out.println(t);
     }
     // offer 42
     //连续子数组最大和
@@ -613,5 +615,27 @@ public class Solution {
             }
         }
         return dp[d][target];
+    }
+
+    //    1269. Number of Ways to Stay in the Same Place After Some Steps
+    public int numWays(int steps, int arrLen) {
+        int toMod = (int) Math.pow(10, 9) + 7;
+        int min = Math.min(steps, arrLen);
+        long[][] dp = new long[steps + 1][min];
+        dp[1][0] = 1;
+        dp[1][1] = 1;
+        for (int i = 2; i <= steps; i++) {
+            for (int j = 0; j < min; j++) {
+                dp[i][j] += dp[i - 1][j];
+                if (j > 0) {
+                    dp[i][j] += dp[i - 1][j - 1];
+                }
+                if (j < min - 1) {
+                    dp[i][j] += dp[i - 1][j + 1];
+                }
+                dp[i][j] %= toMod;
+            }
+        }
+        return (int) dp[steps][0];
     }
 }

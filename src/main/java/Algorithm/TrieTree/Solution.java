@@ -1,5 +1,7 @@
 package Algorithm.TrieTree;
 
+import java.util.*;
+
 class Solution {
     private static final char STARTCHAR = 'a';
     private TrieNode root;
@@ -15,6 +17,7 @@ class Solution {
         private char data;
         private TrieNode[] children;
         private int visitTime = 0;
+        private int endTime = 0;
         public boolean isEndChar = false;
 
         public TrieNode(char data) {
@@ -29,7 +32,7 @@ class Solution {
     public void addWord(String word) {
         char[] wordChar = word.toCharArray();
         TrieNode p = root;
-        for (int i = 0; i != wordChar.length; i++) {
+        for (int i = 0; i < wordChar.length; i++) {
             int index = wordChar[i] - STARTCHAR;
             if (p.children[index] == null) {
                 p.children[index] = new TrieNode(wordChar[i]);
@@ -38,8 +41,9 @@ class Solution {
             p = p.children[index];
         }
         p.isEndChar = true;
-    }
+        p.endTime += 1;
 
+    }
 
     public int startsWith(String prefix) {
         char[] wordChar = prefix.toCharArray();
@@ -51,26 +55,67 @@ class Solution {
             }
             p = p.children[index];
         }
-
         return p.visitTime;
-
     }
 
+    public List<String> startWithNames(String prefix, int limit) {
+        ArrayList<String> res = new ArrayList<>();
+        char[] wordChar = prefix.toCharArray();
+        TrieNode p = root;
+        for (int i = 0; i < wordChar.length; ++i) {
+            int index = wordChar[i] - STARTCHAR;
+            if (p.children[index] == null || p.children[index].data != wordChar[i]) {
+                return res;
+            }
+            p = p.children[index];
+        }
+        findLimit(p, limit, new StringBuilder(prefix), res);
+        return res.subList(0, Math.min(res.size(), limit));
+    }
+
+    private void findLimit(TrieNode p, int limit, StringBuilder sb, ArrayList<String> tmp) {
+        if (tmp.size() >= limit) {
+            return;
+        }
+        if (p.isEndChar) {
+            int t = p.endTime;
+            while (t > 0) {
+                tmp.add(sb.toString());
+                t--;
+            }
+        }
+        for (TrieNode child : p.children) {
+            if (child == null) {
+                continue;
+            }
+            sb.append(child.data);
+            findLimit(child, limit, sb, tmp);
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        for (String p : products) {
+            addWord(p);
+        }
+        List<List<String>> res = new ArrayList<>();
+        for (int i = 0; i < searchWord.length(); i++) {
+            res.add(startWithNames(searchWord.substring(0, i + 1), 3));
+        }
+        return res;
+    }
 
     public static void main(String[] args) {
         Solution obj = new Solution();
         obj.addWord("laurence");
         obj.addWord("lawrence");
         obj.addWord("laurianne");
+        obj.addWord("lauxxrianne");
         obj.addWord("chuanchuan"); // false
-        System.out.println(obj.startsWith("lau"));
-        System.out.println(obj.startsWith("chu"));
+//        System.out.println(obj.startsWith("lau"));
+        System.out.println(obj.suggestedProducts(new String[]{"mobile", "mouse", "moneypot", "monitor", "mousepad"}, "mouse"));
+//        System.out.println(obj.startsWith("chu"));
     }
 }
 
-/**
- * Your WordDictionary object will be instantiated and called as such:
- * WordDictionary obj = new WordDictionary();
- * obj.addWord(word);
- * boolean param_2 = obj.search(word);
- */
+

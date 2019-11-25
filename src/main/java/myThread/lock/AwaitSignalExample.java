@@ -1,4 +1,4 @@
-package myThread;
+package myThread.lock;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,5 +38,6 @@ public class AwaitSignalExample {
         AwaitSignalExample example = new AwaitSignalExample();
         executorService.execute(() -> example.after());
         executorService.execute(() -> example.before());
+        executorService.shutdown();
     }
 }

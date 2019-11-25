@@ -8,6 +8,7 @@ import java.util.List;
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
+        s.countServers(new int[][]{{1, 0}, {1, 1}});
         s.UniqueCombinationSum(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
         char[][] boards = new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
         String word = "ABCCED";
@@ -86,7 +87,8 @@ public class Solution {
         return false;
 
     }
-//    39. Combination Sum 可以使用多次
+
+    //    39. Combination Sum 可以使用多次
     HashSet<List<Integer>> combinationSumRes = new HashSet<>();
 
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
@@ -344,4 +346,40 @@ public class Solution {
         moveStep += 1;
         return moveStep;
     }
+
+    //    1267. Count Servers that Communicate
+    public int countServers(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) return 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        int res = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    int val = traceCountServer(grid, i, j);
+                    res += val == 1 ? 0 : val;
+                }
+            }
+        }
+        return res;
+    }
+
+    private int traceCountServer(int[][] grid, int i, int j) {
+        grid[i][j] = 0;
+        int res = 1;
+        int m = grid.length;
+        int n = grid[0].length;
+        for (int x = 0; x < m; x++) {
+            if (grid[x][j] == 1) {
+                res += traceCountServer(grid, x, j);
+            }
+        }
+        for (int x = 0; x < n; x++) {
+            if (grid[i][x] == 1) {
+                res += traceCountServer(grid, i, x);
+            }
+        }
+        return res;
+    }
+
 }

@@ -3,6 +3,7 @@ package myThread;
 import java.util.concurrent.TimeUnit;
 
 public class JoinExample {
+//    join: Waits for this thread to die.
     public static void main(String[] args) throws InterruptedException {
 //        Join test 1
         JoinExample example = new JoinExample();
