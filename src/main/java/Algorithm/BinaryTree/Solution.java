@@ -3,16 +3,17 @@ package Algorithm.BinaryTree;
 
 import java.util.*;
 
-public class Solution {
-    class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
 
-        TreeNode(int x) {
-            val = x;
-        }
+    TreeNode(int x) {
+        val = x;
     }
+}
+
+public class Solution {
 
 
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {

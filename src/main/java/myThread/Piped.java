@@ -9,7 +9,8 @@ public class Piped {
     public static void main(String[] args) throws Exception {
         PipedReader in = new PipedReader();
         PipedWriter out = new PipedWriter();
-        out.connect(in);
+//        out.connect(in);
+        in.connect(out);
         Thread printThread = new Thread(new Print(in), "P");
         printThread.start();
         int receive = 0;

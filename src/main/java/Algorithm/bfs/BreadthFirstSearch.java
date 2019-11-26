@@ -1,9 +1,8 @@
-package Algorithm.search;
+package Algorithm.bfs;
 
 import Algorithm.Solution;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class BreadthFirstSearch {
     public static void main(String[] args) {

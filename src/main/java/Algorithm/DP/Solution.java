@@ -366,8 +366,11 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int nw = solution.numWays(2, 4);
-        System.out.println(nw);
+//        int t = solution.maxSumDivThree(new int[]{3, 6, 5, 1, 8});
+        int t = solution.maxSumDivThree(new int[]{1, 2, 3, 4, 4});
+        System.out.println(t);
+//        int nw = solution.numWays(2, 4);
+//        System.out.println(nw);
 //        String[] result = solution.printProbability(3);
 //        System.out.println(result.length);
 //        for (String val : result)
@@ -637,5 +640,46 @@ public class Solution {
             }
         }
         return (int) dp[steps][0];
+    }
+
+    //1262. Greatest Sum Divisible by Three
+    public int maxSumDivThree2(int[] nums) {
+        int[] dp = new int[3];
+        int[] tmp = new int[3];
+        int modRes;
+        for (int n : nums) {
+            for (int v : dp) {
+                modRes = (n + v) % 3;
+                if (modRes == 0) {
+                    tmp[0] = Math.max(n + v, tmp[0]);
+                } else if (modRes == 1) {
+                    tmp[1] = Math.max(n + v, tmp[1]);
+                } else {
+                    tmp[2] = Math.max(n + v, tmp[2]);
+                }
+            }
+            dp = Arrays.copyOf(tmp, 3);
+        }
+        return dp[0];
+    }
+
+    public int maxSumDivThree(int[] nums) {
+        int[] dp = new int[3];
+        for (int i = 0; i < nums.length; i++) {
+            int mod = nums[i] % 3;
+            int a = dp[(3 - mod) % 3];
+            int b = dp[(3 + 1 - mod) % 3];
+            int c = dp[(3 + 2 - mod) % 3];
+            if (a != 0 || mod == 0) {
+                dp[0] = Math.max(dp[0], a + nums[i]);
+            }
+            if (b != 0 || mod == 1) {
+                dp[1] = Math.max(dp[1], b + nums[i]);
+            }
+            if (c != 0 || mod == 2) {
+                dp[2] = Math.max(dp[2], c + nums[i]);
+            }
+        }
+        return dp[0];
     }
 }
