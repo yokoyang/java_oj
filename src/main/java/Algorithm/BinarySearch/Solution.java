@@ -1,5 +1,7 @@
 package Algorithm.BinarySearch;
 
+import java.util.*;
+
 public class Solution {
     class TreeNode {
         public int val;
@@ -13,7 +15,6 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-//        solution.searchRange(new int[]{1, 1}, 1);
         solution.searchRange(new int[]{5, 7, 7, 8, 8, 10}, 8);
         String str1 = "abc";
         String str2 = new String("abc");
@@ -317,12 +318,13 @@ public class Solution {
         int[] l_depth = new int[1];
         int[] r_depth = new int[1];
         if (isBalanced_2_core(root.left, l_depth) && isBalanced_2_core(root.right, r_depth)) {
-            depth[0] = Math.max(l_depth[0], r_depth[0])+1;
+            depth[0] = Math.max(l_depth[0], r_depth[0]) + 1;
             if (Math.abs(l_depth[0] - r_depth[0]) <= 1) {
                 return true;
             }
         }
         return false;
     }
+
 
 }

@@ -105,6 +105,22 @@ class Solution {
         return res;
     }
 
+    //使用查找的方法，替代字典树，实现搜索匹配
+    //    1268. Search Suggestions System
+    public List<List<String>> suggestedProducts2(String[] products, String searchWord) {
+        List<List<String>> result = new ArrayList<>();
+        Arrays.sort(products);
+        for (int i = 0; i < searchWord.length(); i++) {
+            List<String> list = new ArrayList<>();
+            String match = searchWord.substring(0, i + 1);
+            for (String s : products) {
+                if (s.startsWith(match) && list.size() < 3) list.add(s);
+            }
+            result.add(list);
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         Solution obj = new Solution();
         obj.addWord("laurence");
