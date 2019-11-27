@@ -1,19 +1,17 @@
 package Algorithm.BackTrace;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.countServers(new int[][]{{1, 0}, {1, 1}});
-        s.UniqueCombinationSum(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
-        char[][] boards = new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
-        String word = "ABCCED";
-        s.exist(boards, word);
-        s.subsets(new int[]{1, 2, 3, 4});
+        System.out.println(s.maxScoreWords(new String[]{"dad","dog", "cat",  "good"}, new char[]{'a', 'a', 'c', 'd', 'd', 'd', 'g', 'o', 'o'}, new int[]{1, 0, 9, 5, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+//        s.countServers(new int[][]{{1, 0}, {1, 1}});
+//        s.UniqueCombinationSum(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
+//        char[][] boards = new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
+//        String word = "ABCCED";
+//        s.exist(boards, word);
+//        s.subsets(new int[]{1, 2, 3, 4});
 
     }
 
@@ -382,4 +380,91 @@ public class Solution {
         return res;
     }
 
+    List<List<Integer>> reconstructMatrixRes = new ArrayList<>();
+
+    //1254. 统计封闭岛屿的数目
+    public int closedIsland(int[][] grid) {
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 0) {
+                    res += dfsClosedIsland(grid, i, j);
+                }
+            }
+        }
+        return res;
+    }
+
+    //判断是否是封闭岛屿的条件：从岛屿出发，走不到边界
+    //如果发现走到边界，那一定不是，但是要注意一点，还是必须要走完才行，否则会把一个大岛屿分成了多个小岛屿
+    private int dfsClosedIsland(int[][] grid, int r, int c) {
+        if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length) {
+            return 0;
+        }
+        if (grid[r][c] == 1) {
+            return 1;
+        }
+        grid[r][c] = 1;
+        int[] vr = {0, 1, 0, -1};
+        int[] vc = {1, 0, -1, 0};
+        int ret = 1;
+        for (int i = 0; i < 4; i++) {
+            ret = Math.min(ret, dfsClosedIsland(grid, r + vr[i], c + vc[i]));
+        }
+        return ret;
+    }
+
+    private int bfsClosedIsland(int[][] grid, int r, int c) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{r, c});
+        int res = 1;
+        while (!queue.isEmpty()) {
+            int[] now = queue.poll();
+            int x = now[0], y = now[1];
+            if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length) {
+                res = 0;
+                continue;
+            }
+            if (grid[x][y] != 0) {
+                continue;
+            }
+            grid[x][y] = 1;
+            int[] vr = {0, 1, 0, -1};
+            int[] vc = {1, 0, -1, 0};
+            for (int i = 0; i < 4; i++) {
+                int next_x = x + vr[i];
+                int next_y = y + vc[i];
+                queue.offer(new int[]{next_x, next_y});
+            }
+        }
+        return res;
+    }
+
+
+    //1255. 得分最高的单词集合
+    public int maxScoreWords(String[] words, char[] letters, int[] score) {
+        int maxScore = 0;
+        int now;
+        HashMap<Character, Integer> record = new HashMap<>();
+        for (char c : letters) {
+            record.put(c, record.getOrDefault(c, 0) + 1);
+        }
+        for (String str : words) {
+            now = 0;
+            int len = str.length();
+            HashMap<Character, Integer> recordTmp = new HashMap<>(record);
+            for (int i = 0; i < len; i++) {
+                char t = str.charAt(i);
+                int times = recordTmp.getOrDefault(t, 0);
+                if (times > 0) {
+                    now += score[t - 'a'];
+                    recordTmp.put(t, --times);
+                }
+            }
+            if (now > maxScore) {
+                maxScore = now;
+            }
+        }
+        return maxScore;
+    }
 }
