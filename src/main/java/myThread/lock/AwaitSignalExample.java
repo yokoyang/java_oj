@@ -15,7 +15,7 @@ public class AwaitSignalExample {
         lock.lock();
         try {
             System.out.println("before");
-            condition.signalAll();
+            condition.signal();
         } finally {
             lock.unlock();
         }

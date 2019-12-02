@@ -1,4 +1,4 @@
-package myThread;
+package myThread.waitNotify;
 
 import java.util.concurrent.TimeUnit;
 

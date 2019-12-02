@@ -364,30 +364,6 @@ public class Solution {
     }
 
 
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-//        int t = solution.maxSumDivThree(new int[]{3, 6, 5, 1, 8});
-        int t = solution.maxSumDivThree(new int[]{1, 2, 3, 4, 4});
-        System.out.println(t);
-//        int nw = solution.numWays(2, 4);
-//        System.out.println(nw);
-//        String[] result = solution.printProbability(3);
-//        System.out.println(result.length);
-//        for (String val : result)
-//            System.out.print(val + ",");
-//        solution.longestSubstringWithoutDuplication("arabcacfr");
-//        solution.JumpFloorII(4);
-//        solution.Permutation("");
-//        solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
-//        solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
-//        Boolean[] booleans = new Boolean[3];
-//
-//        solution.permute(new int[]{1, 2, 3});
-//        int[] a = new int[]{1, 2, 3, 0, 2};
-//
-//        int t = solution.maxProfit(a);
-//        System.out.println(t);
-    }
     // offer 42
     //连续子数组最大和
 
@@ -681,5 +657,67 @@ public class Solution {
             }
         }
         return dp[0];
+    }
+
+    //    1278. Palindrome Partitioning III
+    public int palindromePartition(String s, int k) {
+        int size = s.length();
+        if (s.length() == k) return 0;
+        int[][] dp = new int[size + 1][k];
+        for (int i = 0; i < size; i++) {
+            dp[i + 1][0] = changeToPalindrome(s.substring(0, i + 1));
+        }
+        for (int j = 1; j < k; j++) {
+            for (int i = j; i <= size; i++) {
+                int cur = Integer.MAX_VALUE;
+                for (int p = i; p >= j; p--) {
+                    cur = Math.min(cur, dp[p - 1][j - 1] + changeToPalindrome(s.substring(p - 1, i)));
+                }
+                dp[i][j] = cur;
+            }
+        }
+
+        return dp[size][k - 1];
+    }
+
+    private int changeToPalindrome(String s) {
+        int i = 0, j = s.length() - 1;
+        int counter = 0;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                counter++;
+            }
+            i++;
+            j--;
+        }
+        return counter;
+    }
+
+
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+//        System.out.println(solution.palindromePartition("abc", 2));
+//        int t = solution.maxSumDivThree(new int[]{3, 6, 5, 1, 8});
+//        int t = solution.maxSumDivThree(new int[]{1, 2, 3, 4, 4});
+//        System.out.println(t);
+//        int nw = solution.numWays(2, 4);
+//        System.out.println(nw);
+//        String[] result = solution.printProbability(3);
+//        System.out.println(result.length);
+//        for (String val : result)
+//            System.out.print(val + ",");
+//        solution.longestSubstringWithoutDuplication("arabcacfr");
+//        solution.JumpFloorII(4);
+//        solution.Permutation("");
+//        solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
+//        solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
+//        Boolean[] booleans = new Boolean[3];
+//
+//        solution.permute(new int[]{1, 2, 3});
+//        int[] a = new int[]{1, 2, 3, 0, 2};
+//
+//        int t = solution.maxProfit(a);
+//        System.out.println(t);
     }
 }

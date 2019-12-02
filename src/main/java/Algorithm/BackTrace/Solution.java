@@ -5,7 +5,7 @@ import java.util.*;
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.maxScoreWords(new String[]{"dad","dog", "cat",  "good"}, new char[]{'a', 'a', 'c', 'd', 'd', 'd', 'g', 'o', 'o'}, new int[]{1, 0, 9, 5, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        System.out.println(s.maxScoreWords(new String[]{"dad", "dog", "cat", "good"}, new char[]{'a', 'a', 'c', 'd', 'd', 'd', 'g', 'o', 'o'}, new int[]{1, 0, 9, 5, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 //        s.countServers(new int[][]{{1, 0}, {1, 1}});
 //        s.UniqueCombinationSum(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
 //        char[][] boards = new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
@@ -388,7 +388,9 @@ public class Solution {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 if (grid[i][j] == 0) {
+//                    DFS或者BFS都行
                     res += dfsClosedIsland(grid, i, j);
+//                    bfsClosedIsland
                 }
             }
         }
@@ -442,29 +444,61 @@ public class Solution {
 
 
     //1255. 得分最高的单词集合
+//    你将会得到一份单词表 words，一个字母表 letters （可能会有重复字母），以及每个字母对应的得分情况表 score。
+//
+//请你帮忙计算玩家在单词拼写游戏中所能获得的「最高得分」：能够由 letters 里的字母拼写出的 任意 属于 words 单词子集中，分数最高的单词集合的得分。
+//
+//单词拼写游戏的规则概述如下：
+//
+//玩家需要用字母表 letters 里的字母来拼写单词表 words 中的单词。
+//可以只使用字母表 letters 中的部分字母，但是每个字母最多被使用一次。
+//单词表 words 中每个单词只能计分（使用）一次。
+//根据字母得分情况表score，字母 'a', 'b', 'c', ... , 'z' 对应的得分分别为 score[0], score[1], ..., score[25]。
+//本场游戏的「得分」是指：玩家所拼写出的单词集合里包含的所有字母的得分之和。
+//
+
     public int maxScoreWords(String[] words, char[] letters, int[] score) {
-        int maxScore = 0;
-        int now;
-        HashMap<Character, Integer> record = new HashMap<>();
+        int maxScore;
+        int[] record = new int[26];
         for (char c : letters) {
-            record.put(c, record.getOrDefault(c, 0) + 1);
+            record[c - 'a']++;
         }
-        for (String str : words) {
-            now = 0;
-            int len = str.length();
-            HashMap<Character, Integer> recordTmp = new HashMap<>(record);
-            for (int i = 0; i < len; i++) {
-                char t = str.charAt(i);
-                int times = recordTmp.getOrDefault(t, 0);
-                if (times > 0) {
-                    now += score[t - 'a'];
-                    recordTmp.put(t, --times);
-                }
-            }
-            if (now > maxScore) {
-                maxScore = now;
-            }
-        }
+        maxScore = backtrackMaxScoreWords(0, record, words, score);
         return maxScore;
     }
+
+    private int backtrackMaxScoreWords(int index, int[] record, String[] words, int[] score) {
+        if (index >= words.length) {
+            return 0;
+        }
+        int[] tmp = Arrays.copyOf(record, record.length);
+        int nowScore = 0, res;
+        for (int i = 0; i < words[index].length(); i++) {
+            char c = words[index].charAt(i);
+            if (tmp[c - 'a'] > 0) {
+                nowScore += score[c];
+                tmp[c]--;
+            } else {
+                nowScore = 0;
+                break;
+            }
+        }
+        res = Math.max(backtrackMaxScoreWords(index + 1, record, words, score), nowScore + backtrackMaxScoreWords(index + 1, tmp, words, score));
+        return res;
+    }
+
+    //    LeetCode 1247. Minimum Swaps to Make Strings Equal
+    //    https://zxi.mytechroad.com/blog/math/leetcode-1247-minimum-swaps-to-make-strings-equal/
+    public int minimumSwap(String s1, String s2) {
+        int xy = 0;
+        int yx = 0;
+        for (int i = 0; i < s1.length(); ++i) {
+            if (s1.charAt(i) == 'x' && s2.charAt(i) == 'y') ++xy;
+            if (s1.charAt(i) == 'y' && s2.charAt(i) == 'x') ++yx;
+        }
+        if (((xy + yx) % 2) > 0) return -1;
+        return (xy + 1) / 2 + (yx + 1) / 2;
+    }
+
+
 }
