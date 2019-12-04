@@ -695,10 +695,8 @@ public class Solution {
     }
 
 
-
     public static void main(String[] args) {
         Solution solution = new Solution();
-//        System.out.println(solution.palindromePartition("abc", 2));
 //        int t = solution.maxSumDivThree(new int[]{3, 6, 5, 1, 8});
 //        int t = solution.maxSumDivThree(new int[]{1, 2, 3, 4, 4});
 //        System.out.println(t);

@@ -86,9 +86,57 @@ public class Solution {
         return ans;
     }
 
+    //1234. Replace the Substring for Balanced String
+    //    有一个只含有 'Q', 'W', 'E', 'R' 四种字符，且长度为 n 的字符串。
+    //假如在该字符串中，这四个字符都恰好出现 n/4 次，那么它就是一个「平衡字符串」
+    //    给你一个这样的字符串 s，请通过「替换一个子串」的方式，使原字符串 s 变成一个「平衡字符串」。
+    // 使用滑动窗口
+    public int balancedString(String s) {
+        int[] count = new int[128];
+        int n = s.length(), res = n, i = 0, k = n / 4;
+        for (int j = 0; j < n; ++j) {
+            ++count[s.charAt(j)];
+        }
+        for (int j = 0; j < n; ++j) {
+            --count[s.charAt(j)];
+            while (i < n && count['Q'] <= k && count['W'] <= k && count['E'] <= k && count['R'] <= k) {
+                res = Math.min(res, j - i + 1);
+                ++count[s.charAt(i++)];
+            }
+        }
+        return res;
+    }
+    // 使用滑动窗口 [i, j) 左闭右开
+    public int balancedString2(String s) {
+        int res = s.length();
+        int size = s.length();
+        int i = 0, j = 0, k = size / 4;
+        int[] record = new int[128];
+        for (; j < size; j++) {
+            record[s.charAt(j)]++;
+        }
+        j = 0;
+        while (j >= i) {
+            if (record['Q'] <= k && record['W'] <= k && record['E'] <= k && record['R'] <= k) {
+                res = Math.min(res, j - i);
+                record[s.charAt(i)]++;
+                i++;
+            } else {
+                if (j >= size) {
+                    break;
+                }
+                record[s.charAt(j)]--;
+                j++;
+            }
+        }
+
+        return res;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        System.out.println(solution.lengthOfLongestSubstring2("tmmzuxt"));
+        System.out.println(solution.balancedString("QWERQQER"));
+//        System.out.println(solution.lengthOfLongestSubstring2("tmmzuxt"));
 //        System.out.println(solution.numberOfSubarrays(new int[]{1, 1, 2, 1, 2, 0, 1, 1, 1, 2}, 3));
 
     }
