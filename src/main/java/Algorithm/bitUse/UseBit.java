@@ -1,6 +1,9 @@
 package Algorithm.bitUse;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class UseBit {
     public int hammingWeight(int n) {
@@ -29,6 +32,10 @@ public class UseBit {
         useBit.singleNumber_3(new int[]{1, 2, 1, 3, 2, 5});
         useBit.NumberOf1(12);
         useBit.NumberOf1(-12);
+        int[] t = new int[]{1, 2};
+        List<List<Integer>> res = new ArrayList<>();
+        List ints = Arrays.asList(res);
+        res.add(ints);
         System.out.println(Integer.toBinaryString(-12));
         System.out.println(Integer.toBinaryString(12));
 //        useBit.isPowerOfTwo(-2147483648);
@@ -113,5 +120,8 @@ public class UseBit {
     private boolean isBit1(int n, int index) {
         n = n >> index;
         return (n & 1) > 0;
+    }
+    private int change1Pos(int num, int index) {
+        return num ^ (1 << index);
     }
 }

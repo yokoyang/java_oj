@@ -9,30 +9,31 @@ import static Algorithm.sort.QuickSort.partition;
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.isNStraightHand(new int[]{1, 2, 3, 6, 2, 3, 4, 7, 8}, 3);
-        s.MoreThanHalfNum_Solution_1(new int[]{4, 2, 1, 4, 2, 4});
-        s.printMatrix(new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
-        s.reOrderArrayOddFirst(new int[]{1, 2, 3, 4, 5, 6, 7});
-        s.sortAges(new int[]{2, 31, 2, 1, 3});
-        s.findIncreaseMatrix(7, new int[][]{{1, 2, 8, 9}, {4, 7, 10, 13}});
-        System.out.println(s.findOneDuplicate(new int[]{2, 3, 1, 0, 2, 5, 3}));
-        System.out.println(s.findOneDuplicateNotModify(new int[]{2, 3, 1, 0, 2, 5, 3}));
-        int[] t0 = s.plusOne(new int[]{9});
-        HashSet<Integer> hashSet = new HashSet<>();
-        boolean r1 = hashSet.add(1);
-        boolean r2 = hashSet.add(1);
-        System.out.println(r1);
-        System.out.println(r2);
-        int[][] t1 = new int[][]{{2, 3}, {4, 5}, {6, 7}, {8, 9}, {1, 10}};
-
-        int[][] r = s.merge(t1);
-        System.out.println(r);
-        s.sortedSquares(new int[]{-2, 0});
-        int[] t = new int[]{0, 0, 1, 1, 1, 1, 2, 3, 3};
-        System.out.println(s.removeDuplicates(t));
-        for (int i : t) {
-            System.out.print(i);
-        }
+//        s.removeSubfolders(new String[]{"/a","/a/b","/c/d","/c/d/e","/c/f"});
+//        s.isNStraightHand(new int[]{1, 2, 3, 6, 2, 3, 4, 7, 8}, 3);
+//        s.MoreThanHalfNum_Solution_1(new int[]{4, 2, 1, 4, 2, 4});
+//        s.printMatrix(new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
+//        s.reOrderArrayOddFirst(new int[]{1, 2, 3, 4, 5, 6, 7});
+//        s.sortAges(new int[]{2, 31, 2, 1, 3});
+//        s.findIncreaseMatrix(7, new int[][]{{1, 2, 8, 9}, {4, 7, 10, 13}});
+//        System.out.println(s.findOneDuplicate(new int[]{2, 3, 1, 0, 2, 5, 3}));
+//        System.out.println(s.findOneDuplicateNotModify(new int[]{2, 3, 1, 0, 2, 5, 3}));
+//        int[] t0 = s.plusOne(new int[]{9});
+//        HashSet<Integer> hashSet = new HashSet<>();
+//        boolean r1 = hashSet.add(1);
+//        boolean r2 = hashSet.add(1);
+//        System.out.println(r1);
+//        System.out.println(r2);
+//        int[][] t1 = new int[][]{{2, 3}, {4, 5}, {6, 7}, {8, 9}, {1, 10}};
+//
+//        int[][] r = s.merge(t1);
+//        System.out.println(r);
+//        s.sortedSquares(new int[]{-2, 0});
+//        int[] t = new int[]{0, 0, 1, 1, 1, 1, 2, 3, 3};
+//        System.out.println(s.removeDuplicates(t));
+//        for (int i : t) {
+//            System.out.print(i);
+//        }
     }
 
     private class Student {
@@ -683,4 +684,6 @@ class Solution {
         }
         return true;
     }
+
+
 }

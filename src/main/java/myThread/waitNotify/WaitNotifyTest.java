@@ -2,6 +2,7 @@ package myThread.waitNotify;
 
 
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 public class WaitNotifyTest {
     public static void main(String[] args) {
@@ -19,7 +20,7 @@ public class WaitNotifyTest {
  * @author admin
  */
 class Producer implements Runnable {
-    private Vector<Integer> pool;
+    private final Vector<Integer> pool;
     private Integer size;
 
     public Producer(Vector<Integer> pool, Integer size) {
@@ -30,6 +31,8 @@ class Producer implements Runnable {
     public void run() {
         for (; ; ) {
             try {
+//                每间隔1s尝试生产
+//                TimeUnit.SECONDS.sleep(1);
                 System.out.println("生产一个商品 ");
                 produce(1);
             } catch (InterruptedException e) {
@@ -60,7 +63,7 @@ class Producer implements Runnable {
  * @author admin
  */
 class Consumer implements Runnable {
-    private Vector<Integer> pool;
+    private final Vector<Integer> pool;
 
     public Consumer(Vector<Integer> pool) {
         this.pool = pool;
@@ -72,7 +75,6 @@ class Consumer implements Runnable {
                 System.out.println("消费一个商品");
                 consume();
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

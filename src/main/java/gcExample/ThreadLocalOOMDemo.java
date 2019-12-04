@@ -30,7 +30,7 @@ public class ThreadLocalOOMDemo {
                 e.printStackTrace();
             }
         }
-        //executorService.shutdown();
+        executorService.shutdown();
     }
 
     private List<User> addBigList() {

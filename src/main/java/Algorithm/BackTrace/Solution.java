@@ -501,4 +501,47 @@ public class Solution {
     }
 
 
+    public List<Integer> circularPermutation2(int n, int start) {
+        List<Integer> res = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        res.add(start);
+        set.add(start);
+        return res;
+    }
+
+
+    public List<Integer> circularPermutation(int n, int start) {
+        int totalNum = (int) Math.pow(2, n);
+        List<Integer> res = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        res.add(start);
+        set.add(start);
+        dfs(totalNum, start, res, set, n);
+        return res;
+    }
+
+    private boolean dfs(int totalNum, int start, List<Integer> res, Set<Integer> set, int n) {
+        int last = res.get(res.size() - 1);
+        if (res.size() == totalNum) {
+            int x = last ^ start;
+            return (x & (x - 1)) == 0;
+        }
+        for (int i = 0; i < n; i++) {
+            int next = last ^ (1 << i);
+            if (next <= totalNum && !set.contains(next)) {
+                res.add(next);
+                set.add(next);
+                if (dfs(totalNum, start, res, set, n)) {
+                    return true;
+                }
+                res.remove(res.size() - 1);
+                set.remove(next);
+            }
+        }
+        return false;
+    }
+
+    private int change1Pos(int num, int index) {
+        return num ^ (1 << index);
+    }
 }
