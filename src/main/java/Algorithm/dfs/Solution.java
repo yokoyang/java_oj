@@ -51,6 +51,7 @@ public class Solution {
 
     //version2
     private int subStringMaxLenResult = 0;
+
     public int maxLength2(List<String> arr) {
         if (arr == null || arr.size() == 0) {
             return 0;
@@ -83,6 +84,7 @@ public class Solution {
         }
         return true;
     }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();

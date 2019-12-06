@@ -1,6 +1,7 @@
 package Algorithm.MyArray;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,9 @@ import static Algorithm.sort.QuickSort.partition;
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
+        Integer a = 2222;
+        Integer b = 2222;
+        System.out.println(a.equals(b));
 //        s.removeSubfolders(new String[]{"/a","/a/b","/c/d","/c/d/e","/c/f"});
 //        s.isNStraightHand(new int[]{1, 2, 3, 6, 2, 3, 4, 7, 8}, 3);
 //        s.MoreThanHalfNum_Solution_1(new int[]{4, 2, 1, 4, 2, 4});
