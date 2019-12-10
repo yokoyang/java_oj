@@ -9,6 +9,68 @@ public class Solution {
         System.out.println(solution.shiftGrid(new int[][]{{1}, {2}, {3}}, 3));
     }
 
+    //    1277
+    public int countSquares2(int[][] matrix) {
+        int sum = 0;
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int maxSize = Math.min(m, n);
+        int[][][] dp = new int[m + 1][n + 1][maxSize + 1];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 1) {
+                    dp[i][j][1] = 1;
+                    sum++;
+                }
+            }
+        }
+        int nowSize = 2;
+        while (nowSize <= maxSize) {
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dp[i][j][nowSize - 1] == 1) {
+                        int tmp = dp[i + 1][j][nowSize - 1] + dp[i + 1][j + 1][nowSize - 1] + dp[i][j + 1][nowSize - 1];
+                        if (tmp == 3) {
+                            dp[i][j][nowSize] = 1;
+                            sum++;
+                        }
+                    } else {
+                        dp[i][j][nowSize] = 0;
+                    }
+                }
+            }
+            nowSize++;
+        }
+        return sum;
+    }
+
+    //dp[i][j] := edge of largest square with bottom right corner at (i, j)
+    //dp[i][j] = min(dp[i – 1][j], dp[i – 1][j – 1], dp[i][j – 1]) +1 if m[i][j] == 1 else 0
+    //ans = sum(dp)
+    //Time complexity: O(n*m)
+    //Space complexity: O(n*m)
+    public int countSquares(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] dp = new int[m + 1][n + 1];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (matrix[i - 1][j - 1] != 1) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                dp[i][j] = Math.min(Math.min(dp[i - 1][j - 1], dp[i - 1][j]), dp[i][j - 1]) + 1;
+            }
+        }
+        int res = 0;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                res += dp[i][j];
+            }
+        }
+        return res;
+    }
+
     public List<List<Integer>> shiftGrid(int[][] grid, int k) {
         int m = grid.length;
         int n = grid[0].length;

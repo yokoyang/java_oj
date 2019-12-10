@@ -620,7 +620,7 @@ public class Solution {
     }
 
     //1262. Greatest Sum Divisible by Three
-    public int maxSumDivThree2(int[] nums) {
+    public int maxSumDivThree(int[] nums) {
         int[] dp = new int[3];
         int[] tmp = new int[3];
         int modRes;
@@ -640,7 +640,8 @@ public class Solution {
         return dp[0];
     }
 
-    public int maxSumDivThree(int[] nums) {
+
+    public int maxSumDivThree2(int[] nums) {
         int[] dp = new int[3];
         for (int i = 0; i < nums.length; i++) {
             int mod = nums[i] % 3;
@@ -659,6 +660,8 @@ public class Solution {
         }
         return dp[0];
     }
+
+
 
     //    1278. Palindrome Partitioning III
     public int palindromePartition(String s, int k) {

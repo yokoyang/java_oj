@@ -59,7 +59,27 @@ public class Week166 {
         }
         return res;
     }
+    public List<List<Integer>> groupThePeople2(int[] arr) {
+        int n = arr.length;
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            int curr = arr[i];
+            List<Integer> temp = new ArrayList<>();
+            if(map.containsKey(curr)) {
+                temp = map.get(curr);
+            }
+            temp.add(i);
+            map.put(curr, temp);
+            if(temp.size() == curr){
+                ans.add(temp);
+                map.remove(curr);
+            }
+        }
 
+        return ans;
+
+    }
     //    Input: nums = [1,2,5,9], threshold = 6
     //Output: 5
     //Explanation: We can get a sum to 17 (1+2+5+9) if the divisor is 1.
@@ -73,18 +93,20 @@ public class Week166 {
     //Output: 4
     public int smallestDivisor(int[] A, int threshold) {
         Arrays.sort(A);
-        int left = 1, right = A[A.length - 1];
-        while (left < right) {
-            int m = (left + right) / 2, sum = 0;
+        int left = 1, right = A[A.length - 1], m = 1, sum = 0;
+        while (left <= right) {
+            m = (left + right) / 2;
+            sum = 0;
             for (int i : A)
                 sum += upDivide(i, m);
             if (sum > threshold)
                 left = m + 1;
             else
-                right = m;
+                right = m - 1;
         }
         return left;
     }
+
 
     int upDivide(int n, int m) {
         double c = (double) n / (double) m;
@@ -186,11 +208,44 @@ public class Week166 {
     }
 
 
+    //    编码的方法
+    private static final int[] d = {0, 0, 1, 0, -1, 0};
+
+    public int minFlips2(int[][] mat) {
+        int start = 0, m = mat.length, n = mat[0].length;
+        for (int i = 0; i < m; ++i)
+            for (int j = 0; j < n; ++j)
+                start |= mat[i][j] << (i * n + j); // convert the matrix to an int.
+        Queue<Integer> q = new LinkedList<>(Arrays.asList(start));
+        Set<Integer> seen = new HashSet<>(q);
+        for (int step = 0; !q.isEmpty(); ++step) {
+            for (int sz = q.size(); sz > 0; --sz) {
+                int cur = q.poll();
+                if (cur == 0) // All 0s matrix found.
+                    return step;
+                for (int i = 0; i < m; ++i) { // traverse all m * n bits of cur.
+                    for (int j = 0; j < n; ++j) {
+                        int next = cur;
+                        for (int k = 0; k < 5; ++k) { // flip the cell (i, j) and its neighbors.
+                            int r = i + d[k], c = j + d[k + 1];
+                            if (r >= 0 && r < m && c >= 0 && c < n)
+                                next ^= 1 << r * n + c;
+                        }
+                        if (seen.add(next)) // seen it before ?
+                            q.offer(next); // no, put it into the Queue.
+                    }
+                }
+            }
+        }
+        return -1; // impossible to get all 0s matrix.
+    }
+
     public static void main(String[] args) {
         Week166 week166 = new Week166();
-//        System.out.println(week166.minFlips(new int[][]{{1, 0, 0}, {1, 0, 0}}));
+        System.out.println(week166.minFlips2(new int[][]{{1, 0, 0}, {1, 0, 0}}));
+        System.out.println(week166.minFlips(new int[][]{{1, 0, 0}, {1, 0, 0}}));
         System.out.println(week166.smallestDivisor(new int[]{962551, 933661, 905225, 923035, 990560}, 10));
-//        System.out.println(week166.groupThePeople(new int[]{2, 1, 3, 3, 3, 2}));
+        System.out.println(week166.groupThePeople(new int[]{2, 1, 3, 3, 3, 2}));
 //        week166.subtractProductAndSum(114);
     }
 }
