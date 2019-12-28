@@ -1,11 +1,21 @@
 package Algorithm.MyString;
 
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.countAndSay(4));
+//        System.out.println(Integer.toBinaryString(-3));
+//        System.out.println(Integer.toBinaryString(0xffffffff));
+//        System.out.println(Integer.toBinaryString(0x7fffffff));
+//        System.out.println(Integer.toBinaryString(-3&0x7fffffff));
+//        System.out.println((-3&0x7fffffff));
+//        System.out.println(s.isNumeric("+100".toCharArray()));
+//        System.out.println(s.reMatch("".toCharArray(), ".*".toCharArray()));
+//        System.out.println(s.countAndSay(4));
 //        System.out.println(s.longestCommonPrefix(new String[]{"aa", "a"}));
 //        System.out.println(s.isPalindrome("ASd"));
 //        System.out.println(s.firstUniqChar("loveleetcode"));
@@ -168,7 +178,7 @@ public class Solution {
         int result = 0;
 
         // calculate value
-        while (str.length() > i && str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+        while (i < str.length() && str.charAt(i) >= '0' && str.charAt(i) <= '9') {
             if (Integer.MAX_VALUE / 10 < result || (Integer.MAX_VALUE / 10 == result && Integer.MAX_VALUE % 10 < (str.charAt(i) - '0')))
                 return flag == '-' ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
@@ -210,6 +220,57 @@ public class Solution {
         return (int) result;
     }
 
+    //    用来判断字符串是否表示数值（包括整数和小数）。
+    //    例如，字符串"+100","5e2","-123","3.1416"和"-1E-16"都表示数值。
+    //    但是"12e","1a3.14","1.2.3","+-5"和"12e+4.3"都不是。
+    /*
+    以下对正则进行解释:
+    [\\+\\-]?            -> 正或负符号出现与否
+    \\d*                 -> 整数部分是否出现，如-.34 或 +3.34均符合
+    (\\.\\d+)?           -> 如果出现小数点，那么小数点后面必须有数字；
+                            否则一起不出现
+    ([eE][\\+\\-]?\\d+)? -> 如果存在指数部分，那么e或E肯定出现，+或-可以不出现，
+                            紧接着必须跟着整数；或者整个部分都不出现
+    */
+    public boolean isNumeric(char[] str) {
+        String string = String.valueOf(str);
+        return string.matches("[+\\-]?\\d*(\\.\\d+)?([eE][+\\-]?\\d+)?");
+    }
+
+    public boolean isNumeric2(char[] str) {
+        if (str.length < 1) {
+            return false;
+        }
+        boolean sign = false, decimal = false, hasE = false;
+        for (int i = 0; i < str.length; i++) {
+            if (str[i] == '+' || str[i] == '-') {
+                if (!sign && i > 0 && str[i - 1] != 'e' && str[i - 1] != 'E') {
+                    return false;
+                }
+                if (sign && i > 0 && str[i - 1] != 'e' && str[i - 1] != 'E') {
+                    return false;
+                }
+                sign = true;
+            } else if (str[i] == 'E' || str[i] == 'e') {
+                if (hasE) {
+                    return false;
+                }
+                if (i == str.length - 1) {
+                    return false;
+                }
+                hasE = true;
+            } else if (str[i] == '.') {
+                if (hasE || decimal) {
+                    return false;
+                }
+                decimal = true;
+            } else if (str[i] < '0' || str[i] > '9') {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public String replaceSpace(StringBuffer str) {
         if (str == null) {
             return null;
@@ -235,6 +296,69 @@ public class Solution {
             }
         }
         return str.toString();
+    }
+
+    //正则表达式匹配
+    //请实现一个函数用来匹配包括'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，而'*'表示它前面的字符可以出现任意次（包含0次）。
+    // 在本题中，匹配是指字符串的所有字符匹配整个模式。
+    // 例如，字符串"aaa"与模式"a.a"和"ab*ac*a"匹配，但是与"aa.a"和"ab*a"均不匹配
+    public boolean reMatch(char[] str, char[] pattern) {
+        if (str.length == 0 && pattern.length == 0) {
+            return true;
+        }
+        return reMatchCore(str, 0, str.length, pattern, 0, pattern.length);
+    }
+
+    //i和j表示当前使用了多少个元素
+    private boolean reMatchCore(char[] str, int i, int len1, char[] pattern, int j, int len2) {
+        boolean firstMatch = false;
+        if (j == len2) {
+            if (i == len1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (i < len1 && (str[i] == pattern[j] || pattern[j] == '.')) {
+            firstMatch = true;
+        }
+
+        if (j < len2 - 1 && pattern[j + 1] == '*') {
+            return reMatchCore(str, i, len1, pattern, j + 2, len2) || (firstMatch && reMatchCore(str, i + 1, len1, pattern, j, len2));
+        } else {
+            return firstMatch && reMatchCore(str, i + 1, len1, pattern, j + 1, len2);
+        }
+    }
+
+    //使用动态规划，完成正则匹配
+    //i和j分别表示当前使用了str和pattern多少个元素
+    public boolean reMatch2(char[] str, char[] pattern) {
+        if (str.length == 0 && pattern.length == 0) {
+            return true;
+        }
+        boolean[][] dp = new boolean[str.length + 1][pattern.length + 1];
+        dp[0][0] = true;
+        for (int j = 1; j <= pattern.length; j++) {
+            if (pattern[j - 1] == '*') {
+                dp[0][j] = dp[0][j - 2];
+            } else {
+                dp[0][j] = false;
+            }
+        }
+        for (int i = 0; i < str.length; i++) {
+            for (int j = 0; j < pattern.length; j++) {
+                if (pattern[j] == '*') {
+                    dp[i + 1][j + 1] = dp[i + 1][j - 1] || (first_match(str, pattern, i, j - 1) && dp[i][j + 1]);
+                } else {
+                    dp[i + 1][j + 1] = first_match(str, pattern, i, j) && dp[i][j];
+                }
+            }
+        }
+        return dp[str.length][pattern.length];
+    }
+
+    private boolean first_match(char[] s, char[] p, int i, int j) {
+        return s[i] == p[j] || p[j] == '.';
     }
 
     public String longestCommonPrefix(String[] strs) {
@@ -276,5 +400,96 @@ public class Solution {
             }
         }
         return sb.toString();
+    }
+
+    //    第一个只出现一次的字符
+    //    在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,并返回它的位置, 如果没有则返回 -1（需要区分大小写）.
+    //利用每个字母的ASCII码作hash来作为数组的index。首先用一个58长度的数组来存储每个字母出现的次数，
+    // 为什么是58呢，主要是由于A-Z对应的ASCII码为65-90，a-z对应的ASCII码值为97-122，
+    // 而每个字母的index=int(word)-65，比如g=103-65=38，而数组中具体记录的内容是该字母出现的次数，最终遍历一遍字符串，
+    // 找出第一个数组内容为1的字母就可以了，时间复杂度为O(n)
+    public int FirstNotRepeatingChar(String str) {
+        int[] record = new int[58];
+        char[] chars = str.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            record[(chars[i] - 'A')] += 1;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (record[chars[i] - 'A'] == 1) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //请实现一个函数用来找出字符流中第一个只出现一次的字符。例如，当从字符流中只读出前两个字符"go"时，第一个只出现一次的字符是"g"。当从该字符流中读出前六个字符“google"时，第一个只出现一次的字符是"l"。
+    //输出描述:
+    //如果当前字符流没有存在出现一次的字符，返回#字符。
+    private int[] occurence = new int[256];
+    private int index;
+
+    public Solution() {
+        for (int i = 0; i < 256; i++) {
+            occurence[i] = -1;
+        }
+        index = 0;
+    }
+
+    void Insert(char ch) {
+        if (occurence[ch] == -1)
+            occurence[ch] = index;
+        else if (occurence[ch] >= 0)
+            occurence[ch] = -2;
+        index++;
+    }
+
+    //return the first appearence once char in current stringstream
+    char FirstAppearingOnce() {
+        char ch = '\0';
+        int minIndex = Integer.MAX_VALUE;
+        for (int i = 0; i < 256; i++) {
+            if (occurence[i] >= 0 && occurence[i] < minIndex) {
+                ch = (char) i;
+                minIndex = occurence[i];
+            }
+        }
+        if (ch == '\0')
+            return '#';
+        return ch;
+    }
+
+    //翻转单词顺序列
+    //“student. a am I” -> I am a student.”
+    public static String reverseStringSequence(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        String[] seq = str.split("\\s+");
+        int start = 0, end = seq.length - 1;
+        while (start < end) {
+            String tmp = seq[start];
+            seq[start] = seq[end];
+            seq[end] = tmp;
+            start++;
+            end--;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < seq.length; i++) {
+            sb.append(seq[i]).append(" ");
+        }
+        return sb.toString().trim();
+    }
+
+    public static String reverseStringSequence2(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        str = new StringBuilder(str).reverse().toString();
+        String[] seq = str.split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < seq.length; i++) {
+            sb.append(new StringBuilder(seq[i]).reverse().toString()).append(" ");
+        }
+        return sb.toString().trim();
     }
 }

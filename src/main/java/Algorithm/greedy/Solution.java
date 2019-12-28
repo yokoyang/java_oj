@@ -30,6 +30,48 @@ public class Solution {
         return false;
     }
 
+    //1253.
+    public List<List<Integer>> reconstructMatrix(int upper, int lower, int[] colsum) {
+        Integer[][] res = new Integer[2][colsum.length]; // 构建一个2维数组
+        for (int sum : colsum) { // 循环colsum
+            if (sum == 2) { // 列和为2时，upper和lower分别减一
+                // 如果upper或lower小于0，返回空list
+                if (--upper < 0 || --lower < 0) {
+                    return new ArrayList<>();
+                }
+            }
+        }
+        for (int i = 0; i < colsum.length; i++) { // 循环colsum
+            int sum = colsum[i]; // 当前列和
+            if (sum == 0) { // 列和为0
+                res[0][i] = 0; // 当前列为上0下0
+                res[1][i] = 0;
+            } else if (sum == 2) { // 列和为2
+                res[0][i] = 1; // 当前列为上1下1
+                res[1][i] = 1;
+            } else { // 列和为1
+                if (--upper >= 0) { // 如果还有upper
+                    res[0][i] = 1; // 将1加入上行
+                    res[1][i] = 0;
+                } else if (--lower >= 0) { // 如果还有lower
+                    res[0][i] = 0; // 将1加入下行
+                    res[1][i] = 1;
+                } else { // upper和lower都没了，返回空list
+                    return new ArrayList<>();
+                }
+            }
+        }
+        // 如果upper或lower还有剩余，返回空list
+        if (upper > 0 || lower > 0) {
+            return new ArrayList<>();
+        }
+        // 构造返回结果
+        List<List<Integer>> list = new ArrayList<>();
+        list.add(Arrays.asList(res[0]));
+        list.add(Arrays.asList(res[1]));
+        return list;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         boolean res = solution.carPooling(new int[][]{{3, 2, 8}, {4, 4, 6}, {10, 8, 9}}, 11);

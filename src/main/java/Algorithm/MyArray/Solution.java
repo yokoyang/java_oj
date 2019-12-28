@@ -1,31 +1,43 @@
 package Algorithm.MyArray;
 
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static Algorithm.sort.QuickSort.partition;
 
 class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.sortAges(new int[]{2, 31, 2, 1, 3});
-        s.findIncreaseMatrix(7, new int[][]{{1, 2, 8, 9}, {4, 7, 10, 13}});
-        System.out.println(s.findOneDuplicate(new int[]{2, 3, 1, 0, 2, 5, 3}));
-        System.out.println(s.findOneDuplicateNotModify(new int[]{2, 3, 1, 0, 2, 5, 3}));
-        int[] t0 = s.plusOne(new int[]{9});
-        HashSet<Integer> hashSet = new HashSet<>();
-        boolean r1 = hashSet.add(1);
-        boolean r2 = hashSet.add(1);
-        System.out.println(r1);
-        System.out.println(r2);
-        int[][] t1 = new int[][]{{2, 3}, {4, 5}, {6, 7}, {8, 9}, {1, 10}};
-
-        int[][] r = s.merge(t1);
-        System.out.println(r);
-        s.sortedSquares(new int[]{-2, 0});
-        int[] t = new int[]{0, 0, 1, 1, 1, 1, 2, 3, 3};
-        System.out.println(s.removeDuplicates(t));
-        for (int i : t) {
-            System.out.print(i);
-        }
+        Integer a = 2222;
+        Integer b = 2222;
+        System.out.println(a.equals(b));
+//        s.removeSubfolders(new String[]{"/a","/a/b","/c/d","/c/d/e","/c/f"});
+//        s.isNStraightHand(new int[]{1, 2, 3, 6, 2, 3, 4, 7, 8}, 3);
+//        s.MoreThanHalfNum_Solution_1(new int[]{4, 2, 1, 4, 2, 4});
+//        s.printMatrix(new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
+//        s.reOrderArrayOddFirst(new int[]{1, 2, 3, 4, 5, 6, 7});
+//        s.sortAges(new int[]{2, 31, 2, 1, 3});
+//        s.findIncreaseMatrix(7, new int[][]{{1, 2, 8, 9}, {4, 7, 10, 13}});
+//        System.out.println(s.findOneDuplicate(new int[]{2, 3, 1, 0, 2, 5, 3}));
+//        System.out.println(s.findOneDuplicateNotModify(new int[]{2, 3, 1, 0, 2, 5, 3}));
+//        int[] t0 = s.plusOne(new int[]{9});
+//        HashSet<Integer> hashSet = new HashSet<>();
+//        boolean r1 = hashSet.add(1);
+//        boolean r2 = hashSet.add(1);
+//        System.out.println(r1);
+//        System.out.println(r2);
+//        int[][] t1 = new int[][]{{2, 3}, {4, 5}, {6, 7}, {8, 9}, {1, 10}};
+//
+//        int[][] r = s.merge(t1);
+//        System.out.println(r);
+//        s.sortedSquares(new int[]{-2, 0});
+//        int[] t = new int[]{0, 0, 1, 1, 1, 1, 2, 3, 3};
+//        System.out.println(s.removeDuplicates(t));
+//        for (int i : t) {
+//            System.out.print(i);
+//        }
     }
 
     private class Student {
@@ -451,9 +463,6 @@ class Solution {
         int index1 = 0;
         int index2 = size - 1;
         int mid;
-//        if (array[index1] < array[index2]) {
-//            return array[index1];
-//        }
         while (array[index1] >= array[index2]) {
             if (index1 + 1 == index2) {
                 return array[index2];
@@ -474,5 +483,211 @@ class Solution {
         }
         return array[index1];
     }
+
+    private boolean isOdd(int num) {
+        return (num & 1) == 1;
+    }
+
+    //重新排列数组，使得奇数在前面
+    //相对位置可以改变
+    public void reOrderArrayOddFirst(int[] array) {
+        if (array.length < 2) {
+            return;
+        }
+        int s = 0, p = array.length - 1;
+        while (s != p) {
+            if (!isOdd(array[s])) {
+                while (!isOdd(array[p])) {
+                    p--;
+                }
+                swap(array, s, p);
+            }
+            s++;
+        }
+    }
+
+    public void reOrderArrayKeepRelativeOrder(int[] array) {
+        //相对位置不变，稳定性
+        //插入排序的思想
+        int m = array.length;
+        int k = 0;
+        //记录已经摆好位置的奇数的个数
+        for (int i = 0; i < m; i++) {
+            if (isOdd(array[i])) {
+                int j = i;
+                while (j > k) {//j >= k+1
+                    swap(array, j, j - 1);
+                    j--;
+                }
+                k++;
+            }
+        }
+    }
+
+    //    输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字
+    ArrayList<Integer> list = new ArrayList<>();
+
+    public ArrayList<Integer> printMatrix(int[][] matrix) {
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+        int start = 0;
+        while (rows > start * 2 && columns > start * 2) {
+            printMatrixInCircle(matrix, rows, columns, start);
+            start++;
+        }
+        return list;
+    }
+
+    public void printMatrixInCircle(int[][] matrix, int rows, int columns, int start) {
+        // 从左到右打印一行
+        for (int i = start; i < columns - start; i++)
+            list.add(matrix[start][i]);
+        // 从上到下打印一列
+        for (int j = start + 1; j < rows - start; j++)
+            list.add(matrix[j][columns - start - 1]);
+        // 从右到左打印一行
+        for (int m = columns - start - 2; m >= start && rows - start - 1 > start; m--)
+            list.add(matrix[rows - start - 1][m]);
+        // 从下到上打印一列
+        for (int n = rows - start - 2; n >= start + 1 && columns - start - 1 > start; n--)
+            list.add(matrix[n][start]);
+    }
+
+    //offer 39
+    // 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+    //version 1: 可以修改原始数组的情况下
+    public int MoreThanHalfNum_Solution_1(int[] array) {
+        int length = array.length;
+        int mid = length >> 1;
+        int start = 0;
+        int end = length - 1;
+        int index = partition(array, 0, end);
+        while (index != mid) {
+            if (index > mid) {
+                end = index - 1;
+                index = partition(array, start, end);
+            } else {
+                start = index + 1;
+                index = partition(array, start, end);
+            }
+        }
+        int result = array[mid];
+        int times = 0;
+        for (int i = 0; i < length; ++i) {
+            if (array[i] == result)
+                times++;
+        }
+        if (times * 2 <= length) {
+            return 0;
+        } else {
+            return result;
+        }
+    }
+
+    //不能修改原始数组的情况下，找到数组中出现次数超过一半的元素
+    //记录每个元素出现的次数
+    public int MoreThanHalfNum_Solution_2(int[] array) {
+        if (array.length == 0) {
+            return 0;
+        }
+        int res = array[0];
+        int times = 1;
+        for (int i = 1; i < array.length; i++) {
+            if (times == 0) {
+                times = 1;
+                res = array[i];
+            } else if (array[i] == res) {
+                times++;
+            } else {
+                times--;
+            }
+        }
+        times = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (res == array[i]) {
+                times++;
+            }
+        }
+        if (times * 2 <= array.length) {
+            return 0;
+        }
+        return res;
+    }
+
+    //    334. Increasing Triplet Subsequence
+    //判断数组中是否有长度为3的递增子序列
+    public boolean increasingTriplet(int[] nums) {
+        int min = Integer.MAX_VALUE, secondMin = Integer.MAX_VALUE;
+        for (int num : nums) {
+            if (num <= min) min = num;
+            else if (num < secondMin) secondMin = num;
+            else if (num > secondMin) return true;
+        }
+        return false;
+    }
+
+    //数组是不是顺子
+    //offer 61
+    public boolean isContinuous(int[] numbers) {
+        if (numbers == null) {
+            return false;
+        }
+        int length = numbers.length;
+        if (length < 1) {
+            return false;
+        }
+        int numberOfZero = 0;
+        int numberOfGap = 0;
+        Arrays.sort(numbers);
+        //统计数组中0的个数
+        for (int i = 0; i < length && numbers[i] == 0; i++) {
+            numberOfZero++;
+        }
+        int small = numberOfZero;
+        int big = small + 1;
+        while (big < length) {
+            if (numbers[big] == numbers[small]) {
+                return false;
+            }
+            int gap = numbers[big] - numbers[small] - 1;
+            numberOfGap += gap;
+            small = big;
+            big++;
+        }
+        return numberOfGap <= numberOfZero;
+    }
+
+    //846 一手顺子
+    //爱丽丝有一手（hand）由整数数组给定的牌。
+    //现在她想把牌重新排列成组，使得每个组的大小都是 W，且由 W 张连续的牌组成。
+    //如果她可以完成分组就返回 true，否则返回 false。
+    public boolean isNStraightHand(int[] hand, int W) {
+        Arrays.sort(hand);
+        int length = hand.length;
+        if (length % W != 0) {
+            return false;
+        }
+        HashMap<Integer, Integer> record = new HashMap<>();
+        for (int num : hand) {
+            record.put(num, record.getOrDefault(num, 0) + 1);
+        }
+
+        for (int i = 0; i < length; i++) {
+            if (i + 1 < length && hand[i + 1] == hand[i]) {
+                continue;
+            }
+            while (record.getOrDefault(hand[i], 0) != 0) {
+                for (int n = hand[i]; n < hand[i] + W; n++) {
+                    int t = record.getOrDefault(n, 0);
+                    if (t == 0) {
+                        return false;
+                    }
+                    record.put(n, t - 1);
+                }
+            }
+        }
+        return true;
+    }
+
 
 }

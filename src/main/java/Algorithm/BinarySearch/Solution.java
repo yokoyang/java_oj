@@ -1,5 +1,7 @@
 package Algorithm.BinarySearch;
 
+import java.util.*;
+
 public class Solution {
     class TreeNode {
         public int val;
@@ -13,7 +15,6 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.searchRange(new int[]{1}, 1);
         solution.searchRange(new int[]{5, 7, 7, 8, 8, 10}, 8);
         String str1 = "abc";
         String str2 = new String("abc");
@@ -57,36 +58,59 @@ public class Solution {
         return node;
     }
 
+    //34. Find First and Last Position of Element in Sorted Array
     public int[] searchRange(int[] nums, int target) {
-        int size = nums.length;
-        int[] res = new int[]{-1, -1};
-        if (size == 0) {
-            return res;
-        }
-        int l = 0, r = size - 1, mid;
-        while (l <= r) {
-            mid = l + (r - l) / 2;
-            if (nums[mid] < target) {
-                l = mid + 1;
-            } else if (nums[mid] > target) {
-                r = mid - 1;
-            } else {
-                int t = mid;
-                while (t < size && nums[t] == target) {
-                    t++;
-                }
-                res[1] = t - 1;
-                t = mid;
-                while (t >= 0 && nums[t] == target) {
-                    t--;
-                }
-                res[0] = t + 1;
-                return res;
+        int[] result = new int[2];
+        result[0] = findFirst(nums, target);
+        result[1] = findLast(nums, target);
+        return result;
+    }
 
+    private int findFirst(int[] nums, int target) {
+        int idx = -1;
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid] > target) {
+                end = mid - 1;
+            } else if (nums[mid] < target) {
+                start = mid + 1;
+            }
+
+            if (nums[mid] == target) {
+                if ((mid > 0 && nums[mid - 1] != target) || mid == 0) {
+                    return mid;
+                } else {
+                    end = mid - 1;
+                }
             }
         }
-        return res;
+        return idx;
     }
+
+    private int findLast(int[] nums, int target) {
+        int idx = -1;
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid] > target) {
+                end = mid - 1;
+            } else if (nums[mid] < target) {
+                start = mid + 1;
+            }
+            if (nums[mid] == target) {
+                if ((mid < nums.length - 1 && nums[mid + 1] != target) || mid == nums.length - 1) {
+                    return mid;
+                } else {
+                    start = mid + 1;
+                }
+            }
+        }
+        return idx;
+    }
+
     //    LeetCode 4
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -157,4 +181,150 @@ public class Solution {
         return (c1 + c2) * 0.5;
 
     }
+
+    //    输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。
+    //    要求不能创建任何新的结点，只能调整树中结点指针的指向。
+    public TreeNode Convert(TreeNode pRootOfTree) {
+        if (pRootOfTree == null) {
+            return null;
+        }
+        if (pRootOfTree.left == null && pRootOfTree.right == null) {
+            return pRootOfTree;
+        }
+
+        TreeNode leftPart = Convert(pRootOfTree.left);
+        TreeNode now = leftPart;
+        while (now != null && now.right != null) {
+            now = now.right;
+        }
+        if (now != null) {
+            now.right = pRootOfTree;
+            pRootOfTree.left = now;
+        }
+        TreeNode rightPart = Convert(pRootOfTree.right);
+        pRootOfTree.right = rightPart;
+        if (rightPart != null) {
+            rightPart.left = pRootOfTree;
+        }
+        return leftPart == null ? pRootOfTree : leftPart;
+    }
+
+    //剑指offer 0~n-1的递增数组中缺失的数字，
+    // 长度是n-1 每个数字的范围在0~n-1之间
+    public int getMissingNum(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        int s = 0, end = nums.length, mid = -1;
+        while (s <= end) {
+            mid = (s + end) >> 1;
+            if (nums[mid] == mid) {
+                s = mid + 1;
+            } else {
+                if (mid == 0 || nums[mid - 1] == mid - 1) {
+                    return mid;
+                } else {
+                    end = mid - 1;
+                }
+            }
+        }
+        //如果是末尾缺失
+        if (s == nums.length) {
+            return nums.length;
+        }
+        return mid;
+    }
+
+    //类似的思路
+    //数组单调递增，每个元素都是整数而且唯一，找到任意一个数值=下标的元素
+    public int getNumberSameAsIndex(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        int mid;
+        while (left <= right) {
+            mid = left + ((right - left) >> 1);
+            if (nums[mid] == mid) {
+                return mid;
+            }
+            if (nums[mid] > mid) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    //剑指offer 二叉树的第k大数
+    //也就是中序遍历的第k个
+    public TreeNode KthNode(TreeNode pRoot, int k) {
+        if (pRoot == null || k <= 0) {
+            return null;
+        }
+        TreeNode target = null;
+        if (pRoot.left != null) {
+            target = KthNode(pRoot.left, k);
+        }
+        if (target == null) {
+            if (k == 1) {
+                return pRoot;
+            }
+            k--;
+        }
+        if (target == null && pRoot.right != null) {
+            target = KthNode(pRoot.right, k);
+        }
+        return target;
+    }
+
+    //二叉树的深度
+    public int TreeDepth(TreeNode pRoot) {
+        if (pRoot == null) {
+            return 0;
+        }
+        return Math.max(TreeDepth(pRoot.left), TreeDepth(pRoot.right)) + 1;
+    }
+
+    //借用之前求二叉树高度的函数，缺点是每个点会遍历多次
+    public boolean isBalanced_1(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        int l = TreeDepth(root.left);
+        int r = TreeDepth(root.right);
+        if (Math.abs(l - r) > 1) {
+            return false;
+        }
+        return isBalanced_1(root.left) && isBalanced_1(root.right);
+    }
+
+
+    //以后序遍历的方式，边遍历，边记录
+    public boolean isBalanced_2(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        return isBalanced_2_core(root, new int[]{0});
+    }
+
+    private boolean isBalanced_2_core(TreeNode root, int[] depth) {
+        if (root == null) {
+            depth[0] = 0;
+            return true;
+        }
+        int[] l_depth = new int[1];
+        int[] r_depth = new int[1];
+        if (isBalanced_2_core(root.left, l_depth) && isBalanced_2_core(root.right, r_depth)) {
+            depth[0] = Math.max(l_depth[0], r_depth[0]) + 1;
+            if (Math.abs(l_depth[0] - r_depth[0]) <= 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

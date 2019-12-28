@@ -1,23 +1,22 @@
 package Algorithm.BackTrace;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.combinationSum3(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
-        s.permuteUnique(new int[]{1, 1, 2});
-        char[][] boards = new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
-        String word = "ABCCED";
-        s.exist(boards, word);
-        s.subsets(new int[]{1, 2, 3, 4});
+        System.out.println(s.maxScoreWords(new String[]{"dad", "dog", "cat", "good"}, new char[]{'a', 'a', 'c', 'd', 'd', 'd', 'g', 'o', 'o'}, new int[]{1, 0, 9, 5, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+//        s.countServers(new int[][]{{1, 0}, {1, 1}});
+//        s.UniqueCombinationSum(new int[]{1, 1, 2, 5, 6, 7, 10}, 8);
+//        char[][] boards = new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
+//        String word = "ABCCED";
+//        s.exist(boards, word);
+//        s.subsets(new int[]{1, 2, 3, 4});
 
     }
 
     //78. Subsets
+    //组合问题,没有重复元素
     List<List<Integer>> subsetsRes = new ArrayList<>();
 
     public List<List<Integer>> subsets(int[] nums) {
@@ -37,6 +36,24 @@ public class Solution {
             nowSelect.add(nums[i]);
             subsetDFS(nums, i + 1, nowSelect);
             nowSelect.remove(nowSelect.size() - 1);
+        }
+    }
+
+    //    90. Subsets II
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        Arrays.sort(nums);
+        backtrack(list, new ArrayList<>(), nums, 0);
+        return list;
+    }
+
+    private void backtrack(List<List<Integer>> list, List<Integer> tempList, int[] nums, int start) {
+        list.add(new ArrayList<>(tempList));
+        for (int i = start; i < nums.length; i++) {
+            if (i > start && nums[i] == nums[i - 1]) continue; // skip duplicates
+            tempList.add(nums[i]);
+            backtrack(list, tempList, nums, i + 1);
+            tempList.remove(tempList.size() - 1);
         }
     }
 
@@ -69,6 +86,7 @@ public class Solution {
 
     }
 
+    //    39. Combination Sum 可以使用多次
     HashSet<List<Integer>> combinationSumRes = new HashSet<>();
 
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
@@ -119,6 +137,8 @@ public class Solution {
             }
         }
     }
+
+
     //40. Combination Sum II
     //Input: candidates = [10,1,2,7,6,1,5], target = 8,
     //A solution set is:
@@ -129,7 +149,7 @@ public class Solution {
     //  [1, 1, 6]
     //]
 
-    public List<List<Integer>> combinationSum3(int[] candidates, int target) {
+    public List<List<Integer>> UniqueCombinationSum(int[] candidates, int target) {
         Arrays.sort(candidates);
         List<List<Integer>> res = new ArrayList<>();
         if (target <= 0) {
@@ -150,6 +170,7 @@ public class Solution {
                 continue;
             }
             tmp.add(candidates[i]);
+            //这里是i+1，因为不能使用相同的元素了
             traceSum3(res, tmp, i + 1, candidates, remain - candidates[i]);
             tmp.remove(tmp.size() - 1);
         }
@@ -176,45 +197,6 @@ public class Solution {
         return res;
     }
 
-    public List<List<Integer>> permuteUnique(int[] nums) {
-        List<List<Integer>> res = new ArrayList<>();
-        Arrays.sort(nums);
-        tracePermuteUnique(res, new ArrayList<>(), nums, new boolean[nums.length]);
-        return res;
-    }
-//47. Permutations II
-//    Given a collection of numbers that might contain duplicates, return all possible unique permutations.
-//    Input: [1,1,2]
-//Output:
-//[
-//  [1,1,2],
-//  [1,2,1],
-//  [2,1,1]
-//]
-//    例如，假设输入的数组为[1，1，2]。则当第一个1被添加进结果集时，可以继续使用第二个1作为元素添加进结果集从而生成112。
-//    同理，当试图将第二个1作为第一个元素添加进结果集时，只要第一个1还没有被使用过，则不可以使用第二个1。因此，112不会被重复的添加进结果集。
-//其实，这个算法保证了所有重复的数字在结果集中的顺序和在原输入数组中的顺序是相同的。
-// 假设将[1,1,2]表示为[1,1#,2],那么结果集中会确保1永远在数值1#的前面，从而避免了11#2和1#12的重复情况出现。
-
-    private void tracePermuteUnique(List<List<Integer>> res, List<Integer> tmp, int[] nums, boolean[] used) {
-        if (tmp.size() == nums.length) {
-            res.add(new ArrayList<>(tmp));
-        } else {
-            for (int i = 0; i < nums.length; i++) {
-                if (used[i]) {
-                    continue;
-                }
-                if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
-                    continue;
-                }
-                used[i] = true;
-                tmp.add(nums[i]);
-                tracePermuteUnique(res, tmp, nums, used);
-                tmp.remove(tmp.size() - 1);
-                used[i] = false;
-            }
-        }
-    }
 
     class TreeNode {
         int val;
@@ -337,7 +319,7 @@ public class Solution {
             sum += col % 10;
             col = col / 10;
         }
-        if (sum > threshold){
+        if (sum > threshold) {
             return false;
         }
         return true;
@@ -361,5 +343,205 @@ public class Solution {
         moveStep += movingCount_C(startCol - 1, startRow, maxRow, maxCols, threshold, visit);
         moveStep += 1;
         return moveStep;
+    }
+
+    //    1267. Count Servers that Communicate
+    public int countServers(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) return 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        int res = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    int val = traceCountServer(grid, i, j);
+                    res += val == 1 ? 0 : val;
+                }
+            }
+        }
+        return res;
+    }
+
+    private int traceCountServer(int[][] grid, int i, int j) {
+        grid[i][j] = 0;
+        int res = 1;
+        int m = grid.length;
+        int n = grid[0].length;
+        for (int x = 0; x < m; x++) {
+            if (grid[x][j] == 1) {
+                res += traceCountServer(grid, x, j);
+            }
+        }
+        for (int x = 0; x < n; x++) {
+            if (grid[i][x] == 1) {
+                res += traceCountServer(grid, i, x);
+            }
+        }
+        return res;
+    }
+
+    List<List<Integer>> reconstructMatrixRes = new ArrayList<>();
+
+    //1254. 统计封闭岛屿的数目
+    public int closedIsland(int[][] grid) {
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 0) {
+//                    DFS或者BFS都行
+                    res += dfsClosedIsland(grid, i, j);
+//                    bfsClosedIsland
+                }
+            }
+        }
+        return res;
+    }
+
+    //判断是否是封闭岛屿的条件：从岛屿出发，走不到边界
+    //如果发现走到边界，那一定不是，但是要注意一点，还是必须要走完才行，否则会把一个大岛屿分成了多个小岛屿
+    private int dfsClosedIsland(int[][] grid, int r, int c) {
+        if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length) {
+            return 0;
+        }
+        if (grid[r][c] == 1) {
+            return 1;
+        }
+        grid[r][c] = 1;
+        int[] vr = {0, 1, 0, -1};
+        int[] vc = {1, 0, -1, 0};
+        int ret = 1;
+        for (int i = 0; i < 4; i++) {
+            ret = Math.min(ret, dfsClosedIsland(grid, r + vr[i], c + vc[i]));
+        }
+        return ret;
+    }
+
+    private int bfsClosedIsland(int[][] grid, int r, int c) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{r, c});
+        int res = 1;
+        while (!queue.isEmpty()) {
+            int[] now = queue.poll();
+            int x = now[0], y = now[1];
+            if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length) {
+                res = 0;
+                continue;
+            }
+            if (grid[x][y] != 0) {
+                continue;
+            }
+            grid[x][y] = 1;
+            int[] vr = {0, 1, 0, -1};
+            int[] vc = {1, 0, -1, 0};
+            for (int i = 0; i < 4; i++) {
+                int next_x = x + vr[i];
+                int next_y = y + vc[i];
+                queue.offer(new int[]{next_x, next_y});
+            }
+        }
+        return res;
+    }
+
+
+    //1255. 得分最高的单词集合
+//    你将会得到一份单词表 words，一个字母表 letters （可能会有重复字母），以及每个字母对应的得分情况表 score。
+//
+//请你帮忙计算玩家在单词拼写游戏中所能获得的「最高得分」：能够由 letters 里的字母拼写出的 任意 属于 words 单词子集中，分数最高的单词集合的得分。
+//
+//单词拼写游戏的规则概述如下：
+//
+//玩家需要用字母表 letters 里的字母来拼写单词表 words 中的单词。
+//可以只使用字母表 letters 中的部分字母，但是每个字母最多被使用一次。
+//单词表 words 中每个单词只能计分（使用）一次。
+//根据字母得分情况表score，字母 'a', 'b', 'c', ... , 'z' 对应的得分分别为 score[0], score[1], ..., score[25]。
+//本场游戏的「得分」是指：玩家所拼写出的单词集合里包含的所有字母的得分之和。
+//
+
+    public int maxScoreWords(String[] words, char[] letters, int[] score) {
+        int maxScore;
+        int[] record = new int[26];
+        for (char c : letters) {
+            record[c - 'a']++;
+        }
+        maxScore = backtrackMaxScoreWords(0, record, words, score);
+        return maxScore;
+    }
+
+    private int backtrackMaxScoreWords(int index, int[] record, String[] words, int[] score) {
+        if (index >= words.length) {
+            return 0;
+        }
+        int[] tmp = Arrays.copyOf(record, record.length);
+        int nowScore = 0, res;
+        for (int i = 0; i < words[index].length(); i++) {
+            char c = words[index].charAt(i);
+            if (tmp[c - 'a'] > 0) {
+                nowScore += score[c];
+                tmp[c]--;
+            } else {
+                nowScore = 0;
+                break;
+            }
+        }
+        res = Math.max(backtrackMaxScoreWords(index + 1, record, words, score), nowScore + backtrackMaxScoreWords(index + 1, tmp, words, score));
+        return res;
+    }
+
+    //    LeetCode 1247. Minimum Swaps to Make Strings Equal
+    //    https://zxi.mytechroad.com/blog/math/leetcode-1247-minimum-swaps-to-make-strings-equal/
+    public int minimumSwap(String s1, String s2) {
+        int xy = 0;
+        int yx = 0;
+        for (int i = 0; i < s1.length(); ++i) {
+            if (s1.charAt(i) == 'x' && s2.charAt(i) == 'y') ++xy;
+            if (s1.charAt(i) == 'y' && s2.charAt(i) == 'x') ++yx;
+        }
+        if (((xy + yx) % 2) > 0) return -1;
+        return (xy + 1) / 2 + (yx + 1) / 2;
+    }
+
+
+    public List<Integer> circularPermutation2(int n, int start) {
+        List<Integer> res = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        res.add(start);
+        set.add(start);
+        return res;
+    }
+
+
+    public List<Integer> circularPermutation(int n, int start) {
+        int totalNum = (int) Math.pow(2, n);
+        List<Integer> res = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        res.add(start);
+        set.add(start);
+        dfs(totalNum, start, res, set, n);
+        return res;
+    }
+
+    private boolean dfs(int totalNum, int start, List<Integer> res, Set<Integer> set, int n) {
+        int last = res.get(res.size() - 1);
+        if (res.size() == totalNum) {
+            int x = last ^ start;
+            return (x & (x - 1)) == 0;
+        }
+        for (int i = 0; i < n; i++) {
+            int next = last ^ (1 << i);
+            if (next <= totalNum && !set.contains(next)) {
+                res.add(next);
+                set.add(next);
+                if (dfs(totalNum, start, res, set, n)) {
+                    return true;
+                }
+                res.remove(res.size() - 1);
+                set.remove(next);
+            }
+        }
+        return false;
+    }
+
+    private int change1Pos(int num, int index) {
+        return num ^ (1 << index);
     }
 }

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.ServiceLoader;
 
 public class SPITest {
+//    service provider interface
+
     public static void main(String[] args) {
         ServiceLoader<Search> s = ServiceLoader.load(Search.class);
         Iterator<Search> iterator = s.iterator();

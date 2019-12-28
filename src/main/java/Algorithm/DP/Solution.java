@@ -1,19 +1,10 @@
 package Algorithm.DP;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Solution {
-//    334. Increasing Triplet Subsequence
 
-    public boolean increasingTriplet(int[] nums) {
-        int min = Integer.MAX_VALUE, secondMin = Integer.MAX_VALUE;
-        for (int num : nums) {
-            if (num <= min) min = num;
-            else if (num < secondMin) secondMin = num;
-            else if (num > secondMin) return true;
-        }
-        return false;
-    }
 
     //    没有重复数字的序列，返回所有可能的全排序
     public List<List<Integer>> permute(int[] nums) {
@@ -23,14 +14,115 @@ public class Solution {
             return res;
         }
         boolean[] record = new boolean[size];
-        List<Integer> one = new ArrayList<>();
-        dfsPermute(res, one, nums, record);
+        List<Integer> each = new ArrayList<>();
+        dfsPermute(res, each, nums, record);
+        return res;
+    }
+    //47. Permutations II
+//    Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+//    Input: [1,1,2]
+//Output:
+//[
+//  [1,1,2],
+//  [1,2,1],
+//  [2,1,1]
+//]
+//    例如，假设输入的数组为[1，1，2]。则当第一个1被添加进结果集时，可以继续使用第二个1作为元素添加进结果集从而生成112。
+//    同理，当试图将第二个1作为第一个元素添加进结果集时，只要第一个1还没有被使用过，则不可以使用第二个1。因此，112不会被重复的添加进结果集。
+//其实，这个算法保证了所有重复的数字在结果集中的顺序和在原输入数组中的顺序是相同的。
+// 假设将[1,1,2]表示为[1,1#,2],那么结果集中会确保1永远在数值1#的前面，从而避免了11#2和1#12的重复情况出现。
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        tracePermuteUnique(res, new ArrayList<>(), nums, new boolean[nums.length]);
         return res;
     }
 
-    private void dfsPermute(List<List<Integer>> res, List<Integer> one, int[] nums, boolean[] record) {
-        if (one.size() >= nums.length) {
-            res.add(new ArrayList<>(one));
+    private void tracePermuteUnique(List<List<Integer>> res, List<Integer> tmp, int[] nums, boolean[] used) {
+        if (tmp.size() == nums.length) {
+            res.add(new ArrayList<>(tmp));
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (used[i]) {
+                    continue;
+                }
+                if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
+                    continue;
+                }
+                used[i] = true;
+                tmp.add(nums[i]);
+                tracePermuteUnique(res, tmp, nums, used);
+                tmp.remove(tmp.size() - 1);
+                used[i] = false;
+            }
+        }
+    }
+
+    //    输入一个字符串,按字典序打印出该字符串中字符的所有排列。
+    //    可能有字符重复
+    public ArrayList<String> Permutation(String str) {
+        ArrayList<String> res = new ArrayList<>();
+        if (str == null || str.equals("")) {
+            return res;
+        }
+        char[] chars = str.toCharArray();
+        Arrays.sort(chars);
+        StringBuilder each = new StringBuilder();
+        dfsCharPermutation(res, each, chars, new boolean[chars.length]);
+        return res;
+    }
+
+    private void dfsCharPermutation(ArrayList<String> res, StringBuilder each, char[] chars, boolean[] record) {
+        if (each.length() >= chars.length) {
+            res.add(each.toString());
+            return;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (record[i]) {
+                continue;
+            }
+            if (i > 0 && !record[i - 1] && chars[i] == chars[i - 1]) {
+                continue;
+            }
+            each.append(chars[i]);
+            record[i] = true;
+            dfsCharPermutation(res, each, chars, record);
+            each.deleteCharAt(each.length() - 1);
+            record[i] = false;
+        }
+
+    }
+
+    //    给你一根长度为n的绳子，请把绳子剪成m段（m、n都是整数，n>1并且m>1），
+    //    每段绳子的长度记为k[0],k[1],...,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？
+    //    例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+    public int cutRope(int n) {
+        int[] dp = new int[n + 1];
+        if (n < 2) {
+            return 0;
+        }
+        if (n == 2) {
+            return 1;
+        }
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 2;
+        int max;
+        for (int i = 4; i <= n; i++) {
+            max = 0;
+            //因为是对称的，所有可以是j = i/2开始
+            for (int j = i - 1; j >= 1; j--) {
+                max = Math.max(dp[j] * (i - j), max);
+            }
+            dp[i] = max;
+        }
+        return dp[n];
+    }
+
+    private void dfsPermute(List<List<Integer>> res, List<Integer> each, int[] nums, boolean[] record) {
+        if (each.size() >= nums.length) {
+            res.add(new ArrayList<>(each));
             return;
         }
         for (int i = 0; i < nums.length; i++) {
@@ -38,13 +130,14 @@ public class Solution {
                 continue;
             }
             record[i] = true;
-            one.add(nums[i]);
-            dfsPermute(res, one, nums, record);
-            one.remove(one.size() - 1);
+            each.add(nums[i]);
+            dfsPermute(res, each, nums, record);
+            each.remove(each.size() - 1);
             record[i] = false;
         }
     }
 
+    // 矩阵中到m,n位置有多少种走法
     public int uniquePaths(int m, int n) {
         int[][] dp = new int[m][n];
         for (int i = 0; i < m; i++) {
@@ -60,6 +153,7 @@ public class Solution {
         }
         return dp[m - 1][n - 1];
     }
+
 
     public List<List<String>> groupAnagrams(String[] strs) {
         //返回值是List List里面是List 装的String  定义一个HashMap 值为List
@@ -189,6 +283,42 @@ public class Solution {
         return maxValuePerVolume[maxVolume];
     }
 
+    public int JumpFloor(int target) {
+        int[] memo = new int[]{1, 2};
+        if (target < 3) {
+            return target;
+        }
+        int result = 0;
+        for (int i = 2; i < target; i++) {
+            result = memo[0] + memo[1];
+            memo[0] = memo[1];
+            memo[1] = result;
+        }
+        return result;
+    }
+
+    //    一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。
+//    求该青蛙跳上一个n级的台阶总共有多少种跳法。
+    public int JumpFloorII(int target) {
+        if (target <= 2) {
+            return target;
+        }
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+        int sum;
+
+        for (int i = 3; i <= target; i++) {
+            sum = 0;
+            for (int j = 0; j < i; j++) {
+                sum += dp[j];
+            }
+            dp[i] = sum;
+        }
+        return dp[target];
+    }
+
     private int backPack(int maxVolume, int[] volumes, int[] values) {
         int[][] dp = new int[volumes.length + 1][maxVolume + 1];
         for (int i = 1; i <= volumes.length; i++) {
@@ -235,17 +365,361 @@ public class Solution {
     }
 
 
+    // offer 42
+    //连续子数组最大和
+
+    //Input: [-2,1,-3,4,-1,2,1,-5,4],
+    //Output: 6
+    //Explanation: [4,-1,2,1] has the largest sum = 6.
+    //DP的方式
+    public int maxSubArray(int[] nums) {
+        int size = nums.length;
+        if (size == 0) {
+            return 0;
+        }
+//        dp 以i结尾的最大序列的max值
+        int[] dp = new int[size];
+        dp[0] = nums[0];
+        for (int i = 1; i < size; i++) {
+            dp[i] = Math.max(dp[i - 1] + nums[i], nums[i]);
+        }
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < size; i++) {
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+
+    //    91. Decode Ways
+    //A message containing letters from A-Z is being encoded to numbers using the following mapping:
+    //输入的是数字
+    //    https://zxi.mytechroad.com/blog/dynamic-programming/leetcode-91-decode-ways/
+    public int numDecodings(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int n = s.length();
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = s.charAt(0) != '0' ? 1 : 0;
+        for (int i = 2; i <= n; i++) {
+            int first = Integer.parseInt(s.substring(i - 1, i));
+            int second = Integer.parseInt(s.substring(i - 2, i));
+            if (first >= 1 && first <= 9) {
+                dp[i] += dp[i - 1];
+            }
+            if (second >= 10 && second <= 26) {
+                dp[i] += dp[i - 2];
+            }
+        }
+        return dp[n];
+    }
+
+    //使用滚动数组
+    public int numDecodings2(String s) {
+        if (s == null || s.length() == 0 || s.charAt(0) == '0') {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+        int w1 = 1, w2 = 1;
+        for (int i = 1; i < s.length(); i++) {
+            int w = 0;
+            if (!isValid(s.charAt(i)) && !isValid(s.charAt(i - 1), s.charAt(i))) {
+                return 0;
+            }
+            if (isValid(s.charAt(i))) {
+                w += w1;
+            }
+            if (isValid(s.charAt(i - 1), s.charAt(i))) {
+                w += w2;
+            }
+            //滚动
+            w2 = w1;
+            w1 = w;
+        }
+        return w1;
+    }
+
+    private boolean isValid(char c) {
+        return c != '0';
+    }
+
+    private boolean isValid(char c1, char c2) {
+        int num = 10 * (c1 - '0') + (c2 - '0');
+        if (num >= 10 && num <= 26) {
+            return true;
+        }
+        return false;
+    }
+
+    //使用计划递归，5s
+    HashMap<String, Integer> memo = new HashMap<>();
+
+    public int numDecodings3(String s) {
+        if (s == null || s.length() == 0 || s.charAt(0) == '0') {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+        memo.put("", 1);
+        return ways(s);
+    }
+
+    private int ways(String s) {
+        Integer val = memo.get(s);
+
+        if (val != null) {
+            return val;
+        }
+        if (s.charAt(0) == '0') {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+        int w = ways(s.substring(1));
+        int prefix = Integer.parseInt(s.substring(0, 2));
+        //因为这时候第0位已经不可能是0
+        if (prefix <= 26) {
+            w += ways(s.substring(2));
+        }
+        memo.put(s, w);
+        return w;
+    }
+
+    //礼物的最大价值（从矩阵的左上角走到右上角）
+    public int maxValueOfGifts(int[][] values) {
+        if (values == null || values.length <= 0 || values[0].length <= 0) {
+            return 0;
+        }
+        int rows = values.length;
+        int cols = values[0].length;
+        int[][] dp = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int up = 0;
+                int left = 0;
+                if (i > 0) {
+                    up = dp[i - 1][j];
+                }
+                if (j > 0) {
+                    left = dp[i][j - 1];
+                }
+                dp[i][j] = Math.max(left, up) + values[i][j];
+            }
+        }
+        return dp[rows - 1][cols - 1];
+    }
+
+    //剑指offer 48
+    //最长不含重复字符的子字符串
+    public int longestSubstringWithoutDuplication(String str) {
+        int curLength = 0;
+        int maxLength = 0;
+        int[] position = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            int preIndex = position[str.charAt(i) - 'a'];
+            if (preIndex < 0 || i - preIndex > curLength) {
+                curLength++;
+            } else {
+                if (curLength > maxLength) {
+                    maxLength = curLength;
+                }
+                curLength = i - preIndex;
+            }
+            position[str.charAt(i) - 'a'] = i;
+        }
+        if (curLength >= maxLength) {
+            maxLength = curLength;
+        }
+        return maxLength;
+    }
+
+    public String[] printProbability(int n) {
+        if (n <= 0)
+            return null;
+        //结果可能性总数
+        int total = (int) Math.pow(6, n);
+        String[] result = new String[6 * n - n + 1];
+
+        //dp[c][k] c个骰子朝上一面点数之和为k的次数
+        int[][] dp = new int[n + 1][6 * n + 1];
+        //初始化dp[1][1...6]
+        for (int x = 1; x <= 6; x++)
+            dp[1][x] = 1;
+        //执行计算
+        for (int i = 2; i <= n; i++)
+            for (int j = 2; j <= 6 * n; j++) {
+                int sum = 0;
+                for (int m = 1; m < j && m <= 6; m++)
+                    sum += dp[i - 1][j - m];
+                dp[i][j] = sum;
+            }
+        //统计结果,用分数表示
+        for (int k = n; k <= 6 * n; k++) {
+            result[k - n] = dp[n][k] + "/" + total;
+        }
+        return result;
+    }
+    //    1155. 掷骰子的N种方法
+    //这里有 d 个一样的骰子，每个骰子上都有 f 个面，分别标号为 1, 2, ..., f。
+    //我们约定：掷骰子的得到总点数为各骰子面朝上的数字的总和。
+    //如果需要掷出的总点数为 target，请你计算出有多少种不同的组合情况（所有的组合情况总共有 f^d 种），模 10^9 + 7 后返回。
+
+    public int numRollsToTarget(int d, int f, int target) {
+        int toMod = (int) Math.pow(10, 9) + 7;
+        if (target > d * f) {
+            return 0;
+        }
+        if (target < d) {
+            return 0;
+        }
+        int[][] dp = new int[d + 1][target + 1];
+        for (int i = 1; i <= Math.min(f, target); i++) {
+            dp[1][i] = 1;
+        }
+
+        for (int i = 2; i <= d; i++) {
+            for (int j = i; j <= target; j++) {
+                int sum = 0;
+                for (int k = 1; k <= f; k++) {
+                    if (j - k >= 0) {
+                        sum += dp[i - 1][j - k];
+                        sum %= toMod;
+                    }
+                }
+                dp[i][j] = sum;
+            }
+        }
+        return dp[d][target];
+    }
+
+    //    1269. Number of Ways to Stay in the Same Place After Some Steps
+    public int numWays(int steps, int arrLen) {
+        int toMod = (int) Math.pow(10, 9) + 7;
+        int min = Math.min(steps, arrLen);
+        long[][] dp = new long[steps + 1][min];
+        dp[1][0] = 1;
+        dp[1][1] = 1;
+        for (int i = 2; i <= steps; i++) {
+            for (int j = 0; j < min; j++) {
+                dp[i][j] += dp[i - 1][j];
+                if (j > 0) {
+                    dp[i][j] += dp[i - 1][j - 1];
+                }
+                if (j < min - 1) {
+                    dp[i][j] += dp[i - 1][j + 1];
+                }
+                dp[i][j] %= toMod;
+            }
+        }
+        return (int) dp[steps][0];
+    }
+
+    //1262. Greatest Sum Divisible by Three
+    public int maxSumDivThree(int[] nums) {
+        int[] dp = new int[3];
+        int[] tmp = new int[3];
+        int modRes;
+        for (int n : nums) {
+            for (int v : dp) {
+                modRes = (n + v) % 3;
+                if (modRes == 0) {
+                    tmp[0] = Math.max(n + v, tmp[0]);
+                } else if (modRes == 1) {
+                    tmp[1] = Math.max(n + v, tmp[1]);
+                } else {
+                    tmp[2] = Math.max(n + v, tmp[2]);
+                }
+            }
+            dp = Arrays.copyOf(tmp, 3);
+        }
+        return dp[0];
+    }
+
+
+    public int maxSumDivThree2(int[] nums) {
+        int[] dp = new int[3];
+        for (int i = 0; i < nums.length; i++) {
+            int mod = nums[i] % 3;
+            int a = dp[(3 - mod) % 3];
+            int b = dp[(3 + 1 - mod) % 3];
+            int c = dp[(3 + 2 - mod) % 3];
+            if (a != 0 || mod == 0) {
+                dp[0] = Math.max(dp[0], a + nums[i]);
+            }
+            if (b != 0 || mod == 1) {
+                dp[1] = Math.max(dp[1], b + nums[i]);
+            }
+            if (c != 0 || mod == 2) {
+                dp[2] = Math.max(dp[2], c + nums[i]);
+            }
+        }
+        return dp[0];
+    }
+
+
+
+    //    1278. Palindrome Partitioning III
+    public int palindromePartition(String s, int k) {
+        int size = s.length();
+        if (s.length() == k) return 0;
+        int[][] dp = new int[size + 1][k];
+        for (int i = 0; i < size; i++) {
+            dp[i + 1][0] = changeToPalindrome(s.substring(0, i + 1));
+        }
+        for (int j = 1; j < k; j++) {
+            for (int i = j; i <= size; i++) {
+                int cur = Integer.MAX_VALUE;
+                for (int p = i; p >= j; p--) {
+                    cur = Math.min(cur, dp[p - 1][j - 1] + changeToPalindrome(s.substring(p - 1, i)));
+                }
+                dp[i][j] = cur;
+            }
+        }
+
+        return dp[size][k - 1];
+    }
+
+    private int changeToPalindrome(String s) {
+        int i = 0, j = s.length() - 1;
+        int counter = 0;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                counter++;
+            }
+            i++;
+            j--;
+        }
+        return counter;
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
-        solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
-        Boolean[] booleans = new Boolean[3];
-
-        solution.permute(new int[]{1, 2, 3});
-        int[] a = new int[]{1, 2, 3, 0, 2};
-
-        int t = solution.maxProfit(a);
-        System.out.println(t);
+//        int t = solution.maxSumDivThree(new int[]{3, 6, 5, 1, 8});
+//        int t = solution.maxSumDivThree(new int[]{1, 2, 3, 4, 4});
+//        System.out.println(t);
+//        int nw = solution.numWays(2, 4);
+//        System.out.println(nw);
+//        String[] result = solution.printProbability(3);
+//        System.out.println(result.length);
+//        for (String val : result)
+//            System.out.print(val + ",");
+//        solution.longestSubstringWithoutDuplication("arabcacfr");
+//        solution.JumpFloorII(4);
+//        solution.Permutation("");
+//        solution.maxSum(new int[]{0, -2, 3, 5, -1, 2});
+//        solution.backPackII(10, new int[]{2, 3, 5, 7}, new int[]{1, 5, 2, 4});
+//        Boolean[] booleans = new Boolean[3];
+//
+//        solution.permute(new int[]{1, 2, 3});
+//        int[] a = new int[]{1, 2, 3, 0, 2};
+//
+//        int t = solution.maxProfit(a);
+//        System.out.println(t);
     }
 }

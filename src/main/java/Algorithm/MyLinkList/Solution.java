@@ -86,7 +86,7 @@ class Solution {
         }
 
         int index = 0;
-        while (record.size() >= 1) {
+        while (record.size() > 1) {
             int nowMin = Integer.MAX_VALUE;
             for (int i = 0; i < lists.length; i++) {
                 ListNode node = lists[i];
@@ -134,6 +134,7 @@ class Solution {
 
     public static void main(String[] args) {
         Solution s = new Solution();
+        s.deleteDuplication(s.array2ListNode(new int[]{1, 1, 1, 2}));
         ListNode h = s.array2ListNode(new int[]{1, 2, 2, 1});
         s.isPalindrome(h);
         ListNode[] lists = new ListNode[3];
@@ -426,20 +427,124 @@ class Solution {
         }
     }
 
-    public int findKthLargest(int[] nums, int k) {
-        PriorityQueue<Integer> heap = new PriorityQueue<>(k);
-        for (int i = 0; i < nums.length; i++) {
-            if (heap.size() < k) {
-                heap.offer(nums[i]);
-            } else {
-                int top = heap.peek();
-                if (top < nums[i]) {
-                    heap.poll();
-                    heap.offer(nums[i]);
-                }
-            }
-
+    //删除链表中的重复节点
+    public ListNode deleteDuplication(ListNode pHead) {
+        if (pHead == null) {
+            return pHead;
         }
-        return heap.peek();
+        ListNode Head = new ListNode(0);
+        Head.next = pHead;
+        ListNode pre = Head;
+        ListNode last = Head.next;
+        while (last != null) {
+            if (last.next != null && last.val == last.next.val) {
+                // 找到最后的一个相同节点
+                while (last.next != null && last.val == last.next.val) {
+                    last = last.next;
+                }
+                pre.next = last.next;
+                last = last.next;
+            } else {
+                pre = pre.next;
+                last = last.next;
+            }
+        }
+        return Head.next;
+    }
+
+    //链表中环的入口
+    //思路：先使用快慢指针，判断它是否有环，同时，确定出环的大小（再次回到相遇位置，相遇位置一定在环上）
+    //然后双指针，一个先走环大小长度，然后再一起走，相遇的点就是环的入口
+    public ListNode EntryNodeOfLoop(ListNode pHead) {
+        if (pHead == null || pHead.next == null) {
+            return pHead;
+        }
+        boolean hasLoop = false;
+        ListNode fast = pHead, slow = pHead;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                hasLoop = true;
+                break;
+            }
+        }
+        if (!hasLoop) {
+            return null;
+        }
+        int n = 1;
+        while (slow.next != fast) {
+            slow = slow.next;
+            n++;
+        }
+        ListNode p1 = pHead, p2 = pHead;
+        while (n-- > 0) {
+            p1 = p1.next;
+        }
+        while (p1 != p2) {
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        return p1;
+    }
+
+    //两个链表的第一个公共节点
+    //思路1：数出长的比短的多几个，先多走x步，然后一起走，第一个相同的就是
+    //思路2：使用栈，构建2个栈，先都分别放进去，然后一起弹出，记录最后一个相同的节点就是
+    public ListNode FindFirstCommonNode(ListNode pHead1, ListNode pHead2) {
+        int l1 = GetListLength(pHead1);
+        int l2 = GetListLength(pHead2);
+        ListNode pLong = pHead1;
+        ListNode pShot = pHead2;
+        if (l2 > l1) {
+            pLong = pHead2;
+            pShot = pHead1;
+        }
+        int diff = Math.abs(l1 - l2);
+        for (int i = 0; i < diff; i++) {
+            pLong = pLong.next;
+        }
+        while (pLong != null && pShot != null && pLong != pShot) {
+            pLong = pLong.next;
+            pShot = pShot.next;
+        }
+        return pLong;
+    }
+
+    private int GetListLength(ListNode pHead) {
+        int len = 0;
+        ListNode pNode = pHead;
+        while (pNode != null) {
+            pNode = pNode.next;
+            len++;
+        }
+        return len;
+    }
+
+    //使用栈的方法
+    public ListNode FindFirstCommonNode2(ListNode pHead1, ListNode pHead2) {
+        LinkedList<ListNode> stack1 = new LinkedList<>();
+        LinkedList<ListNode> stack2 = new LinkedList<>();
+        ListNode n1 = pHead1;
+        ListNode n2 = pHead2;
+        while (n1 != null) {
+            stack1.offerLast(n1);
+            n1 = n1.next;
+        }
+
+        while (n2 != null) {
+            stack2.offerLast(n2);
+            n2 = n2.next;
+        }
+        ListNode t1 = null;
+        ListNode t2 = null;
+        while (!stack1.isEmpty() && !stack2.isEmpty()) {
+            t1 = stack1.pollLast();
+            t2 = stack2.pollLast();
+            if (t1 != t2) {
+                break;
+            }
+        }
+        return t1;
     }
 }
