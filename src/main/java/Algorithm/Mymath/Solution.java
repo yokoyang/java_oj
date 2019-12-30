@@ -1,8 +1,6 @@
 package Algorithm.Mymath;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
 public class Solution {
     public double Power(double base, int exponent) {
@@ -20,6 +18,24 @@ public class Solution {
             return 1 / tmp;
         }
         return tmp;
+    }
+
+    //    1291. Sequential Digits
+    public List<Integer> sequentialDigits(int low, int high) {
+        List<Integer> res = new ArrayList<>();
+        for (int i = 1; i <= 8; i++) {
+            int s = i;
+            int next = i + 1;
+            while (s <= high && next < 10) {
+                s = s * 10 + next;
+                if (s >= low && s <= high) {
+                    res.add(s);
+                }
+                next++;
+            }
+        }
+        Collections.sort(res);
+        return res;
     }
 
     private double powerWithUnsignedExponent(double base, int exponent) {
@@ -250,7 +266,8 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.GetUglyNumber_Solution(5);
-        solution.printToMaxOfNDigits2(3);
+//        solution.GetUglyNumber_Solution(5);
+//        solution.printToMaxOfNDigits2(3);
+        System.out.println(solution.sequentialDigits(100, 300));
     }
 }

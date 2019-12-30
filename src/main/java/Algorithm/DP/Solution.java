@@ -662,7 +662,6 @@ public class Solution {
     }
 
 
-
     //    1278. Palindrome Partitioning III
     public int palindromePartition(String s, int k) {
         int size = s.length();
@@ -696,6 +695,34 @@ public class Solution {
         }
         return counter;
     }
+
+    //    1292. Maximum Side Length of a Square with Sum Less than or Equal to Threshold
+    public int maxSideLength(int[][] mat, int threshold) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] dp = new int[m + 1][n + 1];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1] - dp[i - 1][j - 1] + mat[i - 1][j - 1];
+            }
+        }
+        int max = 0;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                for (int k = 0; i + k <= m && j + k <= n; k++) {
+                    if (sumRange(dp, i, j, i + k, j + k) <= threshold) {
+                        max = Math.max(max, k + 1);
+                    }
+                }
+            }
+        }
+        return max;
+    }
+
+    private int sumRange(int[][] dp, int i1, int j1, int i2, int j2) {
+        return Math.abs(dp[i2][j2] - dp[i1 - 1][j2] - dp[i2][j1 - 1] + dp[i1 - 1][j1 - 1]);
+    }
+
 
 
     public static void main(String[] args) {

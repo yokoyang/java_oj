@@ -106,6 +106,7 @@ public class Solution {
         }
         return res;
     }
+
     // 使用滑动窗口 [i, j) 左闭右开
     public int balancedString2(String s) {
         int res = s.length();
@@ -133,9 +134,70 @@ public class Solution {
         return res;
     }
 
+    //    1297. Maximum Number of Occurrences of a Substring
+    public int maxFreq2(String s, int maxLetters, int minSize, int maxSize) {
+        Map<String, Integer> record = new HashMap<>();
+        int n = s.length(), resCnt = 0;
+        if (minSize > n) return 0;
+        for (int i = 0; i < n; i++) {
+            Map<Character, Integer> letterMap = new HashMap<>();
+            for (int distNum = 0, j = 0; j < maxSize; j++) {
+                if (i + j >= n) break;
+                letterMap.put(s.charAt(i + j), letterMap.getOrDefault(s.charAt(i + j), 0) + 1);
+                if (letterMap.get(s.charAt(i + j)) == 1) distNum++;
+                if (distNum > maxLetters) break;
+                if (j >= minSize - 1) {
+                    String substring = s.substring(i, i + j + 1);
+                    record.put(substring, record.getOrDefault(substring, 0) + 1);
+                }
+            }
+        }
+        for (String str : record.keySet()) {
+            if (record.get(str) > resCnt)
+                resCnt = record.get(str);
+        }
+        return resCnt;
+    }
+
+    public int maxFreq(String s, int maxLetters, int minSize, int maxSize) {
+        int res = 0;
+        if (minSize > s.length()) {
+            return res;
+        }
+        int[] letterDic;
+        int i = 0, j = 0;
+        HashMap<String, Integer> record = new HashMap<>();
+        for (i = 0; i < s.length(); i++) {
+            letterDic = new int[26];
+            int distinct = 0;
+            for (j = 0; j < maxSize && (i + j < s.length()); j++) {
+                char now = s.charAt(i + j);
+                if (letterDic[now - 'a']++ == 0) {
+                    distinct++;
+                }
+                if (distinct > maxLetters) {
+                    break;
+                }
+                if (j >= minSize - 1) {
+                    String sub = s.substring(i, i + j + 1);
+                    int last = record.getOrDefault(sub, 0);
+                    record.put(sub, last + 1);
+                }
+            }
+        }
+        for (Integer v : record.values()) {
+            res = Math.max(res, v);
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        System.out.println(solution.balancedString("QWERQQER"));
+//        System.out.println(solution.balancedString("QWERQQER"));
+        System.out.println(solution.maxFreq("aababcaab"
+                , 2
+                , 3
+                , 4));
 //        System.out.println(solution.lengthOfLongestSubstring2("tmmzuxt"));
 //        System.out.println(solution.numberOfSubarrays(new int[]{1, 1, 2, 1, 2, 0, 1, 1, 1, 2}, 3));
 

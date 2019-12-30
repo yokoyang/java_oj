@@ -134,7 +134,42 @@ public class BinarySearchTree {
 
 
     public TreeNode kthSmallest(TreeNode root, int k) {
-        kthSmallestHelper(root,k);
+        kthSmallestHelper(root, k);
         return kthResult;
+    }
+
+    //    判断一个数组是否是二叉搜索树的后序遍历
+    //第一个元素下标low,最后一个元素下标high
+    public boolean verifySequenceBST(int[] sequence, int low, int high) {
+        if (sequence == null || high - low < 0) {
+            return false;
+        }
+        int root = sequence[high];
+        int i;
+        //在二叉搜索树左子树的结点小于根结点
+        for (i = low; i < high; i++) {
+            //如果值大于根结点，停止，说明这个下标开始为右子树
+            if (sequence[i] > root) {
+                break;
+            }
+        }
+        //在二叉搜索树右子树的结点大于根结点
+        for (int j = i; j < high; j++) {
+            if (sequence[j] < root) {
+                return false;
+            }
+        }
+
+        //判断左子树是不是二叉搜索数
+        boolean left = true;
+        if (i > 0) {
+            left = verifySequenceBST(sequence, 0, i - 1);
+        }
+        //判断右子树是不是二叉搜索数
+        boolean right = true;
+        if (i < high) {
+            right = verifySequenceBST(sequence, i + 1, high);
+        }
+        return (left && right);
     }
 }

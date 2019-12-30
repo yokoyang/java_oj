@@ -15,6 +15,27 @@ class TreeNode {
 
 public class Solution {
 
+    public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
+        PriorityQueue<Integer> res = new PriorityQueue<>();
+        res.addAll(getAllNodes(root1));
+        res.addAll(getAllNodes(root2));
+        List<Integer> t = new ArrayList<>();
+
+        while (!res.isEmpty()) {
+            t.add(res.poll());
+        }
+        return t;
+    }
+
+    private ArrayList<Integer> getAllNodes(TreeNode root) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (root != null) {
+            res.add(root.val);
+            res.addAll(getAllNodes(root.left));
+            res.addAll(getAllNodes(root.right));
+        }
+        return res;
+    }
 
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         if (root == null) {
