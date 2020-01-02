@@ -14,6 +14,7 @@ public class Solution {
             this.k = k;
         }
     }
+
     //    1293. Shortest Path in a Grid with Obstacles Elimination
     public int shortestPath(int[][] grid, int k) {
         int m = grid.length;
@@ -59,4 +60,37 @@ public class Solution {
         return step;
     }
 
+    //    1298. Maximum Candies You Can Get from Boxes
+    public int maxCandies(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
+        int[] found = new int[status.length];
+        int[] hasKey = new int[status.length];
+        for (int i = 0; i < status.length; i++) {
+            hasKey[i] = status[i];
+        }
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+        for (int b : initialBoxes) {
+            found[b] = 1;
+            if (hasKey[b] > 0) {
+                q.offer(b);
+            }
+        }
+        int ans = 0;
+        while (!q.isEmpty()) {
+            int b = q.poll();
+            ans += candies[b];
+            for (int t : containedBoxes[b]) {
+                found[t] = 1;
+                if (hasKey[t] > 0) {
+                    q.offer(t);
+                }
+            }
+            for (int k : keys[b]) {
+                if (hasKey[k] == 0 && found[k] > 0) {
+                    q.offer(k);
+                }
+                hasKey[k] = 1;
+            }
+        }
+        return ans;
+    }
 }
