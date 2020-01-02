@@ -50,7 +50,7 @@ public class LRUCache {
             return;
         }
         if (map.size() >= cap) {
-            // 满了
+            // 满了，先去掉头结点数据
             Node tmp = head.next;
             head.next = head.next.next;
             head.next.pre = head;

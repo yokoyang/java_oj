@@ -724,9 +724,49 @@ public class Solution {
     }
 
 
+    public int[] pathsWithMaxScore(List<String> boards) {
+        int kMod = (int) (1e9 + 7);
+        int n = boards.size();
+        int[][] dp = new int[n + 1][n + 1];
+        int[][] paths = new int[n + 1][n + 1];
+        char[][] board = new char[n][n];
+        for (int i = 0; i < boards.size(); i++) {
+            for (int j = 0; j < boards.get(i).length(); j++) {
+                board[i][j] = boards.get(i).charAt(j);
+            }
+        }
+        board[n - 1][n - 1] = '0';
+        board[0][0] = '0';
+        paths[n - 1][n - 1] = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (board[i][j] != 'X') {
+                    int m = Math.max(Math.max(dp[i + 1][j], dp[i][j + 1]), dp[i + 1][j + 1]);
+                    dp[i][j] = (board[i][j] - '0') + m;
+                    if (dp[i + 1][j] == m)
+                        paths[i][j] = (paths[i][j] + paths[i + 1][j]) % kMod;
+                    if (dp[i][j + 1] == m)
+                        paths[i][j] = (paths[i][j] + paths[i][j + 1]) % kMod;
+                    if (dp[i + 1][j + 1] == m)
+                        paths[i][j] = (paths[i][j] + paths[i + 1][j + 1]) % kMod;
+                }
+            }
+        }
+        if (paths[0][0] == 0) {
+            return new int[]{0, 0};
+        }
+        return new int[]{dp[0][0], paths[0][0]};
+    }
+
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
+        List<String> input = new ArrayList<>();
+        input.add("E23");
+        input.add("2X2");
+        input.add("12S");
+        System.out.println(solution.pathsWithMaxScore(input));
 //        int t = solution.maxSumDivThree(new int[]{3, 6, 5, 1, 8});
 //        int t = solution.maxSumDivThree(new int[]{1, 2, 3, 4, 4});
 //        System.out.println(t);
