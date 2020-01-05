@@ -24,14 +24,14 @@ public class ThreadPoolExecutorTest {
         String regex = "表示";
         List<String> resultStringList = new ArrayList<>();
         File path = new File(dirName);
-        if(path.exists()&&path.isDirectory()){
-            for(File file : path.listFiles()){
-                if(file.getName().endsWith(pattern)){
+        if (path.exists() && path.isDirectory()) {
+            for (File file : path.listFiles()) {
+                if (file.getName().endsWith(pattern)) {
                     MyTask task = new MyTask(file, regex);
                     Future<List<String>> result = executor.submit(task);
-                    try{
+                    try {
                         resultStringList.addAll(result.get());
-                    } catch(InterruptedException | ExecutionException e){
+                    } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
                 }
@@ -76,7 +76,8 @@ public class ThreadPoolExecutorTest {
         public MyTask(String name) {
             this.name = name;
         }
-        private MyTask(File file, String regex){
+
+        private MyTask(File file, String regex) {
             this.file = file;
             this.regex = regex;
         }
@@ -105,7 +106,7 @@ public class ThreadPoolExecutorTest {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String str;
             while ((str = bufferedReader.readLine()) != null) {
-                if(str.contains(regex)){
+                if (str.contains(regex)) {
                     callList.add(str);
                 }
             }
