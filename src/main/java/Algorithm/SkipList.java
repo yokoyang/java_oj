@@ -1,5 +1,6 @@
 package Algorithm;
 
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.LinkedHashMap;
 public class SkipList {
@@ -19,7 +20,6 @@ public class SkipList {
                 p = p.forwards[i];
             }
         }
-
         if (p.forwards[0] != null && p.forwards[0].data == value) {
             return p.forwards[0];
         } else {
