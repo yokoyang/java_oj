@@ -780,16 +780,106 @@ public class Solution {
     public int minInsertions(String s) {
         int n = s.length();
         String reverse = new StringBuilder(s).reverse().toString();
-        return n - longestCommonSubsequence(s,reverse);
+        return n - longestCommonSubsequence(s, reverse);
+    }
+
+    public int maxProfit2(int[] prices) {
+        int maxChances = 2;
+        int days = prices.length;
+        if (days <= 1) {
+            return 0;
+        }
+        int[][][] dp = new int[days + 1][maxChances + 1][2];
+        for (int i = 0; i <= maxChances; i++) {
+            dp[0][i][1] = Integer.MIN_VALUE;
+//            dp[1][i][1] = -prices[0];
+        }
+        for (int i = 1; i <= days; i++) {
+            for (int j = 1; j <= maxChances; j++) {
+                dp[i][j][0] = Math.max(dp[i - 1][j][1] + prices[i - 1], dp[i - 1][j][0]);
+                dp[i][j][1] = Math.max(dp[i - 1][j - 1][0] - prices[i - 1], dp[i - 1][j][1]);
+            }
+        }
+        int ans = 0;
+        for (int i = 1; i <= maxChances; i++) {
+            ans = Math.max(ans, dp[days][i][0]);
+        }
+        return ans;
+    }
+
+    public int maxProfit(int k, int[] prices) {
+        int ans = 0;
+        int days = prices.length;
+        if (days <= 1) {
+            return 0;
+        }
+        if (k * 2 >= days) {
+            return greedyProfit(prices);
+        }
+        int[][][] dp = new int[days + 1][k + 1][2];
+        for (int i = 0; i <= k; i++) {
+            dp[0][i][1] = Integer.MIN_VALUE;
+        }
+        for (int i = 1; i <= days; i++) {
+            for (int j = 1; j <= k; j++) {
+                dp[i][j][0] = Math.max(dp[i - 1][j][1] + prices[i - 1], dp[i - 1][j][0]);
+                dp[i][j][1] = Math.max(dp[i - 1][j - 1][0] - prices[i - 1], dp[i - 1][j][1]);
+            }
+        }
+        for (int i = 1; i <= k; i++) {
+            ans = Math.max(ans, dp[days][i][0]);
+        }
+        return ans;
+    }
+
+    public int maxProfitCoolDown(int[] prices) {
+        int days = prices.length;
+        if (days <= 1) {
+            return 0;
+        }
+        int[] rest = new int[days + 1];
+        int[] hold = new int[days + 1];
+        int[] sold = new int[days + 1];
+        hold[0] = -prices[0];
+        sold[0] = Integer.MIN_VALUE;
+        for (int i = 1; i <= days; i++) {
+            rest[i] = Math.max(rest[i - 1], sold[i - 1]);
+            hold[i] = Math.max(hold[i - 1], rest[i - 1] - prices[i - 1]);
+            sold[i] = hold[i - 1] + prices[i - 1];
+        }
+        return Math.max(rest[days], sold[days]);
+    }
+
+    public int greedyProfit(int[] prices) {
+        int ans = 0;
+        for (int i = 1; i < prices.length; i++) {
+            int t = prices[i] - prices[i - 1];
+            if (t > 0) {
+                ans += t;
+            }
+        }
+        return ans;
+    }
+
+    public int maxProfitTransactionFee(int[] prices, int fee) {
+        int days = prices.length;
+        int[][] dp = new int[days + 1][2];
+        dp[0][1] = Integer.MIN_VALUE / 2;
+        for (int i = 1; i <= days; i++) {
+            dp[i][0] = Math.max(dp[i - 1][1] + prices[i - 1] - fee, dp[i - 1][0]);
+            dp[i][1] = Math.max(dp[i - 1][0] - prices[i - 1], dp[i - 1][1]);
+        }
+        return dp[days][0];
     }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        List<String> input = new ArrayList<>();
-        input.add("E23");
-        input.add("2X2");
-        input.add("12S");
-        System.out.println(solution.pathsWithMaxScore(input));
+        System.out.println(solution.maxProfitTransactionFee(new int[]{1, 3, 2, 8, 4, 9}, 2));
+//        List<String> input = new ArrayList<>();
+//        input.add("E23");
+//        input.add("2X2");
+//        input.add("12S");
+//        System.out.println(solution.pathsWithMaxScore(input));
 //        int t = solution.maxSumDivThree(new int[]{3, 6, 5, 1, 8});
 //        int t = solution.maxSumDivThree(new int[]{1, 2, 3, 4, 4});
 //        System.out.println(t);
