@@ -134,22 +134,22 @@ class Solution {
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.deleteDuplication(s.array2ListNode(new int[]{1, 1, 1, 2}));
-        ListNode h = s.array2ListNode(new int[]{1, 2, 2, 1});
-        s.isPalindrome(h);
-        ListNode[] lists = new ListNode[3];
-
-        lists[0] = new ListNode(1);
-        lists[0].next = new ListNode(4);
-        lists[0].next.next = new ListNode(5);
-
-        lists[1] = new ListNode(1);
-        lists[1].next = new ListNode(3);
-        lists[1].next.next = new ListNode(4);
-
-        lists[2] = new ListNode(2);
-        lists[2].next = new ListNode(6);
-        new Solution().mergeKLists(lists);
+        s.reverseKGroup(s.array2ListNode(new int[]{1, 2, 3, 4, 5}), 2);
+//        ListNode h = s.array2ListNode(new int[]{1, 2, 2, 1});
+//        s.isPalindrome(h);
+//        ListNode[] lists = new ListNode[3];
+//
+//        lists[0] = new ListNode(1);
+//        lists[0].next = new ListNode(4);
+//        lists[0].next.next = new ListNode(5);
+//
+//        lists[1] = new ListNode(1);
+//        lists[1].next = new ListNode(3);
+//        lists[1].next.next = new ListNode(4);
+//
+//        lists[2] = new ListNode(2);
+//        lists[2].next = new ListNode(6);
+//        new Solution().mergeKLists(lists);
     }
 
 
@@ -196,15 +196,6 @@ class Solution {
         return count;
     }
 
-    private ListNode reverseList(ListNode start) {
-        if (start == null || start.next == null) {
-            return start;
-        }
-        ListNode headNew = reverseList(start.next);
-        start.next.next = start;
-        start.next = null;
-        return headNew;
-    }
 
     private ListNode reverseListNode(ListNode n) {
         if (n == null || n.next == null) {
@@ -412,7 +403,7 @@ class Solution {
         //     current.next=preMiddle.next;
         //     preMiddle.next=current;
         // }
-        preMiddle.next = reverseList(preCurrent);
+        preMiddle.next = reverseListNode(preCurrent);
 
         //Start reorder one by one  1->2->3->6->5->4 to 1->6->2->5->3->4
         p1 = head;
@@ -546,5 +537,38 @@ class Solution {
             }
         }
         return t1;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (k <= 1 || head == null || head.next == null) {
+            return head;
+        }
+        int counter = 0;
+        ListNode now = head;
+        ListNode dummy = new ListNode(-1), nextNode, startNode = head;
+        ListNode newHead = new ListNode(0);
+        ListNode n = new ListNode(-2);
+        boolean first = true;
+        while (now != null) {
+            counter++;
+            if (counter == 1) {
+                n = now;
+            }
+            if (counter == k) {
+                counter = 0;
+                nextNode = now.next;
+                now.next = null;
+                dummy.next = reverseListNode(startNode);
+                if (first) {
+                    newHead.next = dummy.next;
+                    first = false;
+                }
+                n.next = nextNode;
+                dummy = n;
+                startNode = nextNode;
+            }
+            now = now.next;
+        }
+        return newHead.next;
     }
 }

@@ -2,7 +2,7 @@ package Algorithm.UnionFind;
 
 public class QuickUnionFind {
     //   带路径压缩的 并查集
-    int[] roots;
+    public int[] roots;
 
     public QuickUnionFind(int N) {
         roots = new int[N];
@@ -22,6 +22,7 @@ public class QuickUnionFind {
         while (root != roots[root]) {
             root = roots[root];
         }
+        //        压缩路径
         while (p != roots[p]) {
             int tmp = roots[p];
             roots[p] = root;
@@ -31,10 +32,7 @@ public class QuickUnionFind {
     }
 
     public boolean isConnected(int p, int q) {
-        if (findRoot(p) == findRoot(q)) {
-            return true;
-        }
-        return false;
+        return findRoot(p) == findRoot(q);
     }
 
 }

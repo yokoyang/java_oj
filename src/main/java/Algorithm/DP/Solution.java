@@ -783,6 +783,28 @@ public class Solution {
         return n - longestCommonSubsequence(s, reverse);
     }
 
+    public int minInsertions2(String s) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+//        for (int l = 2; l <= n; l++) {
+//            for (int p = 0; p < n; p++) {
+//                int q = p + l - 1;
+//                if (p >= q || q >= n) {
+//                    continue;
+//                }
+//                if (s.charAt(p) == s.charAt(q)) {
+//                    dp[p][q] = dp[p + 1][q - 1];
+//                } else {
+//                    dp[p][q] = Math.min(dp[p][q - 1], dp[p + 1][q]) + 1;
+//                }
+//            }
+//        }
+        for (int l = 2; l <= n; ++l)
+            for (int i = 0, j = l - 1; j < n; ++i, ++j)
+                dp[i][j] = s.charAt(i) == s.charAt(j) ? dp[i + 1][j - 1] : Math.min(dp[i + 1][j], dp[i][j - 1]) + 1;
+        return dp[0][n - 1];
+    }
+
     public int maxProfit2(int[] prices) {
         int maxChances = 2;
         int days = prices.length;
@@ -874,7 +896,7 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        System.out.println(solution.maxProfitTransactionFee(new int[]{1, 3, 2, 8, 4, 9}, 2));
+        System.out.println(solution.minInsertions2("mbadm"));
 //        List<String> input = new ArrayList<>();
 //        input.add("E23");
 //        input.add("2X2");
