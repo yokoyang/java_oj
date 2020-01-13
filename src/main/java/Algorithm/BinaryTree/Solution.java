@@ -500,4 +500,29 @@ public class Solution {
         }
         return treeNode;
     }
+
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        LinkedList<List<Integer>> res = new LinkedList<>();
+        if (root == null) {
+            return res;
+        }
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+        while (!q.isEmpty()) {
+            int size = q.size();
+            List<Integer> each = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode n = q.poll();
+                each.add(n.val);
+                if (n.left != null) {
+                    q.offer(n.left);
+                }
+                if (n.right != null) {
+                    q.offer(n.right);
+                }
+            }
+            res.addFirst(each);
+        }
+        return res;
+    }
 }

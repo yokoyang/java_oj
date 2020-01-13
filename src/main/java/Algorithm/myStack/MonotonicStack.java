@@ -1,10 +1,7 @@
 package Algorithm.myStack;
 
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 public class MonotonicStack {
 
@@ -181,11 +178,56 @@ public class MonotonicStack {
                 continue;
             }
             int k = i;
-            while (k < size-1 && heights[i] <= heights[k + 1]) {
+            while (k < size - 1 && heights[i] <= heights[k + 1]) {
                 k = right[k + 1];
             }
             right[i] = k;
         }
     }
+
+    //    901. Online Stock Span
+    class StockSpanner {
+        ArrayList<Integer> dp;
+        ArrayList<Integer> priceList;
+        int i;
+        public StockSpanner() {
+            dp = new ArrayList<>();
+            priceList = new ArrayList<>();
+            //第i天
+            i = 0;
+        }
+
+        public int next(int price) {
+            if (i == 0 || price < priceList.indexOf(priceList.size() - 1)) {
+                dp.add(1);
+            } else {
+                int j = i - 1;
+                while (j >= 0 && priceList.get(j) <= price) {
+                    j -= dp.get(j);
+                }
+                dp.add(i - j);
+            }
+            priceList.add(price);
+            i++;
+            return dp.get(dp.size() - 1);
+        }
+    }
+
+//    class StockSpanner {
+//        Stack<int[]> record;
+//
+//        public StockSpanner() {
+//            record = new Stack<>();
+//        }
+//
+//        public int next(int price) {
+//            int res = 1;
+//            while (!record.isEmpty() && record.peek()[0] <= price) {
+//                res += record.pop()[1];
+//            }
+//            record.push(new int[]{price, res});
+//            return res;
+//        }
+//    }
 }
 
