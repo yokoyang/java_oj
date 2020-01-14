@@ -2,6 +2,7 @@ package contest;
 
 import Algorithm.UnionFind.QuickUnionFind;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -10,7 +11,7 @@ public class Week171 {
         Week171 week171 = new Week171();
 //        System.out.println(week171.minFlips(2, 6, 5));
 //        System.out.println(week171.makeConnected(100, new int[][]{{17, 51}, {33, 83}, {53, 62}, {25, 34}, {35, 90}, {29, 41}, {14, 53}, {40, 84}, {41, 64}, {13, 68}, {44, 85}, {57, 58}, {50, 74}, {20, 69}, {15, 62}, {25, 88}, {4, 56}, {37, 39}, {30, 62}, {69, 79}, {33, 85}, {24, 83}, {35, 77}, {2, 73}, {6, 28}, {46, 98}, {11, 82}, {29, 72}, {67, 71}, {12, 49}, {42, 56}, {56, 65}, {40, 70}, {24, 64}, {29, 51}, {20, 27}, {45, 88}, {58, 92}, {60, 99}, {33, 46}, {19, 69}, {33, 89}, {54, 82}, {16, 50}, {35, 73}, {19, 45}, {19, 72}, {1, 79}, {27, 80}, {22, 41}, {52, 61}, {50, 85}, {27, 45}, {4, 84}, {11, 96}, {0, 99}, {29, 94}, {9, 19}, {66, 99}, {20, 39}, {16, 85}, {12, 27}, {16, 67}, {61, 80}, {67, 83}, {16, 17}, {24, 27}, {16, 25}, {41, 79}, {51, 95}, {46, 47}, {27, 51}, {31, 44}, {0, 69}, {61, 63}, {33, 95}, {17, 88}, {70, 87}, {40, 42}, {21, 42}, {67, 77}, {33, 65}, {3, 25}, {39, 83}, {34, 40}, {15, 79}, {30, 90}, {58, 95}, {45, 56}, {37, 48}, {24, 91}, {31, 93}, {83, 90}, {17, 86}, {61, 65}, {15, 48}, {34, 56}, {12, 26}, {39, 98}, {1, 48}, {21, 76}, {72, 96}, {30, 69}, {46, 80}, {6, 29}, {29, 81}, {22, 77}, {85, 90}, {79, 83}, {6, 26}, {33, 57}, {3, 65}, {63, 84}, {77, 94}, {26, 90}, {64, 77}, {0, 3}, {27, 97}, {66, 89}, {18, 77}, {27, 43}}));
-        System.out.println(week171.minimumDistance("CAKE"));
+        System.out.println(week171.minimumDistance3("CAKE"));
 //        char[] chars = new char[2];
 //        System.out.println(chars[0]);
     }
@@ -53,8 +54,35 @@ public class Week171 {
         return counter;
     }
 
-
     public int makeConnected(int n, int[][] connections) {
+        if (connections.length < n - 1) {
+            return -1;
+        }
+        int[] p = new int[n];
+        for (int i = 0; i < n; i++) {
+            p[i] = i;
+        }
+        for (int[] c : connections) {
+            p[find(p, c[0])] = p[find(p, c[1])];
+        }
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            set.add(find(p, p[i]));
+        }
+        return set.size() - 1;
+    }
+
+    private int find(int[] p, int x) {
+        if (p[x] == x) {
+            return x;
+        }
+        p[x] = find(p, p[x]);
+        return p[x];
+    }
+
+
+
+    public int makeConnected2(int n, int[][] connections) {
         QuickUnionFind quickUnionFind = new QuickUnionFind(n);
         int extraEdge = 0;
         for (int[] edge : connections) {
@@ -78,8 +106,9 @@ public class Week171 {
         }
         return -1;
     }
+
     //    并查集问题，不使用路径压缩的方式：
-    public int makeConnected2(int n, int[][] connections) {
+    public int makeConnected3(int n, int[][] connections) {
         int[] parent = new int[n];
         for (int i = 0; i < n; i++) {
             parent[i] = i;
@@ -147,7 +176,54 @@ public class Week171 {
         return ans;
     }
 
+    public int minimumDistance2(String word) {
+        int size = word.length();
+        int kRest = 26;
+        int[][][] memo = new int[size][27][27];
+        return dpMinimumDistance(0, kRest, kRest, memo, word);
+    }
+
+    private int dpMinimumDistance(int i, int l, int r, int[][][] memo, String word) {
+        if (i == word.length()) {
+            return 0;
+        }
+        if (memo[i][l][r] > 0) {
+            return memo[i][l][r];
+        }
+        int c = word.charAt(i) - 'A';
+        memo[i][l][r] = Math.min(dpMinimumDistance(i + 1, c, r, memo, word) + keyDistance(l, c),
+                dpMinimumDistance(i + 1, l, c, memo, word) + keyDistance(r, c));
+        return memo[i][l][r];
+    }
+
+    public int minimumDistance3(String word) {
+        int size = word.length();
+        int kRest = 26;
+        int[][] memo = new int[size][27];
+        return dpMinimumDistance3(0, kRest, memo, word);
+    }
+
+    private int dpMinimumDistance3(int i, int o, int[][] memo, String word) {
+        if (i >= word.length()) {
+            return 0;
+        }
+        if (memo[i][o] > 0) {
+            return memo[i][o];
+        }
+        int c = word.charAt(i) - 'A';
+        int pre = 26;
+        if (i > 0) {
+            pre = word.charAt(i - 1) - 'A';
+        }
+        memo[i][o] = Math.min(dpMinimumDistance3(i + 1, o, memo, word) + keyDistance(pre, c),
+                dpMinimumDistance3(i + 1, pre, memo, word) + keyDistance(o, c));
+        return memo[i][o];
+    }
+
     private int keyDistance(int x, int y) {
+        if (x == 26) {
+            return 0;
+        }
         int xr = x / 6, xc = x % 6;
         int yr = y / 6, yc = y % 6;
         return Math.abs(xr - yr) + Math.abs(xc - yc);

@@ -1,4 +1,4 @@
-package Algorithm.dynamicProgramming;
+package Algorithm.DP;
 
 import java.util.Arrays;
 
@@ -324,7 +324,7 @@ public class MyDynamicProgammingPackageValue {
             return maxLcs[n - 1][m - 1];
         }
 
-        private int multiMax(int a1, int a2, int a3) {
+            private int multiMax(int a1, int a2, int a3) {
             return Math.max(Math.max(a1, a2), a3);
         }
     }
