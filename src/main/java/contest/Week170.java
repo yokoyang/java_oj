@@ -1,4 +1,4 @@
-package Algorithm;
+package contest;
 
 import java.util.HashMap;
 import java.util.*;
@@ -78,7 +78,7 @@ public class Week170 {
         return res;
     }
 
-    public int[] xorQueries(int[] arr, int[][] queries) {
+    public int[] xorQueries2(int[] arr, int[][] queries) {
         int[] res = new int[queries.length];
         for (int i = 0; i < queries.length; i++) {
             int[] query = queries[i];
@@ -93,26 +93,24 @@ public class Week170 {
         return res;
     }
 
-    public int minInsertions(String s) {
-        if (s.length() <= 1) {
-            return 0;
+    public int[] xorQueries(int[] arr, int[][] queries) {
+        int size = arr.length;
+        int[] dp = new int[size + 1];
+        for (int i = 0; i < size; i++) {
+            dp[i + 1] = dp[i] ^ arr[i];
         }
-        int[] dp = new int[s.length()];
-        for (int i = 0; i < s.length(); i++) {
+        int[] ans = new int[queries.length];
+        int c = 0;
+        for (int[] each : queries) {
+            int l = each[0];
+            int r = each[1];
+            ans[c++] = (dp[r + 1] ^ dp[l]);
+        }
+        return ans;
+    }
 
-        }
+    public int minInsertions(String s) {
         return 0;
     }
 
-    private boolean isPalindrome(String s) {
-        int i = 0, j = s.length() - 1;
-        while (i < j) {
-            if (s.charAt(i) != s.charAt(j)) {
-                return false;
-            }
-            i++;
-            j--;
-        }
-        return true;
-    }
 }

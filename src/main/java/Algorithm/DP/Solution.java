@@ -786,22 +786,24 @@ public class Solution {
     public int minInsertions2(String s) {
         int n = s.length();
         int[][] dp = new int[n][n];
-//        for (int l = 2; l <= n; l++) {
-//            for (int p = 0; p < n; p++) {
-//                int q = p + l - 1;
-//                if (p >= q || q >= n) {
-//                    continue;
-//                }
-//                if (s.charAt(p) == s.charAt(q)) {
-//                    dp[p][q] = dp[p + 1][q - 1];
-//                } else {
-//                    dp[p][q] = Math.min(dp[p][q - 1], dp[p + 1][q]) + 1;
-//                }
-//            }
-//        }
-        for (int l = 2; l <= n; ++l)
-            for (int i = 0, j = l - 1; j < n; ++i, ++j)
-                dp[i][j] = s.charAt(i) == s.charAt(j) ? dp[i + 1][j - 1] : Math.min(dp[i + 1][j], dp[i][j - 1]) + 1;
+        for (int l = 2; l <= n; l++) {
+//            l 当前选定长度
+            for (int p = 0; p < n; p++) {
+//                p起点 q终点
+                int q = p + l - 1;
+                if (p >= q || q >= n) {
+                    continue;
+                }
+                if (s.charAt(p) == s.charAt(q)) {
+                    dp[p][q] = dp[p + 1][q - 1];
+                } else {
+                    dp[p][q] = Math.min(dp[p][q - 1], dp[p + 1][q]) + 1;
+                }
+            }
+        }
+//        for (int l = 2; l <= n; ++l)
+//            for (int i = 0, j = l - 1; j < n; ++i, ++j)
+//                dp[i][j] = s.charAt(i) == s.charAt(j) ? dp[i + 1][j - 1] : Math.min(dp[i + 1][j], dp[i][j - 1]) + 1;
         return dp[0][n - 1];
     }
 
