@@ -571,4 +571,33 @@ class Solution {
         }
         return newHead.next;
     }
+
+    public ListNode rotateRight(ListNode head, int k) {
+        int size = 0;
+        ListNode n = head, pre = null, last = head;
+        while (n != null) {
+            if (n.next == null) {
+                last = n;
+            }
+            n = n.next;
+            size++;
+        }
+        int real = k % size;
+        if (real == 0) {
+            return head;
+        }
+        int s = size - real;
+        n = head;
+
+        while (s-- > 0 && n != null) {
+            pre = n;
+            n = n.next;
+        }
+        if (pre != null) {
+            pre.next = null;
+        }
+        ListNode newHead = n;
+        last.next = head;
+        return newHead;
+    }
 }

@@ -544,4 +544,27 @@ public class Solution {
     private int change1Pos(int num, int index) {
         return num ^ (1 << index);
     }
+
+    //    60. Permutation Sequence
+    public String getPermutation(int n, int k) {
+        int[] nums = new int[10];
+        int[] fact = new int[10];
+        Arrays.fill(fact, 1);
+        for (int i = 1; i <= 9; i++) {
+            nums[i - 1] = i;
+            fact[i] = fact[i - 1] * i;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        k--;
+        while (n-- > 0) {
+            int d = k / fact[n];
+            k %= fact[n];
+            stringBuilder.append(nums[d]);
+            for (int i = d + 1; i <= 9; i++)
+                nums[i - 1] = nums[i];
+        }
+        return stringBuilder.toString();
+    }
+
+
 }
