@@ -1022,9 +1022,84 @@ public class Solution {
         return dp[days][0];
     }
 
+    public int longestSubsequence(int[] arr, int difference) {
+        if (arr.length <= 1) {
+            return arr.length;
+        }
+        HashMap<Integer, Integer> dp = new HashMap<>();
+        int ans = 1;
+        for (int n : arr) {
+            int pre = n - difference;
+            int times = dp.getOrDefault(pre, 0) + 1;
+            dp.put(n, times);
+            ans = Math.max(ans, times);
+        }
+        return ans;
+    }
+
+    private long maxSubArray(int[] arr, int r) {
+        long ans = 0, sum = 0;
+        for (int l = 0; l < r; l++) {
+            for (long n : arr) {
+                sum = Math.max(sum + n, 0);
+                ans = Math.max(ans, sum);
+            }
+        }
+        return ans;
+    }
+
+
+    public int kConcatenationMaxSum(int[] arr, int k) {
+        int mod = (int) (1e9 + 7);
+        long ans1 = maxSubArray(arr, 1);
+        if (k == 1) {
+            return (int) (ans1 % mod);
+        }
+        long sum = 0;
+        for (int n : arr) {
+            sum += n;
+        }
+        sum = Math.max(0, sum);
+        long ans2 = maxSubArray(arr, 2);
+        return (int) Math.max(Math.max(ans1, ans2), (k - 2) * sum + ans2) % mod;
+    }
+
+    public double largestSumOfAverages(int[] A, int K) {
+        int n = A.length;
+        double[][] memo = new double[n][n];
+        double[][] dp = new double[n + 1][K + 1];
+        for (int i = 1; i <= n; i++) {
+            dp[i][1] = getAvg(A, 0, i - 1, memo);
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int g = 2; g <= K; g++) {
+                for (int j = i - 1; j >= g - 1; j--) {
+                    dp[i][g] = Math.max(dp[i][g], dp[j][g - 1] + getAvg(A, j, i - 1, memo));
+                }
+            }
+        }
+        return dp[n][K];
+    }
+
+    private double getAvg(int[] A, int s, int e, double[][] memo) {
+        if (memo[s][e] > 0) {
+            return memo[s][e];
+        }
+        int c = (e - s) + 1;
+        double sum = 0.0;
+        for (int i = s; i <= e; i++) {
+            sum += A[i];
+        }
+        double res = sum / c;
+        memo[s][e] = res;
+        return res;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        System.out.println(solution.minInsertions2("mbadm"));
+//        System.out.println(solution.largestSumOfAverages(new int[]{1, 2, 3, 4, 5, 6, 7},4));
+        System.out.println(solution.largestSumOfAverages(new int[]{1, 2}, 1));
+//        System.out.println(solution.minInsertions2("mbadm"));
 //        List<String> input = new ArrayList<>();
 //        input.add("E23");
 //        input.add("2X2");

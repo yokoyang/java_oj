@@ -1,4 +1,4 @@
-package Algorithm.lineSegmenttree;
+package Algorithm.segment_tree;
 
 public class SegmentTree {
     int st[]; // The array that stores segment tree nodes

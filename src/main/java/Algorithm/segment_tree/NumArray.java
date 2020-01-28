@@ -1,4 +1,4 @@
-package Algorithm.lineSegmenttree;
+package Algorithm.segment_tree;
 
 public class NumArray {
     int st[];
