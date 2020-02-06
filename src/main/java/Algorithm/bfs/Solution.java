@@ -93,4 +93,48 @@ public class Solution {
         }
         return ans;
     }
+
+    public static void main(String[] args) {
+        int[] nums = new int[]{6, 4, 14, 6, 8, 13, 9, 7, 10, 6, 12};
+        Solution solution = new Solution();
+        solution.maxJumps(nums, 2);
+    }
+
+    int n;
+    HashMap<Integer, HashSet<Integer>> dp = new HashMap<>();
+
+    public int maxJumps(int[] arr, int d) {
+        n = arr.length;
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            res = Math.max(canReach(arr, i, d, new HashSet<>()).size(), res);
+        }
+        return res;
+    }
+
+    HashSet<Integer> canReach(int[] arr, int p, int d, HashSet<Integer> visited) {
+//        if (dp.get(p) != null) {
+//            return dp.get(p);
+//        }
+        int h = arr[p];
+        visited.add(p);
+        int l = Math.max(0, p - d);
+        int r = Math.min(n - 1, p + d);
+        for (int j = p - 1; j >= l; j--) {
+            if (arr[j] < h) {
+                visited.addAll(canReach(arr, j, d, visited));
+            } else {
+                break;
+            }
+        }
+        for (int j = p + 1; j <= r; j++) {
+            if (arr[j] < h) {
+                visited.addAll(canReach(arr, j, d, visited));
+            } else {
+                break;
+            }
+        }
+        dp.put(p, visited);
+        return visited;
+    }
 }
