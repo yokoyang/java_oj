@@ -7,12 +7,14 @@ import java.util.*;
 public class BreadthFirstSearch {
     public static void main(String[] args) {
         BreadthFirstSearch bfs = new BreadthFirstSearch();
+        int t = bfs.minJumps4(new int[]{100, -23, -23, 404, 100, 23, 23, 23, 3, 404});
+        System.out.println(t);
         String beginWord = "hot";
         String endWord = "dog";
 //        List<String> wordList = Arrays.asList("hot", "dot", "dog", "lot", "log", "cog");
         List<String> wordList = Arrays.asList("hot", "dog");
-        int t= bfs.ladderLength3(beginWord, endWord, wordList);
-        System.out.println(t);
+//        int t = bfs.ladderLength3(beginWord, endWord, wordList);
+//        System.out.println(t);
     }
 
     private boolean similarWord(String s1, String s2) {
@@ -207,5 +209,54 @@ public class BreadthFirstSearch {
             res.add(currentLevel);
         }
         return res;
+    }
+
+    public int minJumps4(int[] arr) {
+        HashSet<Integer> seen = new HashSet<>();
+        int res = 0;
+        if (arr.length <= 1) {
+            return res;
+        }
+        HashMap<Integer, ArrayList<Integer>> record = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            ArrayList<Integer> pre = record.getOrDefault(arr[i], new ArrayList<>());
+            if (pre.size() > 0 && pre.get(pre.size() - 1) == i - 1) {
+                pre.remove(pre.size() - 1);
+            }
+            pre.add(i);
+            record.put(arr[i], pre);
+        }
+        ArrayDeque<Integer> pq = new ArrayDeque<>();
+        pq.offer(0);
+        seen.add(0);
+        while (!pq.isEmpty()) {
+            int size = pq.size();
+            while (size-- > 0) {
+                int now = pq.poll();
+                if (now == arr.length - 1) {
+                    return res ;
+                }
+                if (now - 1 >= 0 && !seen.contains(now - 1)) {
+                    pq.offer(now - 1);
+                    seen.add(now - 1);
+                }
+                if (now + 1 < arr.length && !seen.contains(now + 1)) {
+                    pq.offer(now + 1);
+                    seen.add(now + 1);
+                }
+                ArrayList<Integer> sames = record.getOrDefault(arr[now], new ArrayList<>());
+                for (int p : sames) {
+                    if (p != now) {
+                        if (!seen.contains(p)) {
+                            pq.offer(p);
+                            seen.add(p);
+                        }
+                    }
+                }
+            }
+            res++;
+
+        }
+        return -1;
     }
 }
