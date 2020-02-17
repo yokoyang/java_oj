@@ -127,21 +127,27 @@ class ProductOfNumbers {
 
 public class Week176 {
     public static void main(String[] args) {
-        Week176 week176 = new Week176();
-//        week176.isPossible(new int[]{8, 5});
-        // create map
-        Map<String, String> map = new TreeMap<>((a, b) -> {
-            return (b.compareTo(a));
-        });
 
-        // populate the map
-        map.put("1", "TP");
-        map.put("3", "BEST");
-        map.put("2", "IS");
-        for (Map.Entry entry : map.entrySet()) {
-            System.out.println(entry.getKey());
-            System.out.println(entry.getValue());
-        }
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
+        pq.offer(2);
+        pq.offer(1);
+
+//        System.out.println(pq.poll());
+        Week176 week176 = new Week176();
+        week176.isPossible(new int[]{8, 5});
+//        // create map
+//        Map<String, String> map = new TreeMap<>((a, b) -> {
+//            return (b.compareTo(a));
+//        });
+//
+//        // populate the map
+//        map.put("1", "TP");
+//        map.put("3", "BEST");
+//        map.put("2", "IS");
+//        for (Map.Entry entry : map.entrySet()) {
+//            System.out.println(entry.getKey());
+//            System.out.println(entry.getValue());
+//        }
         // create a synchronized map
 //
 //
@@ -167,36 +173,49 @@ public class Week176 {
         return sb.toString();
     }
 
-    public boolean isPossible(int[] target) {
-        long sum = 0;
-        PriorityQueue<Long> pq = new PriorityQueue<>((a, b) -> {
-            return Long.compare(b, a);
-        });
-        for (int i = 0; i < target.length; i++) {
-            sum += target[i];
-            pq.offer((long) target[i]);
+    public int maxEvents(int[][] events) {
+        int i = 0;
+        int size = events.length;
+        Arrays.sort(events, (a, b) -> (a[0] - b[0]));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int M = events[size - 1][1];
+        int res = 0;
+        for (int d = 1; d <= M; d++) {
+            while (pq.size() > 0 && pq.peek() < d) {
+                pq.poll();
+            }
+            while (i < size && events[i][0] == d) {
+                pq.offer(events[i][1]);
+            }
+            if (pq.size() > 0) {
+                pq.poll();
+                res++;
+            }
         }
-        while (!pq.isEmpty()) {
-            long now = pq.poll();
-            // if there is no number bigger than 1 early exit true
-            if (now == 1) {
+        return res;
+    }
+
+    public boolean isPossible(int[] target) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
+        int sum = 0;
+        for (int n : target) {
+            pq.offer(n);
+            sum += n;
+        }
+
+        while (true) {
+            int t = pq.poll();
+            if (t == 1) {
                 return true;
             }
-            // check if current max can be subtract multiple times by other elements' sum.
-            long diff = sum - now;
-            long times = now / diff;
+            sum -= t;
 
-            // check if current max can be subtract at least once by other elements' sum.
-            // this also ensures that no number less than 1 will be added to the priority queue.
-            if (times < 1) {
+            int v = t - sum;
+            if (v <= 0) {
                 return false;
             }
-
-            // update value.
-            sum = sum - times * diff;
-            now = now % diff;
-            pq.offer(now);
+            sum += v;
+            pq.offer(v);
         }
-        return true;
     }
 }
