@@ -126,16 +126,51 @@ class ProductOfNumbers {
 }
 
 public class Week176 {
+    public int minEatingSpeed(int[] piles, int H) {
+        int size = piles.length;
+        long sum = 0;
+        int max = 0;
+        for (int p : piles) {
+            sum += p;
+            max = Math.max(max, p);
+        }
+        int l = (int)(sum / H);
+        int r = max;
+        long mid;
+        while (l <= r) {
+            mid = l + (r - l) / 2;
+            int tmp = 0;
+            for (int p : piles) {
+                int cost = (int) Math.ceil((double) p / mid);
+                tmp += cost;
+            }
+            if (tmp <= H) {
+                r = (int) mid - 1;
+            } else {
+                l = (int)mid + 1;
+            }
+        }
+        return l;
+    }
+
     public static void main(String[] args) {
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
-        pq.offer(2);
-        pq.offer(1);
-
-//        System.out.println(pq.poll());
-        Week176 week176 = new Week176();
-        week176.isPossible(new int[]{8, 5});
-//        // create map
+//        int v = 61;
+//        int x = v;
+//        System.out.println(Integer.toBinaryString(x));
+//
+//        while (x > 0) {
+//            x = (x - 1) & v;
+//            System.out.println(Integer.toBinaryString(x));
+//        }
+//        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
+//        pq.offer(2);
+//        pq.offer(1);
+//
+////        System.out.println(pq.poll());
+//        Week176 week176 = new Week176();
+//        week176.isPossible(new int[]{8, 5});
+////        // create map
 //        Map<String, String> map = new TreeMap<>((a, b) -> {
 //            return (b.compareTo(a));
 //        });
