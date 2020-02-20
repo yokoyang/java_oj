@@ -68,6 +68,32 @@ public class Solution {
         return counter;
     }
 
+    public int makeConnected(int n, int[][] connections) {
+        if (connections.length < n - 1) {
+            return -1;
+        }
+        int[] p = new int[n];
+        for (int i = 0; i < n; i++) {
+            p[i] = i;
+        }
+        for (int[] c : connections) {
+            p[find(p, c[0])] = p[find(p, c[1])];
+        }
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            set.add(find(p, p[i]));
+        }
+        return set.size() - 1;
+    }
+
+    private int find(int[] p, int x) {
+        if (p[x] == x) {
+            return x;
+        }
+        p[x] = find(p, p[x]);
+        return p[x];
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         int t = solution.findCircleNum(new int[][]{{1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}, {0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1}, {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}});
