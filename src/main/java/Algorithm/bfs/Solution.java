@@ -93,11 +93,15 @@ public class Solution {
         }
         return ans;
     }
-
+    int f1(){
+        int a = 1;
+        return ++a;
+    }
     public static void main(String[] args) {
         int[] nums = new int[]{6, 4, 14, 6, 8, 13, 9, 7, 10, 6, 12};
         Solution solution = new Solution();
-        solution.maxJumps(nums, 2);
+        System.out.println(solution.f1());
+//        solution.maxJumps(nums, 2);
     }
 
     int n;

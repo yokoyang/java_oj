@@ -26,7 +26,7 @@ public class LockInterrupt extends Thread {
                 try {
                     Thread.sleep(500);
                 } catch (Exception e) {
-                    // TODO: handle exception
+                   e.printStackTrace();
                 }
                 lock2.lockInterruptibly();
             } else {
@@ -34,7 +34,7 @@ public class LockInterrupt extends Thread {
                 try {
                     Thread.sleep(500);
                 } catch (Exception e) {
-                    // TODO: handle exception
+                    e.printStackTrace();
                 }
                 lock1.lockInterruptibly();
             }
@@ -47,7 +47,7 @@ public class LockInterrupt extends Thread {
             if (lock2.isHeldByCurrentThread()) {
                 lock2.unlock();
             }
-            System.out.println(Thread.currentThread().getId() + ":线程退出");
+            System.out.println(Thread.currentThread().getName() + ":线程退出");
         }
     }
 
@@ -57,7 +57,7 @@ public class LockInterrupt extends Thread {
         t1.start();
         t2.start();
         Thread.sleep(1000);
-//        t1.interrupt();
+//        t2.interrupt();
         DeadlockChecker.check();
     }
 
@@ -70,7 +70,6 @@ public class LockInterrupt extends Thread {
 
             Thread tt = new Thread(() -> {
                 {
-                    // TODO Auto-generated method stub
                     while (true) {
                         long[] deadlockedThreadIds = mbean.findDeadlockedThreads();
                         if (deadlockedThreadIds != null) {

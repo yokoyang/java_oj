@@ -2,6 +2,8 @@ package Algorithm.MyLRU;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class LRUCache {
     class Node {
@@ -10,7 +12,7 @@ public class LRUCache {
         Integer key;
         Integer value;
 
-        public Node(Integer key, Integer value) {
+         Node(Integer key, Integer value) {
             this.key = key;
             this.value = value;
         }

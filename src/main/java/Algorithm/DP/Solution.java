@@ -1095,6 +1095,35 @@ public class Solution {
         return res;
     }
 
+    public int maxJumps(int[] arr, int d) {
+        int n = arr.length;
+        int[][] record = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            record[i] = new int[]{arr[i], i};
+        }
+        Arrays.sort(record, (a, b) -> (a[0] - b[0]));
+        int[] dp = new int[n];
+        Arrays.fill(dp,1);
+
+        for (int[] each : record) {
+            int h = each[0];
+            int pos = each[1];
+            int r = Math.min(n - 1, pos + d);
+            int l = Math.max(0, pos - d);
+            for (int j = pos + 1; j <= r && arr[j] < h; j++) {
+                dp[pos] = Math.max(dp[pos], dp[j] + 1);
+            }
+            for (int j = pos - 1; j >= l && arr[j] < h; j--) {
+                dp[pos] = Math.max(dp[pos], dp[j] + 1);
+            }
+        }
+        int ans = 1;
+        for (int v : dp) {
+            ans = Math.max(ans, dp[v]);
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 //        System.out.println(solution.largestSumOfAverages(new int[]{1, 2, 3, 4, 5, 6, 7},4));
