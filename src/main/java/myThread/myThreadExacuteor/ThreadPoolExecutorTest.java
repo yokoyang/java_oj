@@ -77,7 +77,7 @@ public class ThreadPoolExecutorTest {
             this.name = name;
         }
 
-        private MyTask(File file, String regex) {
+         MyTask(File file, String regex) {
             this.file = file;
             this.regex = regex;
         }
