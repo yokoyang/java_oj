@@ -4,6 +4,8 @@ import java.util.concurrent.Semaphore;
 import java.util.function.IntConsumer;
 
 public class ZeroEvenOdd {
+
+
     private int n;
     private Semaphore z = new Semaphore(1);
     private Semaphore e = new Semaphore(0);
