@@ -22,15 +22,15 @@ public class StarProxy implements InvocationHandler {
     }
 
     // 生成代理类
-    public Object CreatProxyedObj() {
-        return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), this);
+    public Object CreatProxiedObj() {
+        return Proxy.newProxyInstance(target.getClass().getClassLoader(), new Class[]{Star.class}, this);
     }
 
     public static void main(String[] args) {
         Star ldh = new LiuDeHua();
         StarProxy proxy = new StarProxy();
         proxy.setTarget(ldh);
-        Star star = (Star) proxy.CreatProxyedObj();
+        Star star = (Star) proxy.CreatProxiedObj();
         star.dance("a");
         star.sing("b");
     }

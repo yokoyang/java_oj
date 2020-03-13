@@ -1,6 +1,7 @@
 package myProxy;
 
 
+
 public class LiuDeHua implements Star {
     @Override
     public String sing(String name) {
