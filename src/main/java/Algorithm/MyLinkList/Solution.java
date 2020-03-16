@@ -12,6 +12,39 @@ class ListNode {
 }
 
 class Solution {
+    public ListNode mergeKLists3(ListNode[] lists) {
+        ListNode dummy = new ListNode(-1);
+        ListNode head = dummy;
+        int n = lists.length;
+        int c = 0;
+        int index = 0;
+        while (c < n) {
+            int min = Integer.MAX_VALUE;
+            for (int i = 0; i < n; i++) {
+                ListNode now = lists[i];
+                if (now != null && now.val < min) {
+                    min = now.val;
+                    index = i;
+                }
+            }
+            if (head == null) {
+                break;
+            }
+            head.next = lists[index];
+            head = head.next;
+            if (lists[index] != null) {
+                lists[index] = lists[index].next;
+            }
+
+            if (lists[index] == null) {
+                c++;
+            }
+
+        }
+        return dummy.next;
+
+    }
+
     public ListNode array2ListNode(int[] nums) {
         if (nums.length == 0) {
             return null;
@@ -134,7 +167,10 @@ class Solution {
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.reverseKGroup(s.array2ListNode(new int[]{1, 2, 3, 4, 5}), 2);
+        s.mergeKLists3(new ListNode[]{s.array2ListNode(new int[]{}),
+                s.array2ListNode(new int[]{})
+        });
+//        s.reverseKGroup(s.array2ListNode(new int[]{1, 2, 3, 4, 5}), 2);
 //        ListNode h = s.array2ListNode(new int[]{1, 2, 2, 1});
 //        s.isPalindrome(h);
 //        ListNode[] lists = new ListNode[3];

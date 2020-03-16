@@ -93,10 +93,12 @@ public class Solution {
         }
         return ans;
     }
-    int f1(){
+
+    int f1() {
         int a = 1;
         return ++a;
     }
+
     public static void main(String[] args) {
         int[] nums = new int[]{6, 4, 14, 6, 8, 13, 9, 7, 10, 6, 12};
         Solution solution = new Solution();
@@ -140,5 +142,28 @@ public class Solution {
         }
         dp.put(p, visited);
         return visited;
+    }
+
+    public double frogPosition(int n, int[][] edges, int t, int target) {
+        double[] p = new double[n + 1];
+        p[1] = 1.0;
+        List<Integer>[] g = new List[n + 1];
+        for (int i = 0; i < g.length; i++) {
+            g[i] = new ArrayList<>();
+        }
+        for (int[] edge : edges) {
+            g[edge[0]].add(edge[1]);
+            g[edge[1]].add(edge[0]);
+        }
+        boolean[] seen = new boolean[n + 1];
+        seen[1] = true;
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+        q.offer(1);
+        while (t-- > 0) {
+            while (!q.isEmpty()) {
+                int now = q.poll();
+            }
+        }
+        return 1.0;
     }
 }
