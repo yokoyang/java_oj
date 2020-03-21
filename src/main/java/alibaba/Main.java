@@ -5,7 +5,7 @@ import java.util.*;
 public class Main {
     /*
 1 1 1 2 2 2 2 2 1 1
-   * */
+*/
     private static int result = Integer.MAX_VALUE;
 
     static int cards(int n, int[] cards) {

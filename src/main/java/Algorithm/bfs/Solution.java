@@ -166,4 +166,44 @@ public class Solution {
         }
         return 1.0;
     }
+
+    //     542 01 Matrix
+    public int[][] updateMatrix(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] ans = new int[m][n];
+        boolean[][] seen = new boolean[m][n];
+        Queue<int[]> q = new ArrayDeque<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    seen[i][j] = true;
+                    q.offer(new int[]{i, j});
+                }
+            }
+        }
+        int step = 0;
+        int[] dirX = new int[]{1, -1, 0, 0};
+        int[] dirY = new int[]{0, 0, 1, -1};
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            while (size-- > 0) {
+                int[] pos = q.poll();
+                int posY = pos[0], posX = pos[1];
+                ans[posY][posX] = step;
+                for (int i = 0; i < 4; i++) {
+                    int nx = posX + dirX[i];
+                    int ny = posY + dirY[i];
+                    if (nx < 0 || nx >= n || ny < 0 || ny >= m || seen[ny][nx]) {
+                        continue;
+                    }
+                    seen[ny][nx] = true;
+                    q.offer(new int[]{ny, nx});
+                }
+            }
+            step++;
+        }
+        return ans;
+    }
 }

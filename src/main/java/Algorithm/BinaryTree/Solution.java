@@ -526,4 +526,68 @@ public class Solution {
         return res;
     }
 
+    Integer max_sum = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        maxPath_C(root);
+        return max_sum;
+    }
+
+    private int maxPath_C(TreeNode n) {
+        if (n == null) {
+            return 0;
+        }
+        int left_value = Math.max(maxPath_C(n.left), 0);
+        int right_value = Math.max(maxPath_C(n.right), 0);
+        //如果以当前节点为新的树
+        int now_sum = n.val + left_value + right_value;
+        max_sum = Math.max(max_sum, now_sum);
+        return n.val + Math.max(left_value, right_value);
+    }
+
+    int maxDiameter = Integer.MIN_VALUE;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        LongPath(root);
+        return maxDiameter;
+    }
+
+    //经过当前节点和左右2边中的较深的路径和
+    int LongPath(TreeNode node) {
+        if (node == null) {
+            return -1;
+        }
+        int left_val = LongPath(node.left);
+        int right_val = LongPath(node.right);
+        maxDiameter = Math.max(maxDiameter, 2 + left_val + right_val);
+        return 1 + Math.max(left_val, right_val);
+    }
+
+    int longestPath = Integer.MIN_VALUE;
+
+    public int longestUnivaluePath(TreeNode root) {
+        longestUnivaluePath_C(root);
+        return longestPath;
+    }
+
+    private int longestUnivaluePath_C(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        int left_val = longestUnivaluePath_C(node.left);
+        int right_val = longestUnivaluePath_C(node.right);
+        int pl = 0, pr = 0;
+        if (node.left != null && node.left.val == node.val) {
+            pl = 1 + left_val;
+        }
+        if (node.right != null && node.right.val == node.val) {
+            pr = 1 + right_val;
+        }
+        longestPath = Math.max(longestPath, pl + pr);
+        return Math.max(pl, pr);
+    }
+
 }
