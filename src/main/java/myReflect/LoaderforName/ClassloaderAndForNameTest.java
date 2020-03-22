@@ -19,7 +19,6 @@ public class ClassloaderAndForNameTest {
 //JDK不负责和数据库连接打交道，也没必要，只提供一个具体的接口Driver，告诉所有第三方，要连接数据库，就去实现这个接口，然后通过DriverManager注册一下，
 // 到时候连接某个数据库的时候，你已经在我这里注册了，我会调用你注册进来的Driver里面的方法去对指定数据库进行连接的。
 //我们仅仅需要初始化这个类，执行static块的内容就行了，不需要使用这个类内部的API，因此没必要对其进行实例化。
-
     public static void main(String[] args) throws Exception {
         String wholeNameLine = "myReflect.LoaderforName.Line";
         String wholeNamePoint = "myReflect.LoaderforName.Point";

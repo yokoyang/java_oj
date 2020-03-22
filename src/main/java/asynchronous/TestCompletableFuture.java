@@ -11,14 +11,7 @@ public class TestCompletableFuture {
         assertTrue(cf.isDone());
         assertEquals("message", cf.getNow(null));
     }
-    static void cancelExample() {
-        CompletableFuture cf = CompletableFuture.completedFuture("message").thenApplyAsync(String::toUpperCase,
-                CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS));
-        CompletableFuture cf2 = cf.exceptionally(throwable -> "canceled message");
-        assertTrue("Was not canceled", cf.cancel(true));
-        assertTrue("Was not completed exceptionally", cf.isCompletedExceptionally());
-        assertEquals("canceled message", cf2.join());
-    }
+
     static void runAsyncExample() {
         CompletableFuture cf = CompletableFuture.runAsync(() -> {
             System.out.println(Thread.currentThread().isDaemon());
@@ -66,7 +59,6 @@ public class TestCompletableFuture {
     }
 
     public static void main(String[] args) {
-        cancelExample();
         thenApplyAsyncExample();
         thenApplyExample();
         runAsyncExample();
