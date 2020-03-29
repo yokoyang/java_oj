@@ -262,7 +262,40 @@ public class Solution {
     //数字序列中某一位的数字
     //数字序列 0123456789101112，求第n位的数字
     //https://blog.csdn.net/m0_37862405/article/details/80341260
+//    149. Max Points on a Line
+//    Input: [[1,1],[2,2],[3,3]]
+//Output: 3
+    public int maxPoints(int[][] points) {
+        if (points == null) {
+            return 0;
+        }
+        int res = 0;
+        for (int i = 0; i < points.length; i++) {
+            Map<String, Integer> map = new HashMap<>();
+            int max = 0, duplicate = 0;
+            for (int j = i + 1; j < points.length; j++) {
+                int dx = points[j][0] - points[i][0];
+                int dy = points[j][1] - points[i][1];
+                if (dx == 0 && dy == 0) {
+                    duplicate++;
+                    continue;
+                }
+                int gcd = gcd(dx, dy);
+                dx /= gcd;
+                dy /= gcd;
+                map.put(dx + "," + dy, map.getOrDefault(dx + "," + dy, 0) + 1);
+                max = Math.max(max, map.get(dx + "," + dy));
+            }
+            res = Math.max(res, max + duplicate + 1);
+        }
+        return res;
+    }
 
+    //最大公约数
+    //辗转相除法
+    int gcd(int m, int n) {
+        return (n == 0) ? m : gcd(n, m % n);
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
