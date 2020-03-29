@@ -4,7 +4,37 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Solution {
-
+    //    926
+    public int minFlipsMonoIncr(String S) {
+        int size = S.length();
+        if (size <= 1) {
+            return 0;
+        }
+        int[] lp = new int[size + 1];
+        int[] rp = new int[size + 1];
+        lp[0] = S.charAt(0) - '0';
+        rp[size - 1] = '1' - S.charAt(size - 1);
+        for (int i = 1; i < size; i++) {
+            if (S.charAt(i - 1) == '1') {
+                lp[i] = lp[i - 1] + 1;
+            } else {
+                lp[i] = lp[i - 1];
+            }
+        }
+        for (int i = size - 2; i >= 0; i--) {
+            if (S.charAt(i) == '1') {
+                rp[i] = rp[i + 1];
+            } else {
+                rp[i] = rp[i + 1] + 1;
+            }
+        }
+        int ans = rp[0];
+        for (int i = 0; i < size; i++) {
+            int t = lp[i] + rp[i + 1];
+            ans = Math.min(ans, t);
+        }
+        return ans;
+    }
 
     //    没有重复数字的序列，返回所有可能的全排序
     public List<List<Integer>> permute(int[] nums) {
@@ -662,39 +692,6 @@ public class Solution {
     }
 
 
-    //    1278. Palindrome Partitioning III
-    public int palindromePartition(String s, int k) {
-        int size = s.length();
-        if (s.length() == k) return 0;
-        int[][] dp = new int[size + 1][k];
-        for (int i = 0; i < size; i++) {
-            dp[i + 1][0] = changeToPalindrome(s.substring(0, i + 1));
-        }
-        for (int j = 1; j < k; j++) {
-            for (int i = j; i <= size; i++) {
-                int cur = Integer.MAX_VALUE;
-                for (int p = i; p >= j; p--) {
-                    cur = Math.min(cur, dp[p - 1][j - 1] + changeToPalindrome(s.substring(p - 1, i)));
-                }
-                dp[i][j] = cur;
-            }
-        }
-
-        return dp[size][k - 1];
-    }
-
-    private int changeToPalindrome(String s) {
-        int i = 0, j = s.length() - 1;
-        int counter = 0;
-        while (i < j) {
-            if (s.charAt(i) != s.charAt(j)) {
-                counter++;
-            }
-            i++;
-            j--;
-        }
-        return counter;
-    }
 
     //    1292. Maximum Side Length of a Square with Sum Less than or Equal to Threshold
     public int maxSideLength(int[][] mat, int threshold) {
@@ -1169,7 +1166,9 @@ public class Solution {
     public static void main(String[] args) {
         Solution solution = new Solution();
 //        System.out.println(solution.largestSumOfAverages(new int[]{1, 2, 3, 4, 5, 6, 7},4));
-        System.out.println(solution.largestSumOfAverages(new int[]{1, 2}, 1));
+        System.out.println(solution.minFlipsMonoIncr(
+                "00110"));
+//        System.out.println(solution.largestSumOfAverages(new int[]{1, 2}, 1));
 //        System.out.println(solution.minInsertions2("mbadm"));
 //        List<String> input = new ArrayList<>();
 //        input.add("E23");

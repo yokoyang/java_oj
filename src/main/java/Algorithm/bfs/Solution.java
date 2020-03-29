@@ -102,7 +102,8 @@ public class Solution {
     public static void main(String[] args) {
         int[] nums = new int[]{6, 4, 14, 6, 8, 13, 9, 7, 10, 6, 12};
         Solution solution = new Solution();
-        System.out.println(solution.f1());
+        System.out.println(solution.openLock(new String[]{"0201", "0101", "0102", "1212", "2002"},
+                "0202"));
 //        solution.maxJumps(nums, 2);
     }
 
@@ -205,5 +206,41 @@ public class Solution {
             step++;
         }
         return ans;
+    }
+
+    public int openLock(String[] deadends, String target) {
+        HashSet<String> deadSet = new HashSet<>(Arrays.asList(deadends));
+        HashSet<String> visited = new HashSet<>();
+        String start = "0000";
+        if (deadSet.contains(start)) {
+            return -1;
+        }
+        ArrayDeque<String> q = new ArrayDeque<>();
+        q.offer(start);
+        visited.add(start);
+        int step = 0;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            while (size-- > 0) {
+                String now = q.poll();
+                if (now.equals(target)) {
+                    return step;
+                }
+                for (int i = 0; i < 4; i++) {
+                    for (int j = -1; j <= 1; j += 2) {
+                        char[] nowChars = now.toCharArray();
+                        nowChars[i] = (char) ((nowChars[i] - '0' + j + 10) % 10 + '0');
+                        String next = new String(nowChars);
+                        if (deadSet.contains(next) || visited.contains(next)) {
+                            continue;
+                        }
+                        visited.add(next);
+                        q.offer(next);
+                    }
+                }
+            }
+            step++;
+        }
+        return -1;
     }
 }
