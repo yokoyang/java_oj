@@ -590,4 +590,31 @@ public class Solution {
         return Math.max(pl, pr);
     }
 
+    //    129. Sum Root to Leaf Numbers
+    int sumNum = 0;
+
+    public int sumNumbers(TreeNode root) {
+        if (root == null) {
+            return sumNum;
+        }
+        sumNumbers_C(root, 0);
+        return sumNum;
+    }
+
+    void sumNumbers_C(TreeNode root, int nowSum) {
+        if (root == null) {
+            return;
+        }
+        if (isLeaf(root)) {
+            nowSum = nowSum * 10 + root.val;
+            sumNum += nowSum;
+            return;
+        }
+        sumNumbers_C(root.left, nowSum * 10 + root.val);
+        sumNumbers_C(root.right, nowSum * 10 + root.val);
+    }
+
+    boolean isLeaf(TreeNode t) {
+        return t.left == null && t.right == null;
+    }
 }

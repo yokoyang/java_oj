@@ -589,5 +589,18 @@ public class Solution {
         return stringBuilder.toString();
     }
 
+    //    89. Gray Code
+    public List<Integer> grayCode(int n) {
+        List<Integer> gray = new ArrayList<Integer>();
+        gray.add(0); //初始化 n = 0 的解
+        for (int i = 0; i < n; i++) {
+            int add = 1 << i; //要加的数
+            //倒序遍历，并且加上一个值添加到结果中
+            for (int j = gray.size() - 1; j >= 0; j--) {
+                gray.add(gray.get(j) + add);
+            }
+        }
+        return gray;
+    }
 
 }
