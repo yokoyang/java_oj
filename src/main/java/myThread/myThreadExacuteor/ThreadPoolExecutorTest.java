@@ -57,6 +57,7 @@ public class ThreadPoolExecutorTest {
 
     public static class MyIgnorePolicy implements RejectedExecutionHandler {
 
+        @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
             doLog(r, e);
         }

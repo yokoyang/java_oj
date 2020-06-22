@@ -12,11 +12,11 @@ public class EnumAttackTest {
         byte[] serialize4 = SerializationUtils.serialize(enumSingleton);
         EnumSingleton enumSingleton2 = (EnumSingleton) SerializationUtils.deserialize(serialize4);
         System.out.println(enumSingleton == enumSingleton2);
-
-        //反射攻击
-        Constructor<EnumSingleton> enumSingletonConstructor = EnumSingleton.class.getDeclaredConstructor();
-        enumSingletonConstructor.setAccessible(true);
-        EnumSingleton enumSingleton1 = enumSingletonConstructor.newInstance();
-        System.out.println(enumSingleton == enumSingleton1);
+//
+//        //反射攻击
+//        Constructor<EnumSingleton> enumSingletonConstructor = EnumSingleton.class.getDeclaredConstructor();
+//        enumSingletonConstructor.setAccessible(true);
+//        EnumSingleton enumSingleton1 = enumSingletonConstructor.newInstance();
+//        System.out.println(enumSingleton == enumSingleton1);
     }
 }
